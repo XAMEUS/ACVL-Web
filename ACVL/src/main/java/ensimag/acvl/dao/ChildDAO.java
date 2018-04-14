@@ -1,34 +1,44 @@
 package ensimag.acvl.dao;
 
+import ensimag.acvl.models.Child;
 import ensimag.acvl.models.User;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.sql.DataSource;
 
-public class UserDAO extends AbstractDataBaseDAO {
+public class ChildDAO extends AbstractDataBaseDAO {
 
-    public UserDAO(DataSource ds) {
+    public ChildDAO(DataSource ds) {
         super(ds);
     }
 
-    /**
-     * @return List of users
-     */
-    public List<User> getUsersList() {
-        List<User> result = new ArrayList<User>();
+    public List<Child> getChildrenList() {
+        List<Child> result = new ArrayList<Child>();
         try (
                 Connection conn = getConn();
                 Statement st = conn.createStatement();) {
-            ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Users");
+            ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Children");
             while (rs.next()) {
-                User user = new User(rs.getString("username"), rs.getBytes("passwd"));
-                result.add(user);
+                Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getDate("birthdate"));
+                result.add(child);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Databse error: " + e.getMessage(), e);
+        }
+        return result;
+    }
+    
+        public List<Child> getChildrenList(String username) {
+        List<Child> result = new ArrayList<Child>();
+        try (
+                Connection conn = getConn();
+                PreparedStatement ps = conn.prepareStatement("SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = ?");) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getDate("birthdate"));
+                result.add(child);
             }
         } catch (SQLException e) {
             throw new DAOException("Databse error: " + e.getMessage(), e);
@@ -36,62 +46,51 @@ public class UserDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    /**
-     * @param name username
-     * @param password user password
-     */
-    public void createUser(String name, String password) {
+    public int createChild(String firstname, String lastname, Date birthdate) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd) VALUES (?, ?)");) {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
-            SecretKey key = skf.generateSecret( spec );
-            byte[] pass = key.getEncoded();
-            st.setString(1, name);
-            st.setBytes(2, pass);
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Children (firstname, lastname, birthdate) VALUES (?, ?, ?)");) {
+            st.setString(1, firstname);
+            st.setString(2, lastname);
+            st.setDate(3, birthdate);
             st.executeUpdate();
-        } catch (InvalidKeySpecException e) {
-            throw new DAOException("SecretKeyFactory key error " + e.getMessage(), e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new DAOException("SecretKeyFactory algorithm error " + e.getMessage(), e);
+            ResultSet rs = conn.createStatement().executeQuery("SELECT ACVL_Children_id_seq.currval FROM dual");
+            rs.next();
+            return rs.getInt(1);
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
     
-    public boolean signAs(String name, String password) {
-        User user = getUser(name);
-        try {
-            SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
-            SecretKey key = skf.generateSecret( spec );
-            byte[] pass = key.getEncoded();
-            return user.passwordMatch(pass);
-        } catch (InvalidKeySpecException e) {
-            throw new DAOException("SecretKeyFactory key error " + e.getMessage(), e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new DAOException("SecretKeyFactory algorithm error " + e.getMessage(), e);
+    public void setParent(String username, int idChild) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Family (username, idChild) VALUES (?, ?)");) {
+            st.setString(1, username);
+            st.setInt(2, idChild);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
 
-    public User getUser(String username) {
+    public Child getChild(int id) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Users WHERE username LIKE ?");) {
-            st.setString(1, username);
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Children WHERE id=?");) {
+            st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             rs.next();
-            return new User(rs.getString("username"), rs.getBytes("passwd"));
+            return new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getDate("birthdate"));
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
     }
 
-    public void editUser(int id, String name, byte[] password) {
+    public void editChild(int id) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE ACVL_Users SET username=?, titre=? WHERE username=?");) {
+                PreparedStatement st = conn.prepareStatement("UPDATE ACVL_Children SET username=?, titre=? WHERE username=?");) {
             // TODO
             throw new Error("TODO");
         } catch (SQLException e) {
@@ -99,10 +98,10 @@ public class UserDAO extends AbstractDataBaseDAO {
         }
     }
 
-    public void removeUser(int id) {
+    public void removeChild(int id) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("DELETE FROM ACVL_Users WHERE username=?");) {
+                PreparedStatement st = conn.prepareStatement("DELETE FROM ACVL_Children WHERE username=?");) {
             throw new Error("TODO");
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);

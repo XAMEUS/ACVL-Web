@@ -1,18 +1,23 @@
 package ensimag.acvl.controller;
 
+import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
-import ensimag.acvl.dao.UserDAO;
-import ensimag.acvl.models.User;
+import ensimag.acvl.models.Child;
 import java.io.*;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 
-@WebServlet(name = "Account", urlPatterns = {"/account"})
-public class Account extends HttpServlet {
+@WebServlet(name = "Family", urlPatterns = {"/family"})
+public class Family extends HttpServlet {
 
     @Resource(name = "jdbc/database")
     private DataSource ds;
@@ -20,16 +25,27 @@ public class Account extends HttpServlet {
     
     private void invalidParameters(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/AccountError.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/FamilyError.jsp").forward(request, response);
     }
 
-    private void erreurBD(HttpServletRequest request,
+    private void databaseError(HttpServletRequest request,
             HttpServletResponse response, DAOException e)
             throws ServletException, IOException {
         e.printStackTrace();
         request.setAttribute("errorMessage", e.getMessage());
         request.getRequestDispatcher("/WEB-INF/DatabaseError.jsp").forward(request, response);
     }
+
+    private void error(HttpServletRequest request,
+            HttpServletResponse response, Exception e)
+            throws ServletException, IOException {
+        if (e != null) {
+            e.printStackTrace();
+            request.setAttribute("eMessage", e.getMessage());
+        }
+        request.getRequestDispatcher("/WEB-INF/DatabaseError.jsp").forward(request, response);
+    }
+
     
     
     public void doGet(HttpServletRequest request,
@@ -38,25 +54,32 @@ public class Account extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        UserDAO userDAO = new UserDAO(ds);
+        ChildDAO childDAO = new ChildDAO(ds);
 
         try {
             if (action == null) {
-                actionShow(request, response, userDAO);
+                actionShow(request, response, childDAO);
             } else {
                 invalidParameters(request, response);
             }
         } catch (DAOException e) {
-            erreurBD(request, response, e);
+            databaseError(request, response, e);
         }
     }
 
     private void actionShow(HttpServletRequest request,
             HttpServletResponse response,
-            UserDAO userDAO) throws ServletException, IOException {
-        List<User> users = userDAO.getUsersList();
-        request.setAttribute("users", users);
-        request.getRequestDispatcher("/WEB-INF/UserList.jsp").forward(request, response);
+            ChildDAO childDAO) throws ServletException, IOException {
+        String username = (String) request.getSession().getAttribute("username");
+        if (username == null) {
+            request.setAttribute("message", "Veuillez vous connecter avant de pouvoir continuer");
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        }
+        else {
+            List<Child> children = childDAO.getChildrenList(username);
+            request.setAttribute("children", children);
+            request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
+        }
     }
 
     public void doPost(HttpServletRequest request,
@@ -69,56 +92,45 @@ public class Account extends HttpServlet {
             invalidParameters(request, response);
             return;
         }
-        UserDAO userDAO = new UserDAO(ds);
+        ChildDAO childDAO = new ChildDAO(ds);
 
         try {
             if (action.equals("create")) {
-                actionCreate(request, response, userDAO);
+                actionCreate(request, response, childDAO);
             } else if (action.equals("remove")) {
-                actionRemove(request, response, userDAO);
+                actionRemove(request, response, childDAO);
             } else if (action.equals("edit")) {
-                actionEdit(request, response, userDAO);
-            } else if (action.equals("signin")) {
-                actionSignIn(request, response, userDAO);
-                return;
+                actionEdit(request, response, childDAO);
             } else {
                 invalidParameters(request, response);
                 return;
             }
 
-            actionShow(request, response, userDAO);
+            actionShow(request, response, childDAO);
 
         } catch (DAOException e) {
-            erreurBD(request, response, e);
+            databaseError(request, response, e);
         }
     }
     
     private void actionCreate(HttpServletRequest request,
             HttpServletResponse response,
-            UserDAO userDAO)
+            ChildDAO childDAO)
             throws IOException, ServletException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        userDAO.createUser(username, password);
-    }
-
-    private void actionSignIn(HttpServletRequest request,
-            HttpServletResponse response,
-            UserDAO userDAO)
-            throws IOException, ServletException {
-        HttpSession session = request.getSession();
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        if (userDAO.signAs(username, password)) {
-            session.setAttribute("username", username);
+        try {
+            String firstname = request.getParameter("firstname");
+            String lastname = request.getParameter("lastname");
+            Date birthdate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthdate")).getTime());
+            int idChild = childDAO.createChild(firstname, lastname, birthdate);
+            childDAO.setParent((String) request.getSession().getAttribute("username"), idChild);
+        } catch (ParseException e) {
+            error(request, response, e);
         }
-        request.setAttribute("username", username);
-        request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
     }
 
     private void actionRemove(HttpServletRequest request,
             HttpServletResponse response,
-            UserDAO userDAO)
+            ChildDAO childDAO)
             throws IOException, ServletException {
         // TODO
         System.err.println("TODO");
@@ -126,7 +138,7 @@ public class Account extends HttpServlet {
 
     private void actionEdit(HttpServletRequest request,
             HttpServletResponse response,
-            UserDAO userDAO)
+            ChildDAO childDAO)
             throws IOException, ServletException {
         // TODO
         System.err.println("TODO");
