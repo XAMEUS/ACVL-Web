@@ -11,11 +11,18 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
+        <p>
+            <%
+                if (request.getAttribute("message") != null) {
+                    out.print(request.getAttribute("message"));
+                }
+            %>
+        </p>
         <%
             if(session.getAttribute("username") != null) {
                 out.println("Login success. Hi " + session.getAttribute("username") + "!");
             } else { %>
-                Login failed
+                Login failed? (todo better signal)
                 <form method="post" action="account" accept-charset="UTF-8">
                     <input type="hidden" name="action" value="signin">
                     <input type="text" name="username" placeholder="username">

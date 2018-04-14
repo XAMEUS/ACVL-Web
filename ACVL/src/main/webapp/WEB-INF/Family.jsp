@@ -4,27 +4,31 @@
 <html>
     <head>
         <meta charset="UTF-8"/>
-        <title>Users Management</title>
-        <script src="formularise.js"></script>
+        <title>Family</title>
     </head>
     <body>
-        <h2> Users list </h2>
+        <h2> Family </h2>
 
 
-        <form method="post" action="account" accept-charset="UTF-8">
+        <form method="post" action="family" accept-charset="UTF-8">
             <input type="hidden" name="action" value="create">
-            <input type="text" name="username" placeholder="username">
-            <input type="password" name="password" placeholder="password">
-            <input type="submit" value="Create">
+            <input type="text" name="firstname" placeholder="firstname">
+            <input type="text" name="lastname" placeholder="lastname">
+            <input type="date" name="birthdate">
+            <input type="submit" value="Add">
         </form>
 
         <table>
             <tr>
-                <th>Username</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Birthdate</th>
             </tr>
-            <c:forEach items="${users}" var="user">
+            <c:forEach items="${children}" var="child">
                 <tr>
-                    <td>${user.name}</td>
+                    <td>${child.firstname}</td>
+                    <td>${child.lastname}</td>
+                    <td>${child.birthdate}</td>
                 </tr>
             </c:forEach>
         </table>
