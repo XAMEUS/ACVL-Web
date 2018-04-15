@@ -20,7 +20,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
                 Statement st = conn.createStatement();) {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Children");
             while (rs.next()) {
-                Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getDate("birthdate"));
+                Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
                 result.add(child);
             }
         } catch (SQLException e) {
@@ -29,7 +29,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
         return result;
     }
     
-        public List<Child> getChildrenList(String username) {
+    public List<Child> getChildrenList(String username) {
         List<Child> result = new ArrayList<Child>();
         try (
                 Connection conn = getConn();
@@ -37,8 +37,14 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getDate("birthdate"));
+                Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
                 result.add(child);
+                PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM ACVL_Diet d, ACVL_ChildDiet cd WHERE d.diet = cd.diet AND cd.idChild = ?");
+                ps2.setInt(1, child.getId());
+                ResultSet rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    child.getDiet().add(rs2.getString("diet"));
+                }
             }
         } catch (SQLException e) {
             throw new DAOException("Databse error: " + e.getMessage(), e);
@@ -46,13 +52,15 @@ public class ChildDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    public int createChild(String firstname, String lastname, Date birthdate) {
+    public int createChild(String firstname, String lastname, String gender, String grade, Date birthdate) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Children (firstname, lastname, birthdate) VALUES (?, ?, ?)");) {
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Children (firstname, lastname, gender, grade, birthdate) VALUES (?, ?, ?, ?, ?)");) {
             st.setString(1, firstname);
             st.setString(2, lastname);
-            st.setDate(3, birthdate);
+            st.setString(3, gender);
+            st.setString(4, grade);
+            st.setDate(5, birthdate);
             st.executeUpdate();
             ResultSet rs = conn.createStatement().executeQuery("SELECT ACVL_Children_id_seq.currval FROM dual");
             rs.next();
@@ -73,6 +81,20 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
+    
+    
+    public void setDiet(int idChild, String diet) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_ChildDiet (diet, idChild) VALUES (?, ?)");) {
+            System.out.println(idChild + " " + diet);
+            st.setString(1, diet);
+            st.setInt(2, idChild);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
 
     public Child getChild(int id) {
         try (
@@ -81,7 +103,8 @@ public class ChildDAO extends AbstractDataBaseDAO {
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             rs.next();
-            return new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getDate("birthdate"));
+            Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
+            return child;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
@@ -106,5 +129,19 @@ public class ChildDAO extends AbstractDataBaseDAO {
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
+    }
+
+    public List<String> getDiets() {
+        List<String> result = new ArrayList<String>();
+        try (
+                Connection conn = getConn();
+                ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Diet");) {
+            while (rs.next()) {
+                result.add(rs.getString("diet"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Databse error: " + e.getMessage(), e);
+        }
+        return result;
     }
 }

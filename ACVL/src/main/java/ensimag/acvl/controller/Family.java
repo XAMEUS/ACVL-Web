@@ -78,6 +78,8 @@ public class Family extends HttpServlet {
         else {
             List<Child> children = childDAO.getChildrenList(username);
             request.setAttribute("children", children);
+            List<String> diets = childDAO.getDiets();
+            request.setAttribute("diets", diets);
             request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
         }
     }
@@ -120,9 +122,17 @@ public class Family extends HttpServlet {
         try {
             String firstname = request.getParameter("firstname");
             String lastname = request.getParameter("lastname");
+            String gender = request.getParameter("gender");
+            String grade = request.getParameter("grade");
             Date birthdate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthdate")).getTime());
-            int idChild = childDAO.createChild(firstname, lastname, birthdate);
+            int idChild = childDAO.createChild(firstname, lastname, gender, grade, birthdate);
             childDAO.setParent((String) request.getSession().getAttribute("username"), idChild);
+            for (int i = 1; i <= childDAO.getDiets().size(); i++) {
+                String diet = request.getParameter("diet" + i);
+                if (diet != null) {
+                    childDAO.setDiet(idChild, diet);
+                }
+            }
         } catch (ParseException e) {
             error(request, response, e);
         }

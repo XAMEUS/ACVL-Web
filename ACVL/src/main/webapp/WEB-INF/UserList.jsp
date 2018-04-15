@@ -5,9 +5,10 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Users Management</title>
-        <script src="formularise.js"></script>
+        <%@include file="style/style.jsp" %>
     </head>
     <body>
+        <%@include file="debug/debug.jsp" %>
         <h2> Users list </h2>
 
 
@@ -18,15 +19,20 @@
             <input type="submit" value="Create">
         </form>
 
-        <table>
-            <tr>
-                <th>Username</th>
-            </tr>
-            <c:forEach items="${users}" var="user">
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>${user.name}</td>
+                    <th>Username</th>
                 </tr>
-            </c:forEach>
+            </thead>
+            <tbody>
+                <c:forEach items="${users}" var="user">
+                    <tr>
+                        <td>${user.name}</td>
+                    </tr>
+                </c:forEach>
+            </tbody>
         </table>
     </body>
+    <%@include file="style/js.jsp" %>
 </html>

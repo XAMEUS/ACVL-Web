@@ -39,10 +39,12 @@ public class Account extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         UserDAO userDAO = new UserDAO(ds);
-
+        System.out.println(action);
         try {
             if (action == null) {
                 actionShow(request, response, userDAO);
+            } else if (action.equals("register")) {
+                actionRegister(request, response, userDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -51,6 +53,12 @@ public class Account extends HttpServlet {
         }
     }
 
+    private void actionRegister(HttpServletRequest request,
+            HttpServletResponse response,
+            UserDAO userDAO) throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+    }
+    
     private void actionShow(HttpServletRequest request,
             HttpServletResponse response,
             UserDAO userDAO) throws ServletException, IOException {
@@ -74,6 +82,7 @@ public class Account extends HttpServlet {
         try {
             if (action.equals("create")) {
                 actionCreate(request, response, userDAO);
+                return;
             } else if (action.equals("remove")) {
                 actionRemove(request, response, userDAO);
             } else if (action.equals("edit")) {

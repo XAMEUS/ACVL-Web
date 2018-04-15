@@ -4,12 +4,12 @@
 <html>
     <head>
         <meta charset="UTF-8"/>
-        <title>Users Management</title>
-        <script src="formularise.js"></script>
+        <title>Register</title>
+        <%@include file="style/style.jsp" %>
     </head>
     <body>
-        <h2> Users list </h2>
-
+        <%@include file="debug/debug.jsp" %>
+        <h2> Register </h2>
 
         <form method="post" action="account" accept-charset="UTF-8">
             <input type="hidden" name="action" value="create">
@@ -17,16 +17,7 @@
             <input type="password" name="password" placeholder="password">
             <input type="submit" value="Create">
         </form>
-
-        <table>
-            <tr>
-                <th>Username</th>
-            </tr>
-            <c:forEach items="${users}" var="user">
-                <tr>
-                    <td>${user.name}</td>
-                </tr>
-            </c:forEach>
-        </table>
+        
     </body>
+    <%@include file="style/js.jsp" %>
 </html>
