@@ -12,25 +12,7 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 
 @WebServlet(name = "Account", urlPatterns = {"/account"})
-public class Account extends HttpServlet {
-
-    @Resource(name = "jdbc/database")
-    private DataSource ds;
-
-    
-    private void invalidParameters(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/AccountError.jsp").forward(request, response);
-    }
-
-    private void erreurBD(HttpServletRequest request,
-            HttpServletResponse response, DAOException e)
-            throws ServletException, IOException {
-        e.printStackTrace();
-        request.setAttribute("errorMessage", e.getMessage());
-        request.getRequestDispatcher("/WEB-INF/DatabaseError.jsp").forward(request, response);
-    }
-    
+public class Account extends Controller {
     
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
@@ -46,10 +28,14 @@ public class Account extends HttpServlet {
             } else if (action.equals("register")) {
                 actionRegister(request, response, userDAO);
             } else {
-                invalidParameters(request, response);
+                request.setAttribute("title", "Parameter Error");
+                request.setAttribute("message", "Mauvais paramètre action=" + action);
+                showError(request, response);
             }
         } catch (DAOException e) {
-            erreurBD(request, response, e);
+            request.setAttribute("title", "DAO exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
         }
     }
 
@@ -74,7 +60,8 @@ public class Account extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         if (action == null) {
-            invalidParameters(request, response);
+            request.setAttribute("message", "Mauvais paramètre: action=" + action);
+            showError(request, response);
             return;
         }
         UserDAO userDAO = new UserDAO(ds);
@@ -91,14 +78,14 @@ public class Account extends HttpServlet {
                 actionSignIn(request, response, userDAO);
                 return;
             } else {
-                invalidParameters(request, response);
-                return;
+                request.setAttribute("message", "Mauvais paramètre: action=" + action);
+                showError(request, response);
             }
-
             actionShow(request, response, userDAO);
-
         } catch (DAOException e) {
-            erreurBD(request, response, e);
+            request.setAttribute("title", "DAO exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
         }
     }
     

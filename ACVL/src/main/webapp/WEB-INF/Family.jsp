@@ -22,13 +22,13 @@
             <label for="F">F</label>
             <select name="grade">
                 <option value="PS">PS</option>
-                <option value="PS">MS</option>
-                <option value="PS">GS</option>
-                <option value="PS">CP</option>
-                <option value="PS">CE1</option>
-                <option value="PS">CE2</option>
-                <option value="PS">CM1</option>
-                <option value="PS">CM2</option>
+                <option value="MS">MS</option>
+                <option value="GS">GS</option>
+                <option value="CP">CP</option>
+                <option value="CE1">CE1</option>
+                <option value="CE2">CE2</option>
+                <option value="CM1">CM1</option>
+                <option value="CM2">CM2</option>
             </select>
             <input type="date" name="birthdate">
             <% int c = 0; %>

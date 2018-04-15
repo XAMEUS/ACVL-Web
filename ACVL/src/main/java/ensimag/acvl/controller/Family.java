@@ -17,36 +17,10 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 
 @WebServlet(name = "Family", urlPatterns = {"/family"})
-public class Family extends HttpServlet {
+public class Family extends Controller {
 
     @Resource(name = "jdbc/database")
-    private DataSource ds;
-
-    
-    private void invalidParameters(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/FamilyError.jsp").forward(request, response);
-    }
-
-    private void databaseError(HttpServletRequest request,
-            HttpServletResponse response, DAOException e)
-            throws ServletException, IOException {
-        e.printStackTrace();
-        request.setAttribute("errorMessage", e.getMessage());
-        request.getRequestDispatcher("/WEB-INF/DatabaseError.jsp").forward(request, response);
-    }
-
-    private void error(HttpServletRequest request,
-            HttpServletResponse response, Exception e)
-            throws ServletException, IOException {
-        if (e != null) {
-            e.printStackTrace();
-            request.setAttribute("eMessage", e.getMessage());
-        }
-        request.getRequestDispatcher("/WEB-INF/DatabaseError.jsp").forward(request, response);
-    }
-
-    
+    private DataSource ds;    
     
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
@@ -60,10 +34,14 @@ public class Family extends HttpServlet {
             if (action == null) {
                 actionShow(request, response, childDAO);
             } else {
-                invalidParameters(request, response);
+                request.setAttribute("title", "Parameter Error");
+                request.setAttribute("message", "Mauvais paramètre action=" + action);
+                showError(request, response);
             }
         } catch (DAOException e) {
-            databaseError(request, response, e);
+            request.setAttribute("title", "DAO exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
         }
     }
 
@@ -91,7 +69,8 @@ public class Family extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         if (action == null) {
-            invalidParameters(request, response);
+            request.setAttribute("title", "Parameter Error");
+            request.setAttribute("message", "Mauvais paramètre action=" + action);
             return;
         }
         ChildDAO childDAO = new ChildDAO(ds);
@@ -104,14 +83,17 @@ public class Family extends HttpServlet {
             } else if (action.equals("edit")) {
                 actionEdit(request, response, childDAO);
             } else {
-                invalidParameters(request, response);
+                request.setAttribute("title", "Parameter Error");
+                request.setAttribute("message", "Mauvais paramètre action=" + action);
                 return;
             }
 
             actionShow(request, response, childDAO);
 
         } catch (DAOException e) {
-            databaseError(request, response, e);
+            request.setAttribute("title", "DAO exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
         }
     }
     
@@ -134,7 +116,9 @@ public class Family extends HttpServlet {
                 }
             }
         } catch (ParseException e) {
-            error(request, response, e);
+            request.setAttribute("title", "Parse exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
         }
     }
 
