@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 
-@WebServlet(name = "Admin", urlPatterns = {"/admin"})
+//@WebServlet(name = "C", urlPatterns = {"/admin"})
 public class Controller extends HttpServlet {
 
     @Resource(name = "jdbc/database")
