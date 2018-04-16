@@ -25,31 +25,31 @@
                     <div class="sidebar-sticky">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">
+                                <a class="nav-link <c:if test="${view eq 'main'}">active</c:if>" href="<%= request.getContextPath() %>/admin?view=main">
                                     <span data-feather="home"></span>
                                     Dashboard <span class="sr-only">(current)</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link <c:if test="${view eq 'users'}">active</c:if>" href="<%= request.getContextPath() %>/admin?view=users">
                                     <span data-feather="users"></span>
                                     Personnes
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link <c:if test="${view eq 'calendar'}">active</c:if>" href="<%= request.getContextPath() %>/admin?view=calendar">
                                     <span data-feather="calendar"></span>
                                     Périodes
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link <c:if test="${view eq 'activities'}">active</c:if>" href="<%= request.getContextPath() %>/admin?view=activities">
                                     <span data-feather="sun"></span>
                                     Activités
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link <c:if test="${view eq 'settings'}">active</c:if>" href="<%= request.getContextPath() %>/admin?view=settings">
                                     <span data-feather="settings"></span>
                                     Configuration
                                 </a>
