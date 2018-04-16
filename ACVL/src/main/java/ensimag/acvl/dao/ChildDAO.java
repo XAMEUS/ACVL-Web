@@ -144,4 +144,15 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
         return result;
     }
+    
+    public void addDiet(String diet) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_DIET (diet) VALUES (?)");) {
+            st.setString(1, diet);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
 }

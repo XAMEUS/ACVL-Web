@@ -1,7 +1,9 @@
 package ensimag.acvl.controller;
 
+import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import java.io.*;
+import java.util.List;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -38,6 +40,35 @@ public class Admin extends Controller {
             showError(request, response, e);
         }
     }
+    
+    public void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        if (action == null) {
+            request.setAttribute("message", "Mauvais paramètre: action=" + action);
+            showError(request, response);
+            return;
+        }
+        
+        try {
+            if (action.equals("diet")) {
+                ChildDAO childDAO = new ChildDAO(ds);
+                childDAO.addDiet(request.getParameter("diet"));
+                viewSettings(request, response);
+            } else {
+                request.setAttribute("message", "Mauvais paramètre: action=" + action);
+                showError(request, response);
+            }
+            viewMain(request, response);
+        } catch (DAOException e) {
+            request.setAttribute("title", "DAO exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
+        }
+    }
 
     private void viewMain(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -65,6 +96,9 @@ public class Admin extends Controller {
     
     private void viewSettings(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        ChildDAO childDAO = new ChildDAO(ds);
+        List<String> diets = childDAO.getDiets();
+        request.setAttribute("diets", diets);
         request.setAttribute("view", "settings");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
