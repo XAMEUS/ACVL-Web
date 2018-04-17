@@ -41,6 +41,26 @@ WHEN OTHERS THEN
 END;
 /
 BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE ACVL_Periods_id_seq';
+    DBMS_OUTPUT.put_line('DROP SEQUENCE ACVL_Periods_id_seq');
+EXCEPTION
+  WHEN OTHERS THEN
+    IF SQLCODE != -2289 THEN
+      RAISE;
+    END IF;
+END;
+/
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_Periods';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Periods');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
     EXECUTE IMMEDIATE 'DROP SEQUENCE ACVL_Children_id_seq';
     DBMS_OUTPUT.put_line('DROP SEQUENCE ACVL_Children_id_seq');
 EXCEPTION
@@ -97,6 +117,13 @@ CREATE TABLE ACVL_ChildDiet (
     FOREIGN KEY (idChild) references ACVL_Children(id)
 );
 
+CREATE SEQUENCE ACVL_Periods_id_seq;
+CREATE TABLE ACVL_Periods (
+    idPeriod number(3) DEFAULT ACVL_Periods_id_seq.nextval PRIMARY KEY,
+    startDate DATE,
+    endDate DATE
+);
+
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;
 SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = 'maxime';
@@ -104,6 +131,7 @@ insert into ACVL_DIET values ('végétarien');
 insert into ACVL_DIET values ('sans gluten');
 
 select * from ACVL_ChildDiet;
+select * from ACVL_Periods;
 
 SELECT * FROM ACVL_Diet;
 
