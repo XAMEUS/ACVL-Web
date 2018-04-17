@@ -5,11 +5,9 @@ import ensimag.acvl.dao.UserDAO;
 import ensimag.acvl.models.User;
 import java.io.*;
 import java.util.List;
-import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.sql.DataSource;
 
 @WebServlet(name = "Account", urlPatterns = {"/account"})
 public class Account extends Controller {
@@ -83,13 +81,15 @@ public class Account extends Controller {
             }
             actionShow(request, response, userDAO);
         } catch (DAOException e) {
-            request.setAttribute("title", "DAO exception");
-            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
-
-            if (action.equals("signin") && e.getMessage().equals("failed signin")) {
+            
+            if (action.equals("signin")) {
                 request.setAttribute("title", "Echec de la connexion");
                 request.setAttribute("message", "Utilisateur ou mot de passe incorrect");
                 request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            } else if (action.equals("create")) {
+                request.setAttribute("title", "Echec de la création de compte");
+                request.setAttribute("message", "Utilisateur ou mot de passe incorrect");
+                request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
             } else {
                 request.setAttribute("title", "DAO exception");
                 request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
@@ -102,9 +102,16 @@ public class Account extends Controller {
             HttpServletResponse response,
             UserDAO userDAO)
             throws IOException, ServletException {
+        HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        userDAO.createUser(username, password);
+        if (username.equals("") || password.equals("")) {
+            throw new DAOException("Empty parameters");
+        } else {
+            userDAO.createUser(username, password);
+            session.setAttribute("username", username);
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        }
     }
 
     private void actionSignIn(HttpServletRequest request,
@@ -116,10 +123,9 @@ public class Account extends Controller {
         String password = request.getParameter("password");
         if (userDAO.signAs(username, password)) {
             session.setAttribute("username", username);
-            request.setAttribute("username", username);
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         } else {
-            throw new DAOException("failed signin");
+            throw new DAOException("Invalid parameters");
         }
     }
 

@@ -3,21 +3,22 @@
 <html lang="fr">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Login</title>
+        <title>Se connecter</title>
         <%@include file="style/style.jsp" %>
         <link href="style/login.css" rel="stylesheet">
     </head>
-    <body>
-        <!%@include file="debug/debug.jsp" %>
-
+    <body class="text-center">
         <main role="main" class="container">
+            <%@include file="debug/debug.jsp" %>
 
             <% if (session.getAttribute("username") != null) { %>
-            <div class="text-center">
-                <h1 class="h3 mb-3 font-weight-normal">Connexion réussie.</h1>
+            
+            <div>
+                <h1 class="h3 mb-3 font-weight-normal">Connexion réussie</h1>
                 <p class="lead">Bonjour <strong><% out.print(session.getAttribute("username")); %></strong> !
-                    Vous pouvez maintenant consulter votre <a href=""><strong>page famille</strong></a>.</p>
+                    Vous pouvez maintenant consulter votre <a href="family"><strong>page famille</strong></a>.</p>
             </div>
+                    
             <% } else { %>
 
             <form class="form-signin" method="post" action="account" accept-charset="UTF-8">
@@ -36,9 +37,10 @@
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block" value="login">Connexion</button>
             </form>
+                
             <%}%>
+            
         </main>
-
     </body>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

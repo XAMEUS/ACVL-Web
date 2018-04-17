@@ -8,20 +8,23 @@
         <link href="style/homepage.css" rel="stylesheet">
     </head>
     <body>
-        <!%@include file="WEB-INF/debug/debug.jsp" %>
-
         <main role="main" class="container">
-            <% if (session.getAttribute("username") != null) {%>
+            <%@include file="WEB-INF/debug/debug.jsp" %>
+            
+            <% if (session.getAttribute("username") != null) { %>
+            
             <div class="text-center">
-                <h1 class="h3 mb-3 font-weight-normal">Connexion réussie.</h1>
+                <h1 class="h3 mb-3 font-weight-normal">Connexion réussie</h1>
                 <p class="lead">Bonjour <strong><% out.print(session.getAttribute("username")); %></strong> !
-                    Vous pouvez maintenant consulter votre <a href=""><strong>page famille</strong></a>.</p>
+                    Vous pouvez maintenant consulter votre <a href="family"><strong>page famille</strong></a>.</p>
             </div>
+                    
             <% } else { %>
 
             <div>
-                <h1>Bootstrap starter template</h1>
-                <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+                <h1>Bienvenue !</h1>
+                <p class="lead">Chaque trimestre choisissez les activités périscolaires de vos enfants.
+                    <br>Gérez facilement leur inscription à la cantine, à la garderie et annulez jusqu'à 48 heures avant.</p>
             </div>
             <div>
                 <a class="btn btn-primary" data-toggle="collapse" href="#connect" role="button" aria-expanded="false" aria-controls="connect">Se connecter</a>
@@ -45,7 +48,9 @@
                     </div>
                 </div>
             </div>
+            
             <%}%>
+            
         </main>
     </body>
 

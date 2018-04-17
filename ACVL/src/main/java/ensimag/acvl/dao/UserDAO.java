@@ -31,7 +31,7 @@ public class UserDAO extends AbstractDataBaseDAO {
                 result.add(user);
             }
         } catch (SQLException e) {
-            throw new DAOException("Databse error: " + e.getMessage(), e);
+            throw new DAOException("Database error: " + e.getMessage(), e);
         }
         return result;
     }
@@ -42,8 +42,8 @@ public class UserDAO extends AbstractDataBaseDAO {
      */
     public void createUser(String name, String password) {
         try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd) VALUES (?, ?)");) {
+            Connection conn = getConn();
+            PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd) VALUES (?, ?)");) {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
             SecretKey key = skf.generateSecret( spec );
@@ -81,9 +81,7 @@ public class UserDAO extends AbstractDataBaseDAO {
             PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Users WHERE username LIKE ?");) {
             st.setString(1, username);
             ResultSet rs = st.executeQuery();
-            if(!rs.next()) {
-                throw new DAOException("failed signin");
-            }
+            rs.next();
             return new User(rs.getString("username"), rs.getBytes("passwd"));
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
