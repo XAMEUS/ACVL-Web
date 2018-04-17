@@ -1,5 +1,7 @@
 set serveroutput on format wrapped;
 
+COMMIT;
+
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_ChildDiet';
     DBMS_OUTPUT.put_line('DROP TABLE ACVL_ChildDiet');
@@ -33,6 +35,26 @@ END;
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_Users';
     DBMS_OUTPUT.put_line('DROP TABLE ACVL_Users');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE ACVL_Activities_id_seq';
+    DBMS_OUTPUT.put_line('DROP SEQUENCE ACVL_Activities_id_seq');
+EXCEPTION
+  WHEN OTHERS THEN
+    IF SQLCODE != -2289 THEN
+      RAISE;
+    END IF;
+END;
+/
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_Activities';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Activities');
 EXCEPTION
 WHEN OTHERS THEN
    IF SQLCODE != -942 THEN
@@ -124,6 +146,19 @@ CREATE TABLE ACVL_Periods (
     endDate DATE
 );
 
+CREATE SEQUENCE ACVL_Activities_id_seq;
+CREATE TABLE ACVL_Activities (
+    id number(6) DEFAULT ACVL_Activities_id_seq.nextval PRIMARY KEY,
+    capacity int,
+    codeGrades int,
+    codeDays int,
+    title VARCHAR2(100),
+    description VARCHAR2(500),
+    animators VARCHAR2(500),
+    period number(3),
+    FOREIGN KEY (period) references ACVL_Periods(idPeriod)
+);
+
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;
 SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = 'maxime';
@@ -132,7 +167,7 @@ insert into ACVL_DIET values ('sans gluten');
 
 select * from ACVL_ChildDiet;
 select * from ACVL_Periods;
-
+Select * from ACVL_Activities;
 SELECT * FROM ACVL_Diet;
 
 --SELECT ACVL_Children_id_seq.next FROM dual;

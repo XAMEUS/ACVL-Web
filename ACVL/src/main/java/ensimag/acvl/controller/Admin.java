@@ -1,5 +1,6 @@
 package ensimag.acvl.controller;
 
+import ensimag.acvl.dao.ActivityDAO;
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
@@ -8,7 +9,9 @@ import java.io.*;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.*;
@@ -47,7 +50,7 @@ public class Admin extends Controller {
             showError(request, response, e);
         }
     }
-    
+
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
@@ -59,13 +62,54 @@ public class Admin extends Controller {
             showError(request, response);
             return;
         }
-        
+
         try {
             if (action.equals("period")) {
-                System.out.println("ensimag.acvl.controller.Admin.doPost()");
                 PeriodDAO periodDAO = new PeriodDAO(ds);
                 periodDAO.createPeriod(new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime()), new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime()));
                 viewCalendar(request, response);
+                return;
+            } else if (action.equals("create-activity")) {
+                ActivityDAO activityDAO = new ActivityDAO(ds);
+                int codeDays = 0;
+                int codeGrades = 0;
+                Set<String> parameters = request.getParameterMap().keySet();
+                for (String p : parameters) {
+                    if (p.equals("Lundi"))
+                        codeDays += 1;
+                    if (p.equals("Mardi"))
+                        codeDays += 2;
+                    if (p.equals("Mercredi"))
+                        codeDays += 4;
+                    if (p.equals("Jeudi"))
+                        codeDays += 8;
+                    if (p.equals("Vendredi"))
+                        codeDays += 16;
+                    if (p.equals("PS"))
+                        codeGrades += 1;
+                    if (p.equals("MS"))
+                        codeGrades += 2;
+                    if (p.equals("GS"))
+                        codeGrades += 4;
+                    if (p.equals("CP"))
+                        codeGrades += 8;
+                    if (p.equals("CE1"))
+                        codeGrades += 16;
+                    if (p.equals("CE2"))
+                        codeGrades += 32;
+                    if (p.equals("CM1"))
+                        codeGrades += 64;
+                    if (p.equals("CM2"))
+                        codeGrades += 128;
+                }
+                activityDAO.createActivity(Integer.valueOf(request.getParameter("capacity")),
+                        Integer.valueOf(request.getParameter("period")),
+                        codeGrades,
+                        codeDays,
+                        request.getParameter("title"),
+                        request.getParameter("description"),
+                        request.getParameter("animators"));
+                viewActivities(request, response);
                 return;
             } else if (action.equals("diet")) {
                 ChildDAO childDAO = new ChildDAO(ds);
@@ -94,13 +138,13 @@ public class Admin extends Controller {
         request.setAttribute("view", "main");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
-    
+
     private void viewUsers(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("view", "users");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
-    
+
     private void viewCalendar(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         PeriodDAO periodDAO = new PeriodDAO(ds);
@@ -109,13 +153,18 @@ public class Admin extends Controller {
         request.setAttribute("view", "calendar");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
-    
+
     private void viewActivities(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        ActivityDAO activityDAO = new ActivityDAO(ds);
+        List<Period> periods = periodDAO.getPeriods();
+        request.setAttribute("periods", periods);
+        request.setAttribute("activities", activityDAO.getActivities());
         request.setAttribute("view", "activities");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
-    
+
     private void viewSettings(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         ChildDAO childDAO = new ChildDAO(ds);

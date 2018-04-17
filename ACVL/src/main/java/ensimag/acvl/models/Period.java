@@ -30,5 +30,13 @@ public class Period {
     public String toString() {
         return "Period{" + "id=" + id + ", start=" + start + ", end=" + end + '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Period) {
+            return this.id == ((Period) obj).id;
+        }
+        return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

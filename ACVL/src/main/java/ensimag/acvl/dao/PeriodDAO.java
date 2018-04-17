@@ -34,14 +34,13 @@ public class PeriodDAO extends AbstractDataBaseDAO {
                 PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Periods (startDate, endDate) VALUES (?, ?)");) {
             st.setDate(1, start);
             st.setDate(2, end);
-            System.out.println("ensimag.acvl.dao.PeriodDAO.createPeriod()");
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
 
-    public Period getChild(int id) {
+    public Period getPeriod(int id) {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Periods WHERE idPeriod=?");) {
