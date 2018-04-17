@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @WebServlet(name = "Account", urlPatterns = {"/account"})
 public class Account extends Controller {
-    
+
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
@@ -44,7 +44,7 @@ public class Account extends Controller {
             UserDAO userDAO) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
     }
-    
+
     private void actionShow(HttpServletRequest request,
             HttpServletResponse response,
             UserDAO userDAO) throws ServletException, IOException {
@@ -85,10 +85,19 @@ public class Account extends Controller {
         } catch (DAOException e) {
             request.setAttribute("title", "DAO exception");
             request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
-            showError(request, response, e);
+
+            if (action.equals("signin") && e.getMessage().equals("failed signin")) {
+                request.setAttribute("title", "Echec de la connexion");
+                request.setAttribute("message", "Utilisateur ou mot de passe incorrect");
+                request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            } else {
+                request.setAttribute("title", "DAO exception");
+                request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+                showError(request, response, e);
+            }
         }
     }
-    
+
     private void actionCreate(HttpServletRequest request,
             HttpServletResponse response,
             UserDAO userDAO)
@@ -107,9 +116,11 @@ public class Account extends Controller {
         String password = request.getParameter("password");
         if (userDAO.signAs(username, password)) {
             session.setAttribute("username", username);
+            request.setAttribute("username", username);
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        } else {
+            throw new DAOException("failed signin");
         }
-        request.setAttribute("username", username);
-        request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
     }
 
     private void actionRemove(HttpServletRequest request,

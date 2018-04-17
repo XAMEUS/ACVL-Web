@@ -77,11 +77,13 @@ public class UserDAO extends AbstractDataBaseDAO {
 
     public User getUser(String username) {
         try (
-                Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Users WHERE username LIKE ?");) {
+            Connection conn = getConn();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Users WHERE username LIKE ?");) {
             st.setString(1, username);
             ResultSet rs = st.executeQuery();
-            rs.next();
+            if(!rs.next()) {
+                throw new DAOException("failed signin");
+            }
             return new User(rs.getString("username"), rs.getBytes("passwd"));
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
