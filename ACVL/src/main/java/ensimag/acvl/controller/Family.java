@@ -50,7 +50,8 @@ public class Family extends Controller {
             ChildDAO childDAO) throws ServletException, IOException {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null) {
-            request.setAttribute("message", "Veuillez vous connecter avant de pouvoir continuer");
+            request.setAttribute("title", "Erreur de connexion");
+            request.setAttribute("message", "Veuillez vous connecter afin de pouvoir continuer");
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
         else {

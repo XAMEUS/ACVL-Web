@@ -37,9 +37,11 @@
                             <form method="post" action="account" accept-charset="UTF-8">
                                 <input type="hidden" name="action" value="signin">
                                 <div class="form-group">
+                                    <label for="username">Nom d'utilisateur</label>
                                     <input type="text" name="username" placeholder="Nom d'utilisateur" class="form-control" autofocus>
                                 </div>
                                 <div class="form-group">
+                                    <label for="password">Mot de passe</label>
                                     <input type="password" name="password" placeholder="Mot de passe" class="form-control">
                                 </div>
                                 <button type="submit" class="btn btn-primary" value="login">Connexion</button>
