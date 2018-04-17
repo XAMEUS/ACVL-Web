@@ -2,8 +2,15 @@ package ensimag.acvl.controller;
 
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
+import ensimag.acvl.dao.PeriodDAO;
+import ensimag.acvl.models.Period;
 import java.io.*;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -54,10 +61,17 @@ public class Admin extends Controller {
         }
         
         try {
-            if (action.equals("diet")) {
+            if (action.equals("period")) {
+                System.out.println("ensimag.acvl.controller.Admin.doPost()");
+                PeriodDAO periodDAO = new PeriodDAO(ds);
+                periodDAO.createPeriod(new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime()), new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime()));
+                viewCalendar(request, response);
+                return;
+            } else if (action.equals("diet")) {
                 ChildDAO childDAO = new ChildDAO(ds);
                 childDAO.addDiet(request.getParameter("diet"));
                 viewSettings(request, response);
+                return;
             } else {
                 request.setAttribute("message", "Mauvais paramètre: action=" + action);
                 showError(request, response);
@@ -67,6 +81,11 @@ public class Admin extends Controller {
             request.setAttribute("title", "DAO exception");
             request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
             showError(request, response, e);
+        } catch (ParseException ex) {
+            request.setAttribute("title", "DAO exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé au niveau des dates...\n" + ex.getMessage());
+            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            showError(request, response, ex);
         }
     }
 
@@ -84,6 +103,9 @@ public class Admin extends Controller {
     
     private void viewCalendar(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        List<Period> periods = periodDAO.getPeriods();
+        request.setAttribute("periods", periods);
         request.setAttribute("view", "calendar");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
