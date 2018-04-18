@@ -1,7 +1,26 @@
 set serveroutput on format wrapped;
 
 COMMIT;
-
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_ActivityPeriods';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_ActivityPeriods');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_Registrations';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Registrations');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_ChildDiet';
     DBMS_OUTPUT.put_line('DROP TABLE ACVL_ChildDiet');
@@ -142,6 +161,7 @@ CREATE TABLE ACVL_ChildDiet (
 CREATE SEQUENCE ACVL_Periods_id_seq;
 CREATE TABLE ACVL_Periods (
     idPeriod number(3) DEFAULT ACVL_Periods_id_seq.nextval PRIMARY KEY,
+    limitDate DATE,
     startDate DATE,
     endDate DATE
 );
@@ -154,8 +174,24 @@ CREATE TABLE ACVL_Activities (
     codeDays int,
     title VARCHAR2(100),
     description VARCHAR2(500),
-    animators VARCHAR2(500),
+    animators VARCHAR2(500)
+);
+
+CREATE TABLE ACVL_ActivityPeriods (
+    activity number(6),
     period number(3),
+    PRIMARY KEY (activity, period),
+    FOREIGN KEY (activity) references ACVL_Activities(id),
+    FOREIGN KEY (period) references ACVL_Periods(idPeriod)
+);
+
+CREATE TABLE ACVL_Registrations (
+    child number(6),
+    period number(3),
+    PRIMARY KEY (child, period),
+    codeCantine int,
+    codeGarderie int,
+    FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
@@ -164,7 +200,7 @@ select * from ACVL_Family;
 SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = 'maxime';
 insert into ACVL_DIET values ('végétarien');
 insert into ACVL_DIET values ('sans gluten');
-
+COMMIT;
 select * from ACVL_ChildDiet;
 select * from ACVL_Periods;
 Select * from ACVL_Activities;

@@ -5,6 +5,7 @@
     <div>
         <form method="post" action="admin?view=calendar" accept-charset="UTF-8">
             <input type="hidden" name="action" value="period">
+            <input type="date" name="limitDate">
             <input type="date" name="startDate">
             <input type="date" name="endDate">
             <input type="submit" value="Ajouter">

@@ -1,4 +1,7 @@
 
+<%@page import="ensimag.acvl.models.Period"%>
+<%@page import="ensimag.acvl.models.Period"%>
+<%@page import="java.util.List"%>
 <h2>Gestion des activités</h2>
 <div class="table-responsive">
     <h3>Créer une activité</h3>
@@ -10,12 +13,25 @@
             <small class="form-text text-muted">Des infos en + sur le champs</small>
         </div>
         <div class="form-group">
-            <label for="activityPeriod">Période</label>
-            <select id="activityPeriod" name="period" class="form-control">
+            <label for="activityPeriod">Périodes</label>
+            <!--<select id="activityPeriod" name="period" class="form-control">
                 <c:forEach items="${periods}" var="period">
                     <option value="${period.id}">${period.start} -> ${period.start}</option>
                 </c:forEach>
-            </select>
+            </select>-->
+            <% if (((List<Period>) (request.getAttribute("periods"))).size() == 0) {%>
+            <div class="alert alert-warning" role="alert">
+                Veuillez d'abord définir des périodes.
+            </div>
+            <%}%>
+            <% int c = 0; %>
+            <c:forEach items="${periods}" var="period">
+                <% c++; %>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="period<% out.print(c); %>" name="period<%out.print(c);%>" value="${period.id}">
+                    <label for="period<% out.print(c);%>">${period}</label>
+                </div>
+            </c:forEach>
         </div>
         <div class="form-group">
             <label for="description">Description</label>

@@ -1,6 +1,7 @@
 package ensimag.acvl.dao;
 
 import ensimag.acvl.models.Child;
+import ensimag.acvl.models.Period;
 import ensimag.acvl.models.User;
 import java.sql.*;
 import java.util.ArrayList;
@@ -154,5 +155,19 @@ public class ChildDAO extends AbstractDataBaseDAO {
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
+    }
+    
+    public List<Period> getUnregisterdPeriods() {
+        List<Period> result = new ArrayList<Period>();
+        try (
+                Connection conn = getConn();
+                ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Diet");) {
+            while (rs.next()) {
+                result.add(new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Databse error: " + e.getMessage(), e);
+        }
+        return result;
     }
 }

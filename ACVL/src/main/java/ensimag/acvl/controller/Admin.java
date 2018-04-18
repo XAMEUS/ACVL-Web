@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,10 @@ public class Admin extends Controller {
         try {
             if (action.equals("period")) {
                 PeriodDAO periodDAO = new PeriodDAO(ds);
-                periodDAO.createPeriod(new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime()), new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime()));
+                periodDAO.createPeriod(
+                        new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("limitDate")).getTime()),
+                        new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime()),
+                        new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime()));
                 viewCalendar(request, response);
                 return;
             } else if (action.equals("create-activity")) {
@@ -102,8 +106,16 @@ public class Admin extends Controller {
                     if (p.equals("CM2"))
                         codeGrades += 128;
                 }
+                List<Integer> periods = new ArrayList<>();
+                PeriodDAO periodDAO = new PeriodDAO(ds);
+                for (int i = 1; i <= periodDAO.getPeriods().size(); i++) {
+                    String period = request.getParameter("period" + i);
+                    if (period != null) {
+                        periods.add(Integer.valueOf(period));
+                    }
+                }
                 activityDAO.createActivity(Integer.valueOf(request.getParameter("capacity")),
-                        Integer.valueOf(request.getParameter("period")),
+                        periods,
                         codeGrades,
                         codeDays,
                         request.getParameter("title"),

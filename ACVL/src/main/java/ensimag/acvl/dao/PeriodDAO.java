@@ -1,5 +1,6 @@
 package ensimag.acvl.dao;
 
+import ensimag.acvl.models.Activity;
 import ensimag.acvl.models.Period;
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +20,23 @@ public class PeriodDAO extends AbstractDataBaseDAO {
                 Statement st = conn.createStatement();) {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Periods");
             while (rs.next()) {
-                Period p = new Period(rs.getInt("idPeriod"), rs.getDate("startDate"), rs.getDate("endDate"));
+                Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
+                result.add(p);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Databse error: " + e.getMessage(), e);
+        }
+        return result;
+    }
+    
+    public List<Period> getActivityPeriods(int id) {
+        List<Period> result = new ArrayList<Period>();
+        try (
+                Connection conn = getConn();
+                Statement st = conn.createStatement();) {
+            ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Periods p, ACVL_ActivityPeriods a WHERE p.idPeriod = a.period AND a.activity = " + id);
+            while (rs.next()) {
+                Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
                 result.add(p);
             }
         } catch (SQLException e) {
@@ -28,12 +45,13 @@ public class PeriodDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    public void createPeriod(Date start, Date end) {
+    public void createPeriod(Date limit, Date start, Date end) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Periods (startDate, endDate) VALUES (?, ?)");) {
-            st.setDate(1, start);
-            st.setDate(2, end);
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Periods (limitDate, startDate, endDate) VALUES (?, ?, ?)");) { 
+            st.setDate(1, limit);
+            st.setDate(2, start);
+            st.setDate(3, end);
             st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
@@ -47,10 +65,12 @@ public class PeriodDAO extends AbstractDataBaseDAO {
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             rs.next();
-            Period p = new Period(rs.getInt("idPeriod"), rs.getDate("startDate"), rs.getDate("endDate"));
+            Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
             return p;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
     }
+    
+    
 }
