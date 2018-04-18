@@ -1,0 +1,1 @@
+<h1>Inscriptions</h1>

@@ -8,8 +8,6 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -20,47 +18,80 @@ import javax.sql.DataSource;
 public class Family extends Controller {
 
     @Resource(name = "jdbc/database")
-    private DataSource ds;    
-    
+    private DataSource ds;
+
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
 
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action");
-        ChildDAO childDAO = new ChildDAO(ds);
 
-        try {
-            if (action == null) {
-                actionShow(request, response, childDAO);
-            } else {
-                request.setAttribute("title", "Parameter Error");
-                request.setAttribute("message", "Mauvais paramètre action=" + action);
-                showError(request, response);
-            }
-        } catch (DAOException e) {
-            request.setAttribute("title", "DAO exception");
-            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
-            showError(request, response, e);
-        }
-    }
-
-    private void actionShow(HttpServletRequest request,
-            HttpServletResponse response,
-            ChildDAO childDAO) throws ServletException, IOException {
         String username = (String) request.getSession().getAttribute("username");
         if (username == null) {
             request.setAttribute("title", "Erreur de connexion");
             request.setAttribute("message", "Veuillez vous connecter afin de pouvoir continuer");
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        } else {
+            ChildDAO childDAO = new ChildDAO(ds);
+            String view = request.getParameter("view");
+            try {
+                if (view == null) {
+                    showMain(request, response, childDAO);
+                    return;
+                }
+                switch (view) {
+                    case "view":
+                        showMain(request, response, childDAO);
+                        break;
+                    case "register":
+                        showRegister(request, response);
+                        break;
+                    case "calendar":
+                        showCalendar(request, response);
+                        break;
+                    default:
+                        showMain(request, response, childDAO);
+                        break;
+                }
+            } catch (DAOException e) {
+                request.setAttribute("title", "DAO exception");
+                request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+                showError(request, response, e);
+            }
         }
-        else {
-            List<Child> children = childDAO.getChildrenList(username);
-            request.setAttribute("children", children);
-            List<String> diets = childDAO.getDiets();
-            request.setAttribute("diets", diets);
-            request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
-        }
+
+    }
+
+    private void showMain(HttpServletRequest request,
+            HttpServletResponse response,
+            ChildDAO childDAO) throws ServletException, IOException {
+        String username = (String) request.getSession().getAttribute("username");
+        List<Child> children = childDAO.getChildrenList(username);
+        request.setAttribute("children", children);
+        List<String> diets = childDAO.getDiets();
+        request.setAttribute("diets", diets);
+        request.setAttribute("view", "home");
+        request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
+    }
+
+    private void showRegister(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        ChildDAO childDAO = new ChildDAO(ds);
+        String username = (String) request.getSession().getAttribute("username");
+        List<Child> children = childDAO.getChildrenList(username);
+        request.setAttribute("children", children);
+        request.setAttribute("view", "register");
+        request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
+    }
+    
+    private void showCalendar(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        ChildDAO childDAO = new ChildDAO(ds);
+        String username = (String) request.getSession().getAttribute("username");
+        List<Child> children = childDAO.getChildrenList(username);
+        request.setAttribute("children", children);
+        request.setAttribute("view", "calendar");
+        request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
 
     public void doPost(HttpServletRequest request,
@@ -77,19 +108,23 @@ public class Family extends Controller {
         ChildDAO childDAO = new ChildDAO(ds);
 
         try {
-            if (action.equals("create")) {
-                actionCreate(request, response, childDAO);
-            } else if (action.equals("remove")) {
-                actionRemove(request, response, childDAO);
-            } else if (action.equals("edit")) {
-                actionEdit(request, response, childDAO);
-            } else {
-                request.setAttribute("title", "Parameter Error");
-                request.setAttribute("message", "Mauvais paramètre action=" + action);
-                return;
+            switch (action) {
+                case "create":
+                    actionCreate(request, response, childDAO);
+                    break;
+                case "remove":
+                    actionRemove(request, response, childDAO);
+                    break;
+                case "edit":
+                    actionEdit(request, response, childDAO);
+                    break;
+                default:
+                    request.setAttribute("title", "Parameter Error");
+                    request.setAttribute("message", "Mauvais paramètre action=" + action);
+                    return;
             }
 
-            actionShow(request, response, childDAO);
+            showMain(request, response, childDAO);
 
         } catch (DAOException e) {
             request.setAttribute("title", "DAO exception");
@@ -97,7 +132,7 @@ public class Family extends Controller {
             showError(request, response, e);
         }
     }
-    
+
     private void actionCreate(HttpServletRequest request,
             HttpServletResponse response,
             ChildDAO childDAO)
