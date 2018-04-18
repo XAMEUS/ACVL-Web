@@ -4,6 +4,7 @@ import ensimag.acvl.dao.ActivityDAO;
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
+import ensimag.acvl.dao.UserDAO;
 import ensimag.acvl.models.Period;
 import java.io.*;
 import java.sql.Date;
@@ -155,6 +156,8 @@ public class Admin extends Controller {
     private void viewUsers(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("view", "users");
+        request.setAttribute("users", new UserDAO(ds).getUsersList());
+        request.setAttribute("children", new ChildDAO(ds).getChildrenList());
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
 
