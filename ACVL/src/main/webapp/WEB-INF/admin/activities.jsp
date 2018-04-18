@@ -131,6 +131,14 @@
             <input id="activityCapacity" class="form-control" type="number" name="capacity" placeholder="">
             <small class="form-text text-muted">Capacité par groupe (1 groupe / animateur).</pre></small>
         </div>
+        <div class="form-group">
+            <label for="activityStrategy">Stratégie</label>
+            <select class="form-control" name="strategy">
+                <option value="1">Premier inscrit, premier servi</option>
+                <option value="2">Aléatoire</option>
+                <option value="3">Du moins agé au plus agé</option>
+            </select>
+        </div>
         <input type="hidden" name="action" value="create-activity">
         <button type="submit" class="btn btn-primary">Créer</button>
     </form>

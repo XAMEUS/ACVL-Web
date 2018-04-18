@@ -172,6 +172,7 @@ CREATE TABLE ACVL_Activities (
     capacity int,
     codeGrades int,
     codeDays int,
+    codeStrategy int,
     title VARCHAR2(100),
     description VARCHAR2(500),
     animators VARCHAR2(500)

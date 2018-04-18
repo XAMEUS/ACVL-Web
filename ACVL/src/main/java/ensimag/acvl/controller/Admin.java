@@ -118,6 +118,7 @@ public class Admin extends Controller {
                         periods,
                         codeGrades,
                         codeDays,
+                        Integer.valueOf(request.getParameter("strategy")),
                         request.getParameter("title"),
                         request.getParameter("description"),
                         request.getParameter("animators"));
