@@ -26,7 +26,7 @@
                             <a class="nav-link" href="<%= request.getContextPath()%>/family?view=home">Mes enfants <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item <c:if test="${view eq 'register'}">active</c:if>">
-                            <a class="nav-link" href="<%= request.getContextPath()%>/family?view=register">Inscription aux TAP</a>
+                            <a class="nav-link" href="<%= request.getContextPath()%>/family?view=register">Inscriptions</a>
                         </li>
                         <li class="nav-item <c:if test="${view eq 'calendar'}">active</c:if>">
                             <a class="nav-link" href="<%= request.getContextPath()%>/family?view=calendar">Emploi du temps</a>

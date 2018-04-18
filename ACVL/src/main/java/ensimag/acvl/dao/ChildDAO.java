@@ -22,6 +22,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Children");
             while (rs.next()) {
                 Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
+                child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId()));
                 result.add(child);
             }
         } catch (SQLException e) {
@@ -39,6 +40,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
+                child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId()));
                 result.add(child);
                 PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM ACVL_Diet d, ACVL_ChildDiet cd WHERE d.diet = cd.diet AND cd.idChild = ?");
                 ps2.setInt(1, child.getId());
@@ -105,6 +107,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
             Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
+            child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId()));
             return child;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
@@ -157,11 +160,11 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
     }
     
-    public List<Period> getUnregisterdPeriods() {
+    public List<Period> getUnregisterdPeriods(int idChild) {
         List<Period> result = new ArrayList<Period>();
         try (
                 Connection conn = getConn();
-                ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Diet");) {
+                ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Registrations r WHERE r.child = " + idChild + ")");) {
             while (rs.next()) {
                 result.add(new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate")));
             }

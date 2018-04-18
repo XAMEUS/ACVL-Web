@@ -188,9 +188,10 @@ CREATE TABLE ACVL_ActivityPeriods (
 CREATE TABLE ACVL_Registrations (
     child number(6),
     period number(3),
-    PRIMARY KEY (child, period),
     codeCantine int,
     codeGarderie int,
+    infos VARCHAR2(500),
+    PRIMARY KEY (child, period),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
@@ -202,6 +203,7 @@ insert into ACVL_DIET values ('végétarien');
 insert into ACVL_DIET values ('sans gluten');
 COMMIT;
 select * from ACVL_ChildDiet;
+SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Registrations r WHERE r.child = 1);
 select * from ACVL_Periods;
 Select * from ACVL_Activities;
 SELECT * FROM ACVL_Diet;

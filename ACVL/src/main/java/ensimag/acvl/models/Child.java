@@ -14,6 +14,8 @@ public class Child {
     private final String grade;
     private final Date birthdate;
     private final List<String> diet = new ArrayList<>();
+    private List<Period> registeredPeriods = new ArrayList<>();
+    private List<Period> unregisteredPeriods = new ArrayList<>();
 
     public Child(int id, String firstname, String lastname,  char gender, String grade, Date birthdate) {
         this.id = id;
@@ -54,7 +56,23 @@ public class Child {
 
     @Override
     public String toString() {
-        return "Child{" + "firstname=" + firstname + ", lastname=" + lastname + ", birthdate=" + birthdate + '}';
+        return "Child{" + "id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", gender=" + gender + ", grade=" + grade + ", birthdate=" + birthdate + ", diet=" + diet + ", registeredPeriods=" + registeredPeriods + ", unregisteredPeriods=" + unregisteredPeriods + '}';
+    }
+    
+    public void setRegisteredPeriods(List<Period> registeredPeriods) {
+        this.registeredPeriods = registeredPeriods;
+    }
+
+    public void setUnregisteredPeriods(List<Period> unregisteredPeriods) {
+        this.unregisteredPeriods = unregisteredPeriods;
+    }
+
+    public List<Period> getRegisteredPeriods() {
+        return registeredPeriods;
+    }
+
+    public List<Period> getUnregisteredPeriods() {
+        return unregisteredPeriods;
     }
     
 }

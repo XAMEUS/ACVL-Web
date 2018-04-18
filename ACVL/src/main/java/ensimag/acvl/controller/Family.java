@@ -2,11 +2,13 @@ package ensimag.acvl.controller;
 
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
+import ensimag.acvl.dao.PeriodDAO;
 import ensimag.acvl.models.Child;
 import java.io.*;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.*;
@@ -80,6 +82,7 @@ public class Family extends Controller {
         String username = (String) request.getSession().getAttribute("username");
         List<Child> children = childDAO.getChildrenList(username);
         request.setAttribute("children", children);
+        request.setAttribute("unregistered", childDAO.getUnregisterdPeriods(1));
         request.setAttribute("view", "register");
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
@@ -118,9 +121,13 @@ public class Family extends Controller {
                 case "edit":
                     actionEdit(request, response, childDAO);
                     break;
+                case "register":
+                    actionRegister(request, response);
+                    break;
                 default:
                     request.setAttribute("title", "Parameter Error");
                     request.setAttribute("message", "Mauvais paramètre action=" + action);
+                    showError(request, response);
                     return;
             }
 
@@ -158,6 +165,27 @@ public class Family extends Controller {
         }
     }
 
+    private void actionRegister(HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+        String child = request.getParameter("child");
+        String period = request.getParameter("period");
+        int codeCantine = 0;
+        int codeGarderie = 0;
+        Enumeration<String> params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+            String param = params.nextElement();
+            if (param.startsWith("cantine"))
+                codeCantine += Integer.valueOf(request.getParameter(param));
+            else if (param.startsWith("garderie"))
+                codeGarderie += Integer.valueOf(request.getParameter(param));
+        }
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        periodDAO.registerChild(Integer.valueOf(child), Integer.valueOf(period), codeCantine, codeGarderie, request.getParameter("infos"));
+        ChildDAO childDAO = new ChildDAO(ds);
+        showMain(request, response, childDAO);
+    }
+    
     private void actionRemove(HttpServletRequest request,
             HttpServletResponse response,
             ChildDAO childDAO)
