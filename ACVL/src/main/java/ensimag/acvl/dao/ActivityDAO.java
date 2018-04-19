@@ -38,7 +38,6 @@ public class ActivityDAO extends AbstractDataBaseDAO {
                 Statement st = conn.createStatement();) {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Activities a, ACVL_ActivityPeriods p WHERE a.id = p.activity AND p.period = " + id);
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
-            Period p = periodDAO.getPeriod(rs.getInt("period"));
             while (rs.next()) {
                 Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
                         rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
@@ -62,7 +61,7 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             st.setString(6, description);
             st.setString(7, animators);
             st.executeUpdate();
-            
+
             ResultSet rs = conn.createStatement().executeQuery("SELECT ACVL_Activities_id_seq.currval FROM dual");
             rs.next();
             int id = rs.getInt(1);
@@ -85,12 +84,31 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
-            Period p = periodDAO.getPeriod(rs.getInt("idPeriod"));
-                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
-                        rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
+            Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
+                    rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
             return a;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
+    }
+
+    public List<Activity> getActivities(int period, int codeGrade) {
+        List<Activity> result = new ArrayList<Activity>();
+        try (
+                Connection conn = getConn();
+                Statement st = conn.createStatement();) {
+            ResultSet rs = st.executeQuery("SELECT * FROM Activity a, ACVL_ActivityPeriods p WHERE p.activity = a.id AND p.period = " + period);
+            PeriodDAO periodDAO = new PeriodDAO(dataSource);
+            while (rs.next()) {
+                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
+                        rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
+                if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
+                    result.add(a);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Databse error: " + e.getMessage(), e);
+        }
+        return result;
     }
 }

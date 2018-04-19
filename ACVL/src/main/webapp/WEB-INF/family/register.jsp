@@ -75,6 +75,9 @@
                     <input id="garderie3${period.id}" type="checkbox" class="form-check-input" name="garderie4" value="8">
                     <label for="garderie4${period.id}">Garderie du soir 3 : 17h15 - 18h00 </label>
                 </div>
+
+                <c:forEach items="${unregisteredPeriod.activities}" var="activity">
+                </c:forEach>
                 <div class="form-group">
                     <label for="infos">Informations supplémentaires</label>
                     <textarea class="form-control" rows="3" name='infos'></textarea>

@@ -2,6 +2,16 @@ set serveroutput on format wrapped;
 
 COMMIT;
 BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_Wishes';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Wishes');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_ActivityPeriods';
     DBMS_OUTPUT.put_line('DROP TABLE ACVL_ActivityPeriods');
 EXCEPTION
@@ -196,6 +206,18 @@ CREATE TABLE ACVL_Registrations (
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
+
+CREATE TABLE ACVL_Wishes (
+    child number(6),
+    period number(3),
+    activity number(6),
+    rank int,
+    PRIMARY KEY (child, period, activity),
+    FOREIGN KEY (child) references ACVL_Children(id),
+    FOREIGN KEY (activity) references ACVL_Activities(id),
+    FOREIGN KEY (period) references ACVL_Periods(idPeriod)
+);
+
 
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;

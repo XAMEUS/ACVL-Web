@@ -82,7 +82,6 @@ public class Family extends Controller {
         String username = (String) request.getSession().getAttribute("username");
         List<Child> children = childDAO.getChildrenList(username);
         request.setAttribute("children", children);
-        request.setAttribute("unregistered", childDAO.getUnregisterdPeriods(1));
         request.setAttribute("view", "register");
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }

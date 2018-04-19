@@ -1,5 +1,6 @@
 package ensimag.acvl.dao;
 
+import ensimag.acvl.models.Activity;
 import ensimag.acvl.models.Child;
 import ensimag.acvl.models.Period;
 import ensimag.acvl.models.User;
@@ -22,7 +23,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Children");
             while (rs.next()) {
                 Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
-                child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId()));
+                child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId(), child.getCodeGrade()));
                 result.add(child);
             }
         } catch (SQLException e) {
@@ -40,7 +41,8 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
-                child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId()));
+                System.out.println(child);
+                child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId(), child.getCodeGrade()));
                 result.add(child);
                 PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM ACVL_Diet d, ACVL_ChildDiet cd WHERE d.diet = cd.diet AND cd.idChild = ?");
                 ps2.setInt(1, child.getId());
@@ -107,7 +109,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
             Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
-            child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId()));
+            child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId(), child.getCodeGrade()));
             return child;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
@@ -160,17 +162,30 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
     }
     
-    public List<Period> getUnregisterdPeriods(int idChild) {
+    public List<Period> getUnregisterdPeriods(int idChild, int codeGrade) {
         List<Period> result = new ArrayList<Period>();
         try (
                 Connection conn = getConn();
                 ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Registrations r WHERE r.child = " + idChild + ")");) {
             while (rs.next()) {
-                result.add(new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate")));
+                Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
+                ResultSet rs2 = conn.createStatement().executeQuery("SELECT * FROM ACVL_Activities a, ACVL_ActivityPeriods p WHERE p.activity = a.id AND p.period = " + p.getId());
+                while (rs2.next()) {
+                    Activity a = new Activity(rs2.getInt("id"), rs2.getInt("capacity"), null,
+                            rs2.getInt("codeGrades"), rs2.getInt("codeDays"), rs2.getInt("codeStrategy"), rs2.getString("title"), rs2.getString("description"), rs2.getString("animators"));
+                    if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
+                        for (int day = 1; day <= 5 ; day++) {
+                            if (((a.getCodeDays() / (int) (Math.pow(2, day-1))) % 2) == 1)
+                                p.addActivitiy(day, a);
+                        }
+                    }
+                }
+                result.add(p);
             }
         } catch (SQLException e) {
             throw new DAOException("Databse error: " + e.getMessage(), e);
         }
         return result;
     }
+    
 }

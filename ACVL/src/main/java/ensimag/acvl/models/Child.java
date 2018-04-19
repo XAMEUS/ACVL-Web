@@ -45,6 +45,20 @@ public class Child {
     public String getGrade() {
         return grade;
     }
+    
+    public int getCodeGrade() {
+        switch(this.grade) {
+            case "PS ": return 1;
+            case "MS ": return 2;
+            case "GS ": return 4;
+            case "CP ": return 8;
+            case "CE1": return 16;
+            case "CE2": return 32;
+            case "CM1": return 64;
+            case "CM2": return 128;
+            default: return 0;
+        }
+    }
 
     public Date getBirthdate() {
         return birthdate;

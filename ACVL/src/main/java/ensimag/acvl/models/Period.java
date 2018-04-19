@@ -1,6 +1,8 @@
 package ensimag.acvl.models;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Period {
 
@@ -8,12 +10,18 @@ public class Period {
     private final Date limit;
     private final Date start;
     private final Date end;
+    private final List<List<Activity>> activities = new ArrayList<>();
 
     public Period(int id, Date limit, Date start, Date end) {
         this.id = id;
         this.limit = limit;
         this.start = start;
         this.end = end;
+        this.activities.add(new ArrayList<Activity>());
+        this.activities.add(new ArrayList<Activity>());
+        this.activities.add(new ArrayList<Activity>());
+        this.activities.add(new ArrayList<Activity>());
+        this.activities.add(new ArrayList<Activity>());
     }
 
     public int getId() {
@@ -32,9 +40,21 @@ public class Period {
         return end;
     }
 
+    public List<List<Activity>> getActivities() {
+        return activities;
+    }
+    
+    public void addActivitiy(int day, Activity activity) {
+        this.activities.get(day - 1).add(activity);
+    }
+    
+    public void addActivities(int day, List<Activity> l) {
+        this.activities.get(day - 1).addAll(l);
+    }
+
     @Override
     public String toString() {
-        return "Period{" + "id=" + id + ", limit=" + limit + ", start=" + start + ", end=" + end + '}';
+        return "Period{" + "id=" + id + ", limit=" + limit + ", start=" + start + ", end=" + end + ", activities=" + activities + '}';
     }
 
     @Override
