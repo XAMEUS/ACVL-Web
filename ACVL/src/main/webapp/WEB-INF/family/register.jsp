@@ -1,8 +1,11 @@
+<%@page import="ensimag.acvl.models.Activity"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="ensimag.acvl.models.Child"%>
 <%@page import="ensimag.acvl.models.Period"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.List"%>
 <h1>Inscriptions</h1>
+<% int c = 0; %>
 <c:forEach items="${children}" var="child">
     <h2>${child.firstname} ${child.lastname}</h2>
     <% if (((Child) (pageContext.findAttribute("child"))).getUnregisteredPeriods().size() == 0) {%>
@@ -13,12 +16,11 @@
     <div class="alert alert-warning" role="alert">
         ${child.firstname} ${child.lastname} doit être inscrit.e au(x) période(s) suivante(s):
     </div>
-    <% int c = 0; %>
     <c:forEach items="${child.unregisteredPeriods}" var="unregisteredPeriod">
         <% c++; %>
         ${unregisteredPeriod}
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#period<% out.print(c); %>" aria-expanded="false">Inscrire</button>
-        <div class="collapse" id="period<% out.print(c); %>">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#period<%= c%>" aria-expanded="false">Inscrire</button>
+        <div class="collapse" id="period<%=c %>">
             <form method="post" action="family" accept-charset="UTF-8">
                 <input type="hidden" name="action" value="register">
                 <input type="hidden" name="child" value="${child.id}">
@@ -60,7 +62,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input id="garderie0${period.id}"type="checkbox" class="form-check-input" name="garderie1" value="1">
+                    <input id="garderie0${period.id}" type="checkbox" class="form-check-input" name="garderie1" value="1">
                     <label for="garderie1${period.id}">Garderie Matin : 7h00 - 8h30 </label>
                 </div>
                 <div class="form-group">
@@ -76,7 +78,36 @@
                     <label for="garderie4${period.id}">Garderie du soir 3 : 17h15 - 18h00 </label>
                 </div>
 
-                <c:forEach items="${unregisteredPeriod.activities}" var="activity">
+                <%
+                    int day = 0;
+                    String[] days = {"lundi", "mardi", "mercredi", "jeudi", "vendredi"};
+                %>
+
+                <c:forEach items="${unregisteredPeriod.activities}" var="activities">
+                    <% int n = ((List<Activity>)(pageContext.getAttribute("activities"))).size(); %>
+                    <c:if test="${not empty activities}">
+                        <div class="form-group">
+                            Le <% out.print(days[day]);%>, souhaitez-vous inscrire votre enfant :
+                            <table class="table">
+                            <c:forEach items="${activities}" var="activity">
+                                <tr>
+                                    <td>
+                                        ${activity}
+                                    </td>
+                                    <td>
+                                        <select class="form-control" name="activity-${activity.id}-<%=day%>}">
+                                            <option value="0">Non</option>
+                                            <% for (int i = 1; i <= n; i++) {%>
+                                            <option value="<%=i%>}">Voeux <%=i%></option>
+                                            <% } %>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </table>
+                        </div>
+                    </c:if>
+                    <% day++; %>
                 </c:forEach>
                 <div class="form-group">
                     <label for="infos">Informations supplémentaires</label>

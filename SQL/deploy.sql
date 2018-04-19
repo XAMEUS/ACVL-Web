@@ -212,6 +212,7 @@ CREATE TABLE ACVL_Wishes (
     period number(3),
     activity number(6),
     rank int,
+    day number(1),
     PRIMARY KEY (child, period, activity),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (activity) references ACVL_Activities(id),
