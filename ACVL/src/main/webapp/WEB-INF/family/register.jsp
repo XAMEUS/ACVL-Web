@@ -63,19 +63,19 @@
 
                 <div class="form-group">
                     <input id="garderie0${period.id}" type="checkbox" class="form-check-input" name="garderie1" value="1">
-                    <label for="garderie1${period.id}">Garderie Matin : 7h00 - 8h30 </label>
+                    <label for="garderie0${period.id}">Garderie Matin : 7h00 - 8h30 </label>
                 </div>
                 <div class="form-group">
                     <input id="garderie1${period.id}" type="checkbox" class="form-check-input" name="garderie2" value="2">
-                    <label for="garderie2${period.id}">Garderie du soir 1 : 15h45 - 16h30 </label>
+                    <label for="garderie1${period.id}">Garderie du soir 1 : 15h45 - 16h30 </label>
                 </div>
                 <div class="form-group">
                     <input id="garderie2${period.id}" type="checkbox" class="form-check-input" name="garderie3" value="4">
-                    <label for="garderie3${period.id}">Garderie du soir 2 : 16h30 - 17h15 </label>
+                    <label for="garderie2${period.id}">Garderie du soir 2 : 16h30 - 17h15 </label>
                 </div>
                 <div class="form-group">
                     <input id="garderie3${period.id}" type="checkbox" class="form-check-input" name="garderie4" value="8">
-                    <label for="garderie4${period.id}">Garderie du soir 3 : 17h15 - 18h00 </label>
+                    <label for="garderie3${period.id}">Garderie du soir 3 : 17h15 - 18h00 </label>
                 </div>
 
                 <%
@@ -95,10 +95,10 @@
                                         ${activity}
                                     </td>
                                     <td>
-                                        <select class="form-control" name="activity-${activity.id}-<%=day%>}">
+                                        <select class="form-control" style="width:120px" name="activity-${activity.id}-<%=day%>">
                                             <option value="0">Non</option>
                                             <% for (int i = 1; i <= n; i++) {%>
-                                            <option value="<%=i%>}">Voeux <%=i%></option>
+                                            <option value="<%=i%>">Voeux <%=i%></option>
                                             <% } %>
                                         </select>
                                     </td>

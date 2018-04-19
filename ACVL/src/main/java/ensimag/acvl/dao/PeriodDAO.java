@@ -87,4 +87,19 @@ public class PeriodDAO extends AbstractDataBaseDAO {
         }
     }
     
+    public void registerWish(int child, int period, int activity, int day, int rank) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Wishes (child, period, activity, rank, day) VALUES (?, ?, ?, ?, ?)");) {
+            st.setInt(1, child);
+            st.setInt(2, period);
+            st.setInt(3, activity);
+            st.setInt(4, rank);
+            st.setInt(5, day);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
+    
 }

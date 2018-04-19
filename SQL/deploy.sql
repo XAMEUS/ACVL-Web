@@ -180,8 +180,8 @@ CREATE SEQUENCE ACVL_Activities_id_seq;
 CREATE TABLE ACVL_Activities (
     id number(6) DEFAULT ACVL_Activities_id_seq.nextval PRIMARY KEY,
     capacity int,
-    codeGrades int,
-    codeDays int,
+    codeGrades int, -- 1=PS, 2=MS, 4=GS, etc. 5=PS+GS
+    codeDays int, -- idem
     codeStrategy int,
     title VARCHAR2(100),
     description VARCHAR2(500),
@@ -199,8 +199,8 @@ CREATE TABLE ACVL_ActivityPeriods (
 CREATE TABLE ACVL_Registrations (
     child number(6),
     period number(3),
-    codeCantine int,
-    codeGarderie int,
+    codeCantine int, -- 1, 2, 3=2+1 etc.
+    codeGarderie int, -- idem
     infos VARCHAR2(500),
     PRIMARY KEY (child, period),
     FOREIGN KEY (child) references ACVL_Children(id),
@@ -212,8 +212,8 @@ CREATE TABLE ACVL_Wishes (
     period number(3),
     activity number(6),
     rank int,
-    day number(1),
-    PRIMARY KEY (child, period, activity),
+    day number(1), -- 1, 2, 3, 4, 5
+    PRIMARY KEY (child, period, activity, day),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (activity) references ACVL_Activities(id),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
@@ -231,5 +231,6 @@ SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Regist
 select * from ACVL_Periods;
 Select * from ACVL_Activities;
 SELECT * FROM ACVL_Diet;
+Select * from ACVL_Wishes;
 
 --SELECT ACVL_Children_id_seq.next FROM dual;

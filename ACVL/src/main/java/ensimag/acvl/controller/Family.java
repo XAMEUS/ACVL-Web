@@ -167,20 +167,26 @@ public class Family extends Controller {
     private void actionRegister(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        String child = request.getParameter("child");
-        String period = request.getParameter("period");
+        int child = Integer.valueOf(request.getParameter("child"));
+        int period = Integer.valueOf(request.getParameter("period"));
         int codeCantine = 0;
         int codeGarderie = 0;
         Enumeration<String> params = request.getParameterNames();
+        PeriodDAO periodDAO = new PeriodDAO(ds);
         while (params.hasMoreElements()) {
             String param = params.nextElement();
             if (param.startsWith("cantine"))
                 codeCantine += Integer.valueOf(request.getParameter(param));
             else if (param.startsWith("garderie"))
                 codeGarderie += Integer.valueOf(request.getParameter(param));
+            else if (param.startsWith("activity")) {
+                String[] args = param.split("-");
+                int activity = Integer.valueOf(args[1]);
+                int day = Integer.valueOf(args[2]);
+                periodDAO.registerWish(child, period, activity, day, Integer.valueOf(request.getParameter(param)));
+            }
         }
-        PeriodDAO periodDAO = new PeriodDAO(ds);
-        periodDAO.registerChild(Integer.valueOf(child), Integer.valueOf(period), codeCantine, codeGarderie, request.getParameter("infos"));
+        periodDAO.registerChild(child, period, codeCantine, codeGarderie, request.getParameter("infos"));
         ChildDAO childDAO = new ChildDAO(ds);
         showMain(request, response, childDAO);
     }
