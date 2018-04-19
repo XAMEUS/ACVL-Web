@@ -1,3 +1,4 @@
+<%@page import="ensimag.acvl.time.Time"%>
 <%@ page import="java.util.*" %>
 Debug Tools:
 <table class="table">
@@ -42,6 +43,13 @@ Debug Tools:
     <tr><td>
         <strong>Cookies</strong>
         ${cookie}
+    </td></tr>
+    <tr><td>
+        <strong>Current System Date</strong>
+        <%
+            out.print(Time.date);
+        %>
+        <a href="<%= request.getContextPath()%>/time"><br><i class="fas fa-cog"></i> configure</a>
     </td></tr>
 </table>
 
