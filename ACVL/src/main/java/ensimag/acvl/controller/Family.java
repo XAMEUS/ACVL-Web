@@ -5,6 +5,7 @@ import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
 import ensimag.acvl.dao.RegistrationDAO;
 import ensimag.acvl.models.Child;
+import ensimag.acvl.models.Period;
 import java.io.*;
 import java.sql.Date;
 import java.text.ParseException;
@@ -54,6 +55,9 @@ public class Family extends Controller {
                         break;
                     case "calendar":
                         showCalendar(request, response);
+                        break;
+                    case "period":
+                        showPeriod(request, response);
                         break;
                     default:
                         showMain(request, response, childDAO);
@@ -107,6 +111,26 @@ public class Family extends Controller {
         List<Child> children = childDAO.getChildrenList(username);
         request.setAttribute("children", children);
         request.setAttribute("view", "calendar");
+        request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
+    }
+    
+    private void showPeriod(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("view", "period");
+        ChildDAO childDAO = new ChildDAO(ds);
+        int child = Integer.valueOf(request.getParameter("child"));
+        request.setAttribute("child", childDAO.getChild(Integer.valueOf(request.getParameter("child"))));
+        int period = Integer.valueOf(request.getParameter("period"));
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+        Period p = periodDAO.getPeriod(period);
+        p.addActivities(1, registrationDAO.getActivities(child, period, 0));
+        p.addActivities(2, registrationDAO.getActivities(child, period, 1));
+        p.addActivities(3, registrationDAO.getActivities(child, period, 2));
+        p.addActivities(4, registrationDAO.getActivities(child, period, 3));
+        p.addActivities(5, registrationDAO.getActivities(child, period, 4));
+        request.setAttribute("period", p);
+        request.setAttribute("registration", registrationDAO.getRegistration(child, period));
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
 

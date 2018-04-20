@@ -2,6 +2,7 @@ package ensimag.acvl.dao;
 
 import ensimag.acvl.models.Activity;
 import ensimag.acvl.models.Period;
+import ensimag.acvl.models.Registration;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,6 +115,41 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             st.setInt(4, rank);
             st.setInt(5, day);
             st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
+    
+    public List<Activity> getActivities(int child, int period, int day) {
+        List<Activity> activities = new ArrayList<>();
+        try (
+                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Wishes WHERE child = ? AND period = ? AND day = ?");) {
+            st.setInt(1, child);
+            st.setInt(2, period);
+            st.setInt(3, day);
+            ResultSet rs = st.executeQuery();
+            ActivityDAO activityDAO = new ActivityDAO(dataSource);
+            while (rs.next()) {
+                activities.add(activityDAO.getActivity(rs.getInt("activity")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+        return activities;
+    }
+    
+    public Registration getRegistration(int child, int period) {
+        List<Activity> activities = new ArrayList<>();
+        try (
+                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE child = ? AND period = ?");) {
+            st.setInt(1, child);
+            st.setInt(2, period);
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            Registration r = new Registration(rs.getInt("codeCantine"), rs.getInt("codeGarderie"), rs.getString("infos"));
+            return r;
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
