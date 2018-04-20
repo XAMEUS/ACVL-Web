@@ -31,7 +31,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
         return result;
     }
-    
+
     public List<Child> getChildrenList(String username) {
         List<Child> result = new ArrayList<Child>();
         try (
@@ -74,7 +74,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
-    
+
     public void setParent(String username, int idChild) {
         try (
                 Connection conn = getConn();
@@ -86,8 +86,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
-    
-    
+
     public void setDiet(int idChild, String diet) {
         try (
                 Connection conn = getConn();
@@ -110,18 +109,29 @@ public class ChildDAO extends AbstractDataBaseDAO {
             rs.next();
             Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
             child.setUnregisteredPeriods(getUnregisterdPeriods(child.getId(), child.getCodeGrade()));
+            PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM ACVL_Diet d, ACVL_ChildDiet cd WHERE d.diet = cd.diet AND cd.idChild = ?");
+            ps2.setInt(1, child.getId());
+            ResultSet rs2 = ps2.executeQuery();
+            while (rs2.next()) {
+                child.getDiet().add(rs2.getString("diet"));
+            }
             return child;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
     }
 
-    public void editChild(int id) {
+    public void editChild(int id, String firstname, String lastname, String gender, String grade, Date birthdate) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("UPDATE ACVL_Children SET username=?, titre=? WHERE username=?");) {
-            // TODO
-            throw new Error("TODO");
+                PreparedStatement st = conn.prepareStatement("UPDATE ACVL_Children SET firstname=?, lastname=?, gender=?, grade=?, birthdate=? WHERE id=?");) {
+            st.setString(1, firstname);
+            st.setString(2, lastname);
+            st.setString(3, gender);
+            st.setString(4, grade);
+            st.setDate(5, birthdate);
+            st.setInt(6, id);
+            st.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
@@ -150,7 +160,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
         return result;
     }
-    
+
     public void addDiet(String diet) {
         try (
                 Connection conn = getConn();
@@ -161,7 +171,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
-    
+
     public List<Period> getUnregisterdPeriods(int idChild, int codeGrade) {
         List<Period> result = new ArrayList<Period>();
         try (
@@ -174,9 +184,10 @@ public class ChildDAO extends AbstractDataBaseDAO {
                     Activity a = new Activity(rs2.getInt("id"), rs2.getInt("capacity"), null,
                             rs2.getInt("codeGrades"), rs2.getInt("codeDays"), rs2.getInt("codeStrategy"), rs2.getString("title"), rs2.getString("description"), rs2.getString("animators"));
                     if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
-                        for (int day = 1; day <= 5 ; day++) {
-                            if (((a.getCodeDays() / (int) (Math.pow(2, day-1))) % 2) == 1)
+                        for (int day = 1; day <= 5; day++) {
+                            if (((a.getCodeDays() / (int) (Math.pow(2, day - 1))) % 2) == 1) {
                                 p.addActivitiy(day, a);
+                            }
                         }
                     }
                 }
@@ -187,5 +198,5 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
         return result;
     }
-    
+
 }

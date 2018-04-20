@@ -45,6 +45,9 @@ public class Family extends Controller {
                     case "view":
                         showMain(request, response, childDAO);
                         break;
+                    case "editChild":
+                        showEditChild(request, response, childDAO);
+                        break;
                     case "register":
                         showRegister(request, response);
                         break;
@@ -76,6 +79,16 @@ public class Family extends Controller {
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
 
+    private void showEditChild(HttpServletRequest request,
+            HttpServletResponse response,
+            ChildDAO childDAO) throws ServletException, IOException {
+        request.setAttribute("child", childDAO.getChild(Integer.valueOf(request.getParameter("child"))));
+        List<String> diets = childDAO.getDiets();
+        request.setAttribute("diets", diets);
+        request.setAttribute("view", "editChild");
+        request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
+    }
+
     private void showRegister(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         ChildDAO childDAO = new ChildDAO(ds);
@@ -85,7 +98,7 @@ public class Family extends Controller {
         request.setAttribute("view", "register");
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
-    
+
     private void showCalendar(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         ChildDAO childDAO = new ChildDAO(ds);
@@ -117,8 +130,8 @@ public class Family extends Controller {
                 case "remove":
                     actionRemove(request, response, childDAO);
                     break;
-                case "edit":
-                    actionEdit(request, response, childDAO);
+                case "editChild":
+                    actionEditChild(request, response, childDAO);
                     break;
                 case "register":
                     actionRegister(request, response);
@@ -175,11 +188,11 @@ public class Family extends Controller {
         PeriodDAO periodDAO = new PeriodDAO(ds);
         while (params.hasMoreElements()) {
             String param = params.nextElement();
-            if (param.startsWith("cantine"))
+            if (param.startsWith("cantine")) {
                 codeCantine += Integer.valueOf(request.getParameter(param));
-            else if (param.startsWith("garderie"))
+            } else if (param.startsWith("garderie")) {
                 codeGarderie += Integer.valueOf(request.getParameter(param));
-            else if (param.startsWith("activity")) {
+            } else if (param.startsWith("activity")) {
                 String[] args = param.split("-");
                 int activity = Integer.valueOf(args[1]);
                 int day = Integer.valueOf(args[2]);
@@ -190,7 +203,7 @@ public class Family extends Controller {
         ChildDAO childDAO = new ChildDAO(ds);
         showMain(request, response, childDAO);
     }
-    
+
     private void actionRemove(HttpServletRequest request,
             HttpServletResponse response,
             ChildDAO childDAO)
@@ -199,12 +212,23 @@ public class Family extends Controller {
         System.err.println("TODO");
     }
 
-    private void actionEdit(HttpServletRequest request,
+    private void actionEditChild(HttpServletRequest request,
             HttpServletResponse response,
             ChildDAO childDAO)
             throws IOException, ServletException {
-        // TODO
-        System.err.println("TODO");
+        try {
+        String firstname = request.getParameter("firstname");
+            String lastname = request.getParameter("lastname");
+            String gender = request.getParameter("gender");
+            String grade = request.getParameter("grade");
+            Date birthdate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthdate")).getTime());
+            childDAO.editChild(Integer.valueOf(request.getParameter("child")), firstname, lastname, gender, grade, birthdate);
+            showMain(request, response, childDAO);
+        } catch (ParseException e) {
+            request.setAttribute("title", "Parse exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
+            showError(request, response, e);
+        }
     }
 
 }

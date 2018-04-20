@@ -37,6 +37,7 @@
             </nav>
 
             <c:if test="${view eq 'home'}"><%@include file="family/home.jsp" %></c:if>
+            <c:if test="${view eq 'editChild'}"><%@include file="family/home.jsp" %></c:if>
             <c:if test="${view eq 'register'}"><%@include file="family/register.jsp" %></c:if>
             <c:if test="${view eq 'calendar'}"><%@include file="family/calendar.jsp" %></c:if>
 

@@ -71,7 +71,7 @@ public class Time extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String date = request.getParameter("date");
-        System.err.println(request);
+        System.err.println(request  );
         if (date != null) {
             try {
                 Time.date = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(date).getTime());
