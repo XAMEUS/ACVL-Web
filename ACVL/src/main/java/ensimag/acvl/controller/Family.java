@@ -3,6 +3,7 @@ package ensimag.acvl.controller;
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
+import ensimag.acvl.dao.RegistrationDAO;
 import ensimag.acvl.models.Child;
 import java.io.*;
 import java.sql.Date;
@@ -185,7 +186,7 @@ public class Family extends Controller {
         int codeCantine = 0;
         int codeGarderie = 0;
         Enumeration<String> params = request.getParameterNames();
-        PeriodDAO periodDAO = new PeriodDAO(ds);
+        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
         while (params.hasMoreElements()) {
             String param = params.nextElement();
             if (param.startsWith("cantine")) {
@@ -196,10 +197,10 @@ public class Family extends Controller {
                 String[] args = param.split("-");
                 int activity = Integer.valueOf(args[1]);
                 int day = Integer.valueOf(args[2]);
-                periodDAO.registerWish(child, period, activity, day, Integer.valueOf(request.getParameter(param)));
+                registrationDAO.registerWish(child, period, activity, day, Integer.valueOf(request.getParameter(param)));
             }
         }
-        periodDAO.registerChild(child, period, codeCantine, codeGarderie, request.getParameter("infos"));
+        registrationDAO.registerChild(child, period, codeCantine, codeGarderie, request.getParameter("infos"));
         ChildDAO childDAO = new ChildDAO(ds);
         showMain(request, response, childDAO);
     }

@@ -219,6 +219,17 @@ CREATE TABLE ACVL_Wishes (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
+CREATE TABLE ACVL_ActivitiesRegistrations (
+    child number(6),
+    period number(3),
+    activity number(6),
+    day number(1), -- 1, 2, 3, 4, 5
+    PRIMARY KEY (child, period, activity, day),
+    FOREIGN KEY (child) references ACVL_Children(id),
+    FOREIGN KEY (activity) references ACVL_Activities(id),
+    FOREIGN KEY (period) references ACVL_Periods(idPeriod)
+);
+
 
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;
