@@ -203,5 +203,23 @@ public class ChildDAO extends AbstractDataBaseDAO {
         }
         return result;
     }
+    
+    public List<Period> getPeriods(boolean moulinetted) {
+        List<Period> result = new ArrayList<Period>();
+        try (Connection conn = getConn();) {
+            ResultSet rs = null;
+            if (moulinetted)
+                rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Periods where idPeriod IN (select period from ACVL_moulinette)");
+            else
+                rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_moulinette)");
+            while (rs.next()) {
+                Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
+                result.add(p);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Databse error: " + e.getMessage(), e);
+        }
+        return result;
+    }
 
 }

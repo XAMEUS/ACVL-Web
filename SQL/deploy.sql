@@ -2,6 +2,26 @@ set serveroutput on format wrapped;
 
 COMMIT;
 BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_ActivitiesRegistrations';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Wishes');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_moulinette';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Wishes');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_Wishes';
     DBMS_OUTPUT.put_line('DROP TABLE ACVL_Wishes');
 EXCEPTION
@@ -69,6 +89,16 @@ WHEN OTHERS THEN
    IF SQLCODE != -942 THEN
       RAISE;
    END IF;
+END;
+/
+BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE ACVL_Whises_id_seq';
+    DBMS_OUTPUT.put_line('DROP SEQUENCE ACVL_Whises_id_seq');
+EXCEPTION
+  WHEN OTHERS THEN
+    IF SQLCODE != -2289 THEN
+      RAISE;
+    END IF;
 END;
 /
 BEGIN
@@ -207,15 +237,22 @@ CREATE TABLE ACVL_Registrations (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
+CREATE SEQUENCE ACVL_Whises_id_seq; -- pour pouvoir trier par premier arrivé premier servi...
 CREATE TABLE ACVL_Wishes (
+    id number(6) DEFAULT ACVL_Whises_id_seq.nextval PRIMARY KEY,
     child number(6),
     period number(3),
     activity number(6),
     rank int,
     day number(1), -- 1, 2, 3, 4, 5
-    PRIMARY KEY (child, period, activity, day),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (activity) references ACVL_Activities(id),
+    FOREIGN KEY (period) references ACVL_Periods(idPeriod)
+);
+
+CREATE TABLE ACVL_moulinette (
+    period number(3),
+    PRIMARY KEY (period),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
