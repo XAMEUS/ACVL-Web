@@ -74,6 +74,7 @@ public class Child {
     }
     
     public void setRegisteredPeriods(List<Period> registeredPeriods) {
+        System.out.println(this + " " + registeredPeriods);
         this.registeredPeriods = registeredPeriods;
     }
 
