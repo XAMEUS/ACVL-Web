@@ -71,6 +71,8 @@ public class Registration {
         result.add(0); // garderie 3
         for (Registration r : registrations) {
             if ((r.codeCantine/1) % 2 == 1) {
+                
+            }
         }
         return result;
     }
