@@ -132,6 +132,11 @@
             <small class="form-text text-muted">Capacité par groupe (1 groupe / animateur).</pre></small>
         </div>
         <div class="form-group">
+            <label for="activityPrice">Prix</label>
+            <input id="activityPrice" class="form-control" type="number" step="0.01" name="price" placeholder="">
+            <small class="form-text text-muted">prix de la scéance, ex: 9,50</pre></small>
+        </div>
+        <div class="form-group">
             <label for="activityStrategy">Stratégie</label>
             <select class="form-control" name="strategy">
                 <option value="1">Premier inscrit, premier servi</option>

@@ -221,6 +221,7 @@ CREATE TABLE ACVL_Activities (
     id number(6) DEFAULT ACVL_Activities_id_seq.nextval PRIMARY KEY,
     capacity int,
     codeGrades int, -- 1=PS, 2=MS, 4=GS, etc. 5=PS+GS
+    price float,
     codeDays int, -- idem
     codeStrategy int,
     title VARCHAR2(100),

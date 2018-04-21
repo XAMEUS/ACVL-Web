@@ -236,7 +236,7 @@ public class Family extends Controller {
                 codeCantine += Integer.valueOf(request.getParameter(param));
             } else if (param.startsWith("garderie")) {
                 codeGarderie += Integer.valueOf(request.getParameter(param));
-            } else if (param.startsWith("activity")) {
+            } else if (param.startsWith("activity") && !request.getParameter(param).equals("0")) {
                 String[] args = param.split("-");
                 int activity = Integer.valueOf(args[1]);
                 int day = Integer.valueOf(args[2]);
