@@ -85,7 +85,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
         <% } %>
     </li>
     <% } else {
-        if ((registration.getCodeGarderie() >> 1) % 2 == 1) {%>
+        if (i != 2 && (registration.getCodeGarderie() >> 1) % 2 == 1) {%>
     <li>Garderie du soir 1 : 15h45 - 16h30
         <% if (cancel.isCanceled(date, 1, 1)) { %>
         <span class="alert-secondary">Annulé</span>
@@ -95,7 +95,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
         <% } %>
     </li>
     <% }
-        if ((registration.getCodeGarderie() >> 2) % 2 == 1) {%>
+        if (i != 2 && (registration.getCodeGarderie() >> 2) % 2 == 1) {%>
     <li>Garderie du soir 2 : 16h30 - 17h15
         <% if (cancel.isCanceled(date, 1, 2)) { %>
         <span class="alert-secondary">Annulé</span>
@@ -105,7 +105,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
         <% } %>
     </li>
     <% }
-        if ((registration.getCodeGarderie() >> 3) % 2 == 1) {%>
+        if (i != 2 && (registration.getCodeGarderie() >> 3) % 2 == 1) {%>
     <li>Garderie du soir 3 : 17h15 - 18h00
         <% if (cancel.isCanceled(date, 1, 3)) { %>
         <span class="alert-secondary">Annulé</span>
