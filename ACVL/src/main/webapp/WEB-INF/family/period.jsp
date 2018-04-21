@@ -1,3 +1,4 @@
+<%@page import="ensimag.acvl.models.Cancel"%>
 <%@page import="java.time.DayOfWeek"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="java.util.Locale"%>
@@ -25,17 +26,23 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
 <% while (date.isBefore(limit) || date.equals(limit)) { %>
 <%
     int i = 0;
-    if (date.getDayOfWeek() == DayOfWeek.MONDAY)
+    if (date.getDayOfWeek() == DayOfWeek.MONDAY) {
         i = 0;
-    if (date.getDayOfWeek() == DayOfWeek.TUESDAY)
+    }
+    if (date.getDayOfWeek() == DayOfWeek.TUESDAY) {
         i = 1;
-    if (date.getDayOfWeek() == DayOfWeek.WEDNESDAY)
+    }
+    if (date.getDayOfWeek() == DayOfWeek.WEDNESDAY) {
         i = 2;
-    if (date.getDayOfWeek() == DayOfWeek.THURSDAY)
+    }
+    if (date.getDayOfWeek() == DayOfWeek.THURSDAY) {
         i = 3;
-    if (date.getDayOfWeek() == DayOfWeek.FRIDAY)
+    }
+    if (date.getDayOfWeek() == DayOfWeek.FRIDAY) {
         i = 4;
+    }
 %>
+<% Cancel cancel = (Cancel) request.getAttribute("cancel"); %>
 <% for (; i < 5 && !date.isAfter(limit); i++) {%>
 <span>Le <%=date.format(DateTimeFormatter.ofPattern("EEEE, dd MMMM, yyyy", Locale.FRENCH))%> :</span>
 <ul>
@@ -43,7 +50,15 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
     <li>Garderie Matin : 7h00 - 8h30</li>
         <% } %>
         <% if ((registration.getCodeCantine() / (i + 1)) % 2 == 1) {%>
-    <li>cantine</li>
+    <li>
+        cantine
+        <% if (cancel.isCanceled(date, 2, i)) { %>
+        <span class="alert-secondary">Annulé</span>
+        <% } else { %>
+        <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=2&code=<%=i%>" 
+           class="alert-warning" role="button">Annuler</a>
+           <% } %>
+    </li>
         <% } %>
         <%
             List<Activity> activities = ((Period) (request.getAttribute("period"))).getActivities().get(i);

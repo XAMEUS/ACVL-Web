@@ -1,5 +1,6 @@
 package ensimag.acvl.controller;
 
+import ensimag.acvl.dao.CancelDAO;
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
@@ -12,6 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -113,7 +116,7 @@ public class Family extends Controller {
         request.setAttribute("view", "calendar");
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
-    
+
     private void showPeriod(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("view", "period");
@@ -121,6 +124,21 @@ public class Family extends Controller {
         int child = Integer.valueOf(request.getParameter("child"));
         request.setAttribute("child", childDAO.getChild(Integer.valueOf(request.getParameter("child"))));
         int period = Integer.valueOf(request.getParameter("period"));
+
+        CancelDAO cancelDAO = new CancelDAO(ds);
+        if (request.getParameterMap().containsKey("cancelDate")) {
+            try {
+                int codeType = Integer.valueOf(request.getParameter("codeType"));
+                int code = Integer.valueOf(request.getParameter("code"));
+                Date day = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("cancelDate")).getTime());
+                cancelDAO.addCancel(child, period, codeType, code, day);
+            } catch (ParseException ex) {
+                request.setAttribute("title", "Parse exception");
+                request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + ex.getMessage());
+                showError(request, response, ex);
+            }
+        }
+
         PeriodDAO periodDAO = new PeriodDAO(ds);
         RegistrationDAO registrationDAO = new RegistrationDAO(ds);
         Period p = periodDAO.getPeriod(period);
@@ -130,6 +148,7 @@ public class Family extends Controller {
         p.addActivities(4, registrationDAO.getActivities(child, period, 3));
         p.addActivities(5, registrationDAO.getActivities(child, period, 4));
         request.setAttribute("period", p);
+        request.setAttribute("cancel", cancelDAO.getCancels(child, period));
         request.setAttribute("registration", registrationDAO.getRegistration(child, period));
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
@@ -242,7 +261,7 @@ public class Family extends Controller {
             ChildDAO childDAO)
             throws IOException, ServletException {
         try {
-        String firstname = request.getParameter("firstname");
+            String firstname = request.getParameter("firstname");
             String lastname = request.getParameter("lastname");
             String gender = request.getParameter("gender");
             String grade = request.getParameter("grade");

@@ -2,8 +2,18 @@ set serveroutput on format wrapped;
 
 COMMIT;
 BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE ACVL_Cancel';
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Cancel');
+EXCEPTION
+WHEN OTHERS THEN
+   IF SQLCODE != -942 THEN
+      RAISE;
+   END IF;
+END;
+/
+BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_ActivitiesRegistrations';
-    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Wishes');
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_ActivitiesRegistrations');
 EXCEPTION
 WHEN OTHERS THEN
    IF SQLCODE != -942 THEN
@@ -13,7 +23,7 @@ END;
 /
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE ACVL_moulinette';
-    DBMS_OUTPUT.put_line('DROP TABLE ACVL_Wishes');
+    DBMS_OUTPUT.put_line('DROP TABLE ACVL_moulinette');
 EXCEPTION
 WHEN OTHERS THEN
    IF SQLCODE != -942 THEN
@@ -267,6 +277,16 @@ CREATE TABLE ACVL_ActivitiesRegistrations (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
+CREATE TABLE ACVL_Cancel (
+    child number(6),
+    period number(3),
+    codeType int, -- 1: garderie, 2:cantine, 3:activité
+    code number(6), --gardire, cantine, activity
+    day Date, -- 1, 2, 3, 4, 5
+    PRIMARY KEY (child, period, codeType, code, day),
+    FOREIGN KEY (child) references ACVL_Children(id),
+    FOREIGN KEY (period) references ACVL_Periods(idPeriod)
+);
 
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;
@@ -280,5 +300,6 @@ select * from ACVL_Periods;
 Select * from ACVL_Activities;
 SELECT * FROM ACVL_Diet;
 Select * from ACVL_Wishes;
+Select * from ACVL_Cancel;
 
 --SELECT ACVL_Children_id_seq.next FROM dual;
