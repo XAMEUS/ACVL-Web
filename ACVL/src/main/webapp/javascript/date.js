@@ -11,16 +11,41 @@ function isDate(dateString) {
     return d.toISOString().slice(0,10) === dateString;
 }
 
-function checkBirthdate() {
-    var birthdate = document.getElementsByName("birthdate")[0];
-    if (isDate(birthdate.value)) {
+function checkDate(name) {
+    var element = document.getElementsByName(name)[0];s
+    if (isDate(element.value)) {
         return true;
     } else {
         var p = document.createElement("p");
-        p.setAttribute("id", "errMsg");
+        p.setAttribute("class", "error-message");
         var txt = document.createTextNode("Date invalide : Veuillez respecter le format YYYY-MM-DD.");
         p.appendChild(txt);
-        birthdate.parentElement.appendChild(p);
+        element.parentElement.appendChild(p);
+        return false;
+    }
+}
+
+function checkPeriod() {
+    var err = document.getElementsByClassName("error-message");
+    while(err[0]) {
+        err[0].parentNode.removeChild(err[0]);
+    }
+    
+    if (checkDate("limitDate") && checkDate("startDate") && checkDate("endDate")) {
+         var startDate = document.getElementsByName("startDate")[0];
+         var endDate = document.getElementsByName("endDate")[0];
+         if (startDate.value < endDate.value) {
+             return true;
+         } else {
+            var p = document.createElement("p");
+            p.setAttribute("class", "error-message");
+            var txt = document.createTextNode("Date invalide : la date de début doit être avoir lieu avant la date de fin.");
+            p.appendChild(txt);
+            startDate.parentElement.appendChild(p);
+            endDate.parentElement.appendChild(p.cloneNode(true));
+            return false;
+         }
+    } else {
         return false;
     }
 }

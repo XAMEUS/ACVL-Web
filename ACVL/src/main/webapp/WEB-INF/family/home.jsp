@@ -42,7 +42,7 @@
             <div class="col">
                 <div class="collapse multi-collapse" id="add">
                     <div class="card card-body">
-                        <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkBirthdate();">
+                        <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkDate('birthdate');">
                             <input type="hidden" name="action" value="create">
                             <div class="form-group">
                                 <label for="lastname">Nom</label>
@@ -114,7 +114,7 @@
             ${child}
             <hr>
         </div>
-            <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkBirthdate()">
+            <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkDate('birthdate')">
             <input type="hidden" name="action" value="editChild">
             <input type="hidden" name="child" value="${child.id}">
             <div class="form-group">
