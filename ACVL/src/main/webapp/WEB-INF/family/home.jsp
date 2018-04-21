@@ -42,7 +42,7 @@
             <div class="col">
                 <div class="collapse multi-collapse" id="add">
                     <div class="card card-body">
-                        <form method="post" action="family" accept-charset="UTF-8" id="add-form">
+                        <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkBirthdate();">
                             <input type="hidden" name="action" value="create">
                             <div class="form-group">
                                 <label for="lastname">Nom</label>
@@ -99,8 +99,7 @@
                                     </div>
                                 </c:forEach>
                             </div>
-                            <button class="btn btn-primary" type="submit" value="add"
-                                    onsubmit="return isDate(document.add-form.birthdate">Ajouter</button>
+                            <button class="btn btn-primary" type="submit" value="add">Ajouter</button>
                         </form>
 
                     </div>
@@ -115,7 +114,7 @@
             ${child}
             <hr>
         </div>
-        <form method="post" action="family" accept-charset="UTF-8" id="edit-form">
+            <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkBirthdate()">
             <input type="hidden" name="action" value="editChild">
             <input type="hidden" name="child" value="${child.id}">
             <div class="form-group">
@@ -181,8 +180,7 @@
                     </div>
                 </c:forEach>
             </div>
-            <button class="btn btn-primary" type="submit" value="add"
-                    onsubmit="return false;">Éditer</button>
+                <button class="btn btn-primary" type="submit" value="add">Éditer</button>
         </form>
 
 
