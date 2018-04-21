@@ -205,7 +205,7 @@ public class Family extends Controller {
             String lastname = request.getParameter("lastname");
             String gender = request.getParameter("gender");
             String grade = request.getParameter("grade");
-            Date birthdate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthdate")).getTime());
+            Date birthdate = new Date(new SimpleDateFormat("yyyy-mm-dd").parse(request.getParameter("birthdate")).getTime());
             int idChild = childDAO.createChild(firstname, lastname, gender, grade, birthdate);
             childDAO.setParent((String) request.getSession().getAttribute("username"), idChild);
             for (int i = 1; i <= childDAO.getDiets().size(); i++) {
@@ -265,10 +265,19 @@ public class Family extends Controller {
             String lastname = request.getParameter("lastname");
             String gender = request.getParameter("gender");
             String grade = request.getParameter("grade");
-            Date birthdate = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("birthdate")).getTime());
-            childDAO.editChild(Integer.valueOf(request.getParameter("child")), firstname, lastname, gender, grade, birthdate);
+            Date birthdate = new Date(new SimpleDateFormat("yyyy-mm-dd").parse(request.getParameter("birthdate")).getTime());
+            int idChild = Integer.valueOf(request.getParameter("child"));
+            childDAO.editChild(idChild, firstname, lastname, gender, grade, birthdate);
+            childDAO.removeChildDiet(idChild);
+            for (int i = 1; i <= childDAO.getDiets().size(); i++) {
+                String diet = request.getParameter("diet" + i);
+                if (diet != null) {
+                    childDAO.setDiet(idChild, diet);
+                }
+            }
             showMain(request, response, childDAO);
         } catch (ParseException e) {
+            System.out.println("ensimag.acvl.controller.Family.actionEditChild()");
             request.setAttribute("title", "Parse exception");
             request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
             showError(request, response, e);

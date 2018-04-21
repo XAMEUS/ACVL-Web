@@ -101,6 +101,17 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
+    
+    public void removeChildDiet(int idChild) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("DELETE FROM ACVL_ChildDiet WHERE idChild=?");) {
+            st.setInt(1, idChild);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
 
     public Child getChild(int id) {
         try (

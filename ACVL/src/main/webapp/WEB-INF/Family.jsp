@@ -6,8 +6,8 @@
         <meta charset="UTF-8"/>
         <title>Ma famille</title>
         <%@include file="style/style.jsp" %>
-        <link href="homepage.css" rel="stylesheet">
-        <link href="navbar.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/style/homepage.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/style/navbar.css" rel="stylesheet">
     </head>
     <body>
 
