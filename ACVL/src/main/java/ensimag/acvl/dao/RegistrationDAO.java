@@ -110,6 +110,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Wishes (child, period, activity, rank, day) VALUES (?, ?, ?, ?, ?)");) {
             st.setInt(1, child);
+            System.out.println("ensimag.acvl.dao.RegistrationDAO.registerWish()" + child + ":" + activity + ":" + day);
             st.setInt(2, period);
             st.setInt(3, activity);
             st.setInt(4, rank);
