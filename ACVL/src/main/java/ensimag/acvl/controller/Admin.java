@@ -6,6 +6,7 @@ import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
 import ensimag.acvl.dao.RegistrationDAO;
 import ensimag.acvl.dao.UserDAO;
+import ensimag.acvl.models.Child;
 import ensimag.acvl.models.Period;
 import java.io.*;
 import java.sql.Date;
@@ -189,7 +190,12 @@ public class Admin extends Controller {
         request.setAttribute("view", "calendar");
         String p = request.getParameter("period");
         if (p != null) {
+            RegistrationDAO registrationDAO = new RegistrationDAO(ds);
             Period period = periodDAO.getPeriod(Integer.valueOf(p));
+            List<ensimag.acvl.models.Registration> registrations = registrationDAO.getRegistrations(period.getId());
+            List<Child> inscrits = new ArrayList<Child>();
+            request.setAttribute("stats", registrationDAO.recap(registrations, inscrits));
+            request.setAttribute("inscrits", inscrits);
             request.setAttribute("period", period);
             request.setAttribute("activities", activityDAO.getActivitiesByPeriod(period.getId()));
         }

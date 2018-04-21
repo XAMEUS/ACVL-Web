@@ -1,6 +1,7 @@
 package ensimag.acvl.dao;
 
 import ensimag.acvl.models.Activity;
+import ensimag.acvl.models.Child;
 import ensimag.acvl.models.Period;
 import ensimag.acvl.models.Registration;
 import java.sql.*;
@@ -154,7 +155,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             st.setInt(2, period);
             ResultSet rs = st.executeQuery();
             rs.next();
-            Registration r = new Registration(rs.getInt("codeCantine"), rs.getInt("codeGarderie"), rs.getString("infos"));
+            Registration r = new Registration(rs.getInt("child"), rs.getInt("period"), rs.getInt("codeCantine"), rs.getInt("codeGarderie"), rs.getString("infos"));
             return r;
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
@@ -169,7 +170,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             st.setInt(1, period);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Registration r = new Registration(rs.getInt("codeCantine"), rs.getInt("codeGarderie"), rs.getString("infos"));
+                Registration r = new Registration(rs.getInt("child"), rs.getInt("period"), rs.getInt("codeCantine"), rs.getInt("codeGarderie"), rs.getString("infos"));
                 registrations.add(r);
             }
         } catch (SQLException e) {
@@ -245,6 +246,62 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
         return map;
+    }
+
+    public List<Integer> recap(List<Registration> registrations, List<Child> childs) {
+        List<Integer> result = new ArrayList<>();
+        int cantineLundi = 0;
+        int cantineMardi = 0;
+        int cantineMercredi = 0;
+        int cantineJeudi = 0;
+        int cantineVendredi = 0;
+        int garderieMatin = 0;
+        int garderie1 = 0;
+        int garderie2 = 0;
+        int garderie3 = 0;
+        ChildDAO childDAO = new ChildDAO(dataSource);
+        for (Registration r : registrations) {
+            childs.add(childDAO.getChild(r.getChild()));
+            if (r.getCodeCantine() % 2 == 1) {
+                cantineLundi++;
+            }
+            if ((r.getCodeCantine() >> 1) % 2 == 1) {
+                cantineMardi++;
+            }
+            if ((r.getCodeCantine() >> 2) % 2 == 1) {
+                cantineMercredi++;
+            }
+            if ((r.getCodeCantine() >> 3) % 2 == 1) {
+                cantineJeudi++;
+            }
+            if ((r.getCodeCantine() >> 4) % 2 == 1) {
+                cantineVendredi++;
+            }
+
+            // TODO remove if activity
+            if ((r.getCodeGarderie()) % 2 == 1) {
+                garderieMatin++;
+            }
+            if ((r.getCodeGarderie() >> 1) % 2 == 1) {
+                garderie1++;
+            }
+            if ((r.getCodeGarderie() >> 2) % 2 == 1) {
+                garderie2++;
+            }
+            if ((r.getCodeGarderie() >> 2) % 2 == 1) {
+                garderie3++;
+            }
+        }
+        result.add(cantineLundi);
+        result.add(cantineMardi);
+        result.add(cantineMercredi);
+        result.add(cantineJeudi);
+        result.add(cantineVendredi);
+        result.add(garderieMatin);
+        result.add(garderie1);
+        result.add(garderie2);
+        result.add(garderie3);
+        return result;
     }
 
 }
