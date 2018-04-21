@@ -36,15 +36,17 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
         @Override
         public String toString() {
-            return getClass().getSimpleName()+"{" + "date=" + date + ", child=" + child + ", activity=" + activity + ", rank=" + rank + ", birthdate=" + birthdate + ", value=" + value + '}';
+            return getClass().getSimpleName() + "{" + "date=" + date + ", child=" + child + ", activity=" + activity + ", rank=" + rank + ", birthdate=" + birthdate + ", value=" + value + '}';
         }
 
         @Override
         public int compareTo(Wish o) {
-            if (rank < o.rank)
+            if (rank < o.rank) {
                 return -1;
-            if (rank > o.rank)
+            }
+            if (rank > o.rank) {
                 return 1;
+            }
             return Double.compare(value, o.value);
         }
     }
@@ -57,10 +59,12 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
         @Override
         public int compareTo(Wish o) {
-            if (rank < o.rank)
+            if (rank < o.rank) {
                 return -1;
-            if (rank > o.rank)
+            }
+            if (rank > o.rank) {
                 return 1;
+            }
             if (birthdate.before(o.birthdate)) {
                 return -1;
             } else if (birthdate.after(o.birthdate)) {
@@ -78,10 +82,12 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
         @Override
         public int compareTo(Wish o) {
-            if (rank < o.rank)
+            if (rank < o.rank) {
                 return -1;
-            if (rank > o.rank)
+            }
+            if (rank > o.rank) {
                 return 1;
+            }
             return date - o.date;
         }
     }
@@ -120,7 +126,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
-    
+
     public List<Activity> getActivities(int child, int period, int day) {
         List<Activity> activities = new ArrayList<>();
         try (
@@ -139,9 +145,8 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         }
         return activities;
     }
-    
+
     public Registration getRegistration(int child, int period) {
-        List<Activity> activities = new ArrayList<>();
         try (
                 Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE child = ? AND period = ?");) {
@@ -154,6 +159,23 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
+    }
+
+    public List<Registration> getRegistrations(int period) {
+        List<Registration> registrations = new ArrayList<>();
+        try (
+                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE period = ?");) {
+            st.setInt(1, period);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Registration r = new Registration(rs.getInt("codeCantine"), rs.getInt("codeGarderie"), rs.getString("infos"));
+                registrations.add(r);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+        return registrations;
     }
 
     public List<HashMap<Integer, HashMap<Integer, PriorityQueue<Wish>>>> moulinette() {
@@ -215,8 +237,9 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             System.out.println(map);
             while (true) {
                 // TODO tant qu'on arrive à faire poper des trucs, et qu'on respecte les règles.
-                if (true)
+                if (true) {
                     break;
+                }
             }
         } catch (SQLException e) {
             throw new DAOException("Database error " + e.getMessage(), e);

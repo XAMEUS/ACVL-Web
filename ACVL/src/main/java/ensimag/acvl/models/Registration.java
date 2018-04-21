@@ -1,7 +1,10 @@
 package ensimag.acvl.models;
+
 ;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class Registration {
 
@@ -25,7 +28,7 @@ public class Registration {
     public Period getPeriod() {
         return period;
     }
-    
+
     public void setChild(Child child) {
         this.child = child;
     }
@@ -54,5 +57,22 @@ public class Registration {
     public String toString() {
         return "Registration{" + "child=" + child + ", period=" + period + ", codeCantine=" + codeCantine + ", codeGarderie=" + codeGarderie + ", infos=" + infos + ", activities=" + activities + '}';
     }
-    
+
+    public List<Integer> recap(List<Registration> registrations) {
+        List<Integer> result = new ArrayList<>();
+        result.add(0); // cantine lundi
+        result.add(0);
+        result.add(0);
+        result.add(0);
+        result.add(0);
+        result.add(0); // garderie matin
+        result.add(0); // garderie 1
+        result.add(0); // garderie 2
+        result.add(0); // garderie 3
+        for (Registration r : registrations) {
+            if ((r.codeCantine/1) % 2 == 1) {
+        }
+        return result;
+    }
+
 }

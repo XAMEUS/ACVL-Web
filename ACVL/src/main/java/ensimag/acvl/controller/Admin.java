@@ -183,9 +183,16 @@ public class Admin extends Controller {
     private void viewCalendar(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         PeriodDAO periodDAO = new PeriodDAO(ds);
+        ActivityDAO activityDAO = new ActivityDAO(ds);
         List<Period> periods = periodDAO.getPeriods();
         request.setAttribute("periods", periods);
         request.setAttribute("view", "calendar");
+        String p = request.getParameter("period");
+        if (p != null) {
+            Period period = periodDAO.getPeriod(Integer.valueOf(p));
+            request.setAttribute("period", period);
+            request.setAttribute("activities", activityDAO.getActivitiesByPeriod(period.getId()));
+        }
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
 
