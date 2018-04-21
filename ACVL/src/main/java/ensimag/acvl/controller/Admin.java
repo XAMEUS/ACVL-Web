@@ -135,6 +135,7 @@ public class Admin extends Controller {
                 }
                 activityDAO.createActivity(Integer.valueOf(request.getParameter("capacity")),
                         periods,
+                        Float.valueOf(request.getParameter("price")),
                         codeGrades,
                         codeDays,
                         Integer.valueOf(request.getParameter("strategy")),

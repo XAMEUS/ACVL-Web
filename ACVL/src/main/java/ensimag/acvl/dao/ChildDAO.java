@@ -186,7 +186,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
                 Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
                 ResultSet rs2 = conn.createStatement().executeQuery("SELECT * FROM ACVL_Activities a, ACVL_ActivityPeriods p WHERE p.activity = a.id AND p.period = " + p.getId());
                 while (rs2.next()) {
-                    Activity a = new Activity(rs2.getInt("id"), rs2.getInt("capacity"), null,
+                    Activity a = new Activity(rs2.getInt("id"), rs2.getInt("capacity"), null, rs2.getFloat("price"),
                             rs2.getInt("codeGrades"), rs2.getInt("codeDays"), rs2.getInt("codeStrategy"), rs2.getString("title"), rs2.getString("description"), rs2.getString("animators"));
                     if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
                         for (int day = 1; day <= 5; day++) {

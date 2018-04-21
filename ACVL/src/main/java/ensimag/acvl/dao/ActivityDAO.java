@@ -21,7 +21,7 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Activities");
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
             while (rs.next()) {
-                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
+                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")), rs.getFloat("price"),
                         rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
                 result.add(a);
             }
@@ -39,7 +39,7 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Activities a, ACVL_ActivityPeriods p WHERE a.id = p.activity AND p.period = " + id);
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
             while (rs.next()) {
-                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
+                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")), rs.getFloat("price"),
                         rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
                 result.add(a);
             }
@@ -49,10 +49,10 @@ public class ActivityDAO extends AbstractDataBaseDAO {
         return result;
     }
 
-    public void createActivity(int capacity, List<Integer> periods, int codeGrades, int codeDays, int codeStrategy, String title, String description, String animators) {
+    public void createActivity(int capacity, List<Integer> periods, float price, int codeGrades, int codeDays, int codeStrategy, String title, String description, String animators) {
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Activities (capacity, codeGrades, codeDays, codeStrategy, title, description, animators) VALUES (?, ?, ?, ?, ?, ?, ?)");) {
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Activities (capacity, codeGrades, codeDays, codeStrategy, title, description, animators, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");) {
             st.setInt(1, capacity);
             st.setInt(2, codeGrades);
             st.setInt(3, codeDays);
@@ -60,6 +60,7 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             st.setString(5, title);
             st.setString(6, description);
             st.setString(7, animators);
+            st.setFloat(8, price);
             st.executeUpdate();
 
             ResultSet rs = conn.createStatement().executeQuery("SELECT ACVL_Activities_id_seq.currval FROM dual");
@@ -84,9 +85,9 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
-            Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
-                    rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
-            return a;
+
+                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")), rs.getFloat("price"),
+                        rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));            return a;
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
@@ -100,9 +101,9 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery("SELECT * FROM Activity a, ACVL_ActivityPeriods p WHERE p.activity = a.id AND p.period = " + period);
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
             while (rs.next()) {
-                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")),
-                        rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
-                if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
+
+                Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")), rs.getFloat("price"),
+                        rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));                if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
                     result.add(a);
                 }
             }

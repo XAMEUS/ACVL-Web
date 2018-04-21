@@ -11,6 +11,7 @@ public class Activity {
     private final int id;
     private final int capacity;
     private final List<Period> periods;
+    private final float price;
     private final int codeGrades;
     private final int codeDays;
     private final int codeStrategy;
@@ -18,10 +19,11 @@ public class Activity {
     private final String description;
     private final String animators;
 
-    public Activity(int id, int capacity, List<Period> periods, int codeGrades, int codeDays, int codeStrategy, String title, String description, String animators) {
+    public Activity(int id, int capacity, List<Period> periods, float price, int codeGrades, int codeDays, int codeStrategy, String title, String description, String animators) {
         this.id = id;
         this.capacity = capacity;
         this.periods = periods;
+        this.price = price;
         this.codeGrades = codeGrades;
         this.codeDays = codeDays;
         this.codeStrategy = codeStrategy;
@@ -42,6 +44,10 @@ public class Activity {
         return periods;
     }
 
+    public int getPrice() {
+        return capacity;
+    }
+
     public int getCodeGrades() {
         return codeGrades;
     }
@@ -49,7 +55,7 @@ public class Activity {
     public int getCodeDays() {
         return codeDays;
     }
-    
+
     public int getCodeStrategy() {
         return codeStrategy;
     }
@@ -68,8 +74,7 @@ public class Activity {
 
     @Override
     public String toString() {
-        return "Activity{" + "id=" + id + ", capacity=" + capacity + ", periods=" + periods + ", codeGrades=" + codeGrades + ", codeDays=" + codeDays + ", codeStrategy=" + codeStrategy + ", title=" + title + ", description=" + description + ", animators=" + animators + '}';
+        return "Activity{" + "id=" + id + ", capacity=" + capacity + ", periods=" + periods + ", price=" + price + ", codeGrades=" + codeGrades + ", codeDays=" + codeDays + ", codeStrategy=" + codeStrategy + ", title=" + title + ", description=" + description + ", animators=" + animators + '}';
     }
-
 
 }
