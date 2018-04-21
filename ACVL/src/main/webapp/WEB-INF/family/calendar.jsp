@@ -33,7 +33,7 @@
                 Période courrante.
             </div>
         <% } %>
-        <p>Cliquez <a href="<%= request.getContextPath()%>/admin?view=period&period=">ici</a> pour voir les détails de l'inscription. (ça n'est pas encore fait !)</p>
+        <p>Cliquez <a href="<%= request.getContextPath()%>/family?view=period&period=${registeredPeriod.id}&child=${child.id}">ici</a> pour voir les détails de l'inscription. (ça n'est pas encore fait !)</p>
     </c:forEach>
     <% }%>
     <hr>

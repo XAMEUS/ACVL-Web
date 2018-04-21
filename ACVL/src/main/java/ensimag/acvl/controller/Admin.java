@@ -4,6 +4,7 @@ import ensimag.acvl.dao.ActivityDAO;
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
+import ensimag.acvl.dao.RegistrationDAO;
 import ensimag.acvl.dao.UserDAO;
 import ensimag.acvl.models.Period;
 import java.io.*;
@@ -40,6 +41,10 @@ public class Admin extends Controller {
                 viewActivities(request, response);
             } else if (view.equals("settings")) {
                 viewSettings(request, response);
+            } else if (view.equals("moulinette")) {
+                RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+                request.setAttribute("map", registrationDAO.moulinette());
+                request.getRequestDispatcher("/WEB-INF/admin/moulinette.jsp").forward(request, response);
             } else {
                 request.setAttribute("title", "Parameter Error");
                 request.setAttribute("message", "Mauvais paramètre view=" + view);
@@ -80,32 +85,45 @@ public class Admin extends Controller {
                 int codeGrades = 0;
                 Set<String> parameters = request.getParameterMap().keySet();
                 for (String p : parameters) {
-                    if (p.equals("Lundi"))
+                    if (p.equals("Lundi")) {
                         codeDays += 1;
-                    if (p.equals("Mardi"))
+                    }
+                    if (p.equals("Mardi")) {
                         codeDays += 2;
-                    if (p.equals("Mercredi"))
+                    }
+                    if (p.equals("Mercredi")) {
                         codeDays += 4;
-                    if (p.equals("Jeudi"))
+                    }
+                    if (p.equals("Jeudi")) {
                         codeDays += 8;
-                    if (p.equals("Vendredi"))
+                    }
+                    if (p.equals("Vendredi")) {
                         codeDays += 16;
-                    if (p.equals("PS"))
+                    }
+                    if (p.equals("PS")) {
                         codeGrades += 1;
-                    if (p.equals("MS"))
+                    }
+                    if (p.equals("MS")) {
                         codeGrades += 2;
-                    if (p.equals("GS"))
+                    }
+                    if (p.equals("GS")) {
                         codeGrades += 4;
-                    if (p.equals("CP"))
+                    }
+                    if (p.equals("CP")) {
                         codeGrades += 8;
-                    if (p.equals("CE1"))
+                    }
+                    if (p.equals("CE1")) {
                         codeGrades += 16;
-                    if (p.equals("CE2"))
+                    }
+                    if (p.equals("CE2")) {
                         codeGrades += 32;
-                    if (p.equals("CM1"))
+                    }
+                    if (p.equals("CM1")) {
                         codeGrades += 64;
-                    if (p.equals("CM2"))
+                    }
+                    if (p.equals("CM2")) {
                         codeGrades += 128;
+                    }
                 }
                 List<Integer> periods = new ArrayList<>();
                 PeriodDAO periodDAO = new PeriodDAO(ds);

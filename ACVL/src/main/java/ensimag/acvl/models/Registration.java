@@ -49,4 +49,10 @@ public class Registration {
     public List<Activity> getActivities() {
         return activities;
     }
+
+    @Override
+    public String toString() {
+        return "Registration{" + "child=" + child + ", period=" + period + ", codeCantine=" + codeCantine + ", codeGarderie=" + codeGarderie + ", infos=" + infos + ", activities=" + activities + '}';
+    }
+    
 }
