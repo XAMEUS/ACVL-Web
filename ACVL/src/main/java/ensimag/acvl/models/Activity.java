@@ -44,8 +44,8 @@ public class Activity {
         return periods;
     }
 
-    public int getPrice() {
-        return capacity;
+    public float getPrice() {
+        return price;
     }
 
     public int getCodeGrades() {
@@ -75,6 +75,18 @@ public class Activity {
     @Override
     public String toString() {
         return "Activity{" + "id=" + id + ", capacity=" + capacity + ", periods=" + periods + ", price=" + price + ", codeGrades=" + codeGrades + ", codeDays=" + codeDays + ", codeStrategy=" + codeStrategy + ", title=" + title + ", description=" + description + ", animators=" + animators + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Activity)
+            return id == ((Activity) obj).id;
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
 }

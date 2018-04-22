@@ -62,6 +62,9 @@ public class Family extends Controller {
                     case "period":
                         showPeriod(request, response);
                         break;
+                    case "facture":
+                        showFacture(request, response);
+                        break;
                     default:
                         showMain(request, response, childDAO);
                         break;
@@ -151,6 +154,42 @@ public class Family extends Controller {
         request.setAttribute("cancel", cancelDAO.getCancels(child, period));
         request.setAttribute("registration", registrationDAO.getRegistration(child, period));
         request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
+    }
+    
+    private void showFacture(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("view", "facture");
+        ChildDAO childDAO = new ChildDAO(ds);
+        int child = Integer.valueOf(request.getParameter("child"));
+        request.setAttribute("child", childDAO.getChild(Integer.valueOf(request.getParameter("child"))));
+        int period = Integer.valueOf(request.getParameter("period"));
+
+        CancelDAO cancelDAO = new CancelDAO(ds);
+        if (request.getParameterMap().containsKey("cancelDate")) {
+            try {
+                int codeType = Integer.valueOf(request.getParameter("codeType"));
+                int code = Integer.valueOf(request.getParameter("code"));
+                Date day = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("cancelDate")).getTime());
+                cancelDAO.addCancel(child, period, codeType, code, day);
+            } catch (ParseException ex) {
+                request.setAttribute("title", "Parse exception");
+                request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + ex.getMessage());
+                showError(request, response, ex);
+            }
+        }
+
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+        Period p = periodDAO.getPeriod(period);
+        p.addActivities(1, registrationDAO.getActivities(child, period, 0));
+        p.addActivities(2, registrationDAO.getActivities(child, period, 1));
+        p.addActivities(3, registrationDAO.getActivities(child, period, 2));
+        p.addActivities(4, registrationDAO.getActivities(child, period, 3));
+        p.addActivities(5, registrationDAO.getActivities(child, period, 4));
+        request.setAttribute("period", p);
+        request.setAttribute("cancel", cancelDAO.getCancels(child, period));
+        request.setAttribute("registration", registrationDAO.getRegistration(child, period));
+        request.getRequestDispatcher("/WEB-INF/family/facture.jsp").forward(request, response);
     }
 
     public void doPost(HttpServletRequest request,

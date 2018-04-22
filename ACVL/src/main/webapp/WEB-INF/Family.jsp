@@ -40,6 +40,7 @@
             <c:if test="${view eq 'register'}"><%@include file="family/register.jsp" %></c:if>
             <c:if test="${view eq 'calendar'}"><%@include file="family/calendar.jsp" %></c:if>
             <c:if test="${view eq 'period'}"><%@include file="family/period.jsp" %></c:if>
+            <c:if test="${view eq 'facture'}"><%@include file="family/facture.jsp" %></c:if>
             
             </main>
         </body>
