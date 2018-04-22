@@ -7,6 +7,11 @@
         <title>Ma famille</title>
         <%@include file="style/style.jsp" %>
         <link href="${pageContext.request.contextPath}/style/navbar.css" rel="stylesheet">
+        <style>
+            .error-message {
+                color: red;
+            }
+        </style>
     </head>
     <body>
 

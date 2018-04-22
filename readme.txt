@@ -1,8 +1,3 @@
-3.un fichier readme.txt indiquant comment déployer votre
-application pour qu’elle fonctionne. En principe les manipulations
-doivent se limiter à modifier des noms d’utilisateurs et des mots de
-passe dans des fichiers de configuration à préciser, exécuter le script install_bd.sql puis compiler et déployer via maven ou netbeans.
-
 Installation de notre application
 =================================
 
@@ -12,7 +7,7 @@ Installation de notre application
 	Une installation de Netbeans EE 8.2 ou plus fonctionnelle, avec l'option serveur Tomcat cochée lors de l'installation
 
 	NB: Le SGBD Oracle peut-être remplacé par un autre SBGD ayant un pilote JDBC fonctionnel. Cependant nous ne pourrions pas vous apporter une garantie de résultat et nous vous déconseillons cette option, à moins que vous soyez certain de ce que vous faîtes et en accepter les conséquences.
-	NB: Netbeans est ici utilisé par commodité. Bien qu'un administrateur expert peut utiliser directement Maven ou un autre IDE, nous utiliserons Netbeans pour en raison de sa facilité d'installation.
+	NB: Netbeans est ici utilisé par commodité. Bien qu'un administrateur expert peut utiliser directement Maven ou un autre IDE, nous utiliserons Netbeans en raison de sa facilité d'installation.
 
 1) Configuration de la base de données
 	Exécutez le script SQL/deploy.sql sur la base de données du serveur
@@ -26,7 +21,7 @@ Installation de notre application
 			url
 
 3) Configuration de Netbeans
-Ces étapes ne sont à réaliser que si votre installation de Netbeans n'est pas complète.
+Ces étapes ne sont à réaliser que si votre installation de Netbeans n'est pas reliée à votre base de données.
 	3.1) Oracle JDBC
 		Vous aurez besoin de télécharger le pilote JBDC d'Oracle à l'adresse suivante: http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html
 

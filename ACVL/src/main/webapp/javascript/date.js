@@ -12,7 +12,7 @@ function isDate(dateString) {
 }
 
 function checkDate(name) {
-    var element = document.getElementsByName(name)[0];s
+    var element = document.getElementsByName(name)[0];
     if (isDate(element.value)) {
         return true;
     } else {

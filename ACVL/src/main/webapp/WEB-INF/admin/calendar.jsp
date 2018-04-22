@@ -64,7 +64,7 @@
 <% } else {%>
 <h2>Détail de la période : </h2>
 
-<h3>Inscritpions</h3>
+<h3>Inscriptions</h3>
 <p>Nombre d'inscrits : <%= inscrits.size()%></p>
 
 <table class="table table-striped table-sm">
