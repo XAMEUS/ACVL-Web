@@ -85,7 +85,6 @@ public class ActivityDAO extends AbstractDataBaseDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
             PeriodDAO periodDAO = new PeriodDAO(dataSource);
-
             Activity a = new Activity(rs.getInt("id"), rs.getInt("capacity"), periodDAO.getActivityPeriods(rs.getInt("id")), rs.getFloat("price"),
                     rs.getInt("codeGrades"), rs.getInt("codeDays"), rs.getInt("codeStrategy"), rs.getString("title"), rs.getString("description"), rs.getString("animators"));
             return a;

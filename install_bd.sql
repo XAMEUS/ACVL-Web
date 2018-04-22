@@ -175,7 +175,8 @@ END;
 
 CREATE TABLE ACVL_Users (
     username VARCHAR2(32) NOT NULL PRIMARY KEY,
-    passwd RAW(32) NOT NULL
+    passwd RAW(32) NOT NULL,
+	address VARCHAR(255)
 );
 
 CREATE SEQUENCE ACVL_Children_id_seq;
@@ -191,6 +192,7 @@ CREATE TABLE ACVL_Children (
 CREATE TABLE ACVL_Family (
     username VARCHAR2(32),
     idChild number(6),
+	address varchar(255),
     PRIMARY KEY (username, idChild),
     FOREIGN KEY (username) references ACVL_Users(username),
     FOREIGN KEY (idChild) references ACVL_Children(id)
@@ -271,7 +273,7 @@ CREATE TABLE ACVL_ActivitiesRegistrations (
     child number(6),
     period number(3),
     activity number(6),
-    day number(1), -- 1, 2, 3, 4, 5
+    day number(1), -- 0, 1, 2, 3, 4
     PRIMARY KEY (child, period, activity, day),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (activity) references ACVL_Activities(id),
@@ -289,6 +291,7 @@ CREATE TABLE ACVL_Cancel (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
+select * from ACVL_Users;
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;
 SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = 'maxime';
@@ -302,5 +305,6 @@ Select * from ACVL_Activities;
 SELECT * FROM ACVL_Diet;
 Select * from ACVL_Wishes;
 Select * from ACVL_Cancel;
+Select * from ACVL_ActivitiesRegistrations;
 
 --SELECT ACVL_Children_id_seq.next FROM dual;

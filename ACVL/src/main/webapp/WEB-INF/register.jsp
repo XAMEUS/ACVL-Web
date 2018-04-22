@@ -37,6 +37,13 @@
                            oninvalid="this.setCustomValidity('Ce champ est requis.')"
                            oninput="setCustomValidity('')">
                 </div>
+                <div class="form-group">
+                    <label for="password">Coordonnées</label>
+                    <input class="form-control" type="text" name="address"
+                           placeholder="Coordonéees" required=""
+                           oninvalid="this.setCustomValidity('Ce champ est requis.')"
+                           oninput="setCustomValidity('')">
+                </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block" value="create">Créer mon compte</button>
             </form>
 

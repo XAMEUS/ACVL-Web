@@ -27,7 +27,7 @@ public class UserDAO extends AbstractDataBaseDAO {
                 Statement st = conn.createStatement();) {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Users");
             while (rs.next()) {
-                User user = new User(rs.getString("username"), rs.getBytes("passwd"));
+                User user = new User(rs.getString("username"), rs.getBytes("passwd"), rs.getString("address"));
                 result.add(user);
             }
         } catch (SQLException e) {
@@ -40,16 +40,17 @@ public class UserDAO extends AbstractDataBaseDAO {
      * @param name username
      * @param password user password
      */
-    public void createUser(String name, String password) {
+    public void createUser(String name, String password, String address) {
         try (
             Connection conn = getConn();
-            PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd) VALUES (?, ?)");) {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd, address) VALUES (?, ?, ?)");) {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), name.getBytes(), 4, 256);
             SecretKey key = skf.generateSecret( spec );
             byte[] pass = key.getEncoded();
             st.setString(1, name);
-            st.setBytes(2, pass);
+            st.setBytes(2, pass);;
+            st.setString(3, address);
             st.executeUpdate();
         } catch (InvalidKeySpecException e) {
             throw new DAOException("SecretKeyFactory key error " + e.getMessage(), e);
@@ -64,7 +65,7 @@ public class UserDAO extends AbstractDataBaseDAO {
         User user = getUser(name);
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), name.getBytes(), 4, 256);
             SecretKey key = skf.generateSecret( spec );
             byte[] pass = key.getEncoded();
             return user.passwordMatch(pass);
@@ -82,7 +83,7 @@ public class UserDAO extends AbstractDataBaseDAO {
             st.setString(1, username);
             ResultSet rs = st.executeQuery();
             rs.next();
-            return new User(rs.getString("username"), rs.getBytes("passwd"));
+            return new User(rs.getString("username"), rs.getBytes("passwd"), rs.getString("address"));
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }

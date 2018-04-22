@@ -5,6 +5,7 @@ import ensimag.acvl.models.Child;
 import ensimag.acvl.models.Period;
 import ensimag.acvl.models.Registration;
 import java.sql.*;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +20,18 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         protected int child;
         protected int activity;
         protected int rank;
+        protected int rank2;
+        protected int day;
         protected Date birthdate;
         protected double value = Math.random();
 
-        public Wish(int date, int child, int activity, int rank, Date birthdate) {
+        public Wish(int date, int child, int activity, int day, int rank, int rank2, Date birthdate) {
             this.date = date;
             this.child = child;
             this.activity = activity;
+            this.day = day;
             this.rank = rank;
+            this.rank2 = rank2;
             this.birthdate = birthdate;
         }
 
@@ -42,6 +47,12 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
         @Override
         public int compareTo(Wish o) {
+            if (rank2 < o.rank2) {
+                return -1;
+            }
+            if (rank2 > o.rank2) {
+                return 1;
+            }
             if (rank < o.rank) {
                 return -1;
             }
@@ -54,12 +65,18 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
     private class WishDate extends Wish {
 
-        public WishDate(int date, int child, int activity, int day, Date birthdate) {
-            super(date, child, activity, day, birthdate);
+        public WishDate(int date, int child, int activity, int day, int rank, int rank2, Date birthdate) {
+            super(date, child, activity, day, rank, rank2, birthdate);
         }
 
         @Override
         public int compareTo(Wish o) {
+            if (rank2 < o.rank2) {
+                return -1;
+            }
+            if (rank2 > o.rank2) {
+                return 1;
+            }
             if (rank < o.rank) {
                 return -1;
             }
@@ -77,12 +94,18 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
     private class WishFirst extends Wish {
 
-        public WishFirst(int date, int child, int activity, int day, Date birthdate) {
-            super(date, child, activity, day, birthdate);
+        public WishFirst(int date, int child, int activity, int day, int rank, int rank2, Date birthdate) {
+            super(date, child, activity, day, rank, rank2, birthdate);
         }
 
         @Override
         public int compareTo(Wish o) {
+            if (rank2 < o.rank2) {
+                return -1;
+            }
+            if (rank2 > o.rank2) {
+                return 1;
+            }
             if (rank < o.rank) {
                 return -1;
             }
@@ -117,7 +140,6 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Wishes (child, period, activity, rank, day) VALUES (?, ?, ?, ?, ?)");) {
             st.setInt(1, child);
-            System.out.println("ensimag.acvl.dao.RegistrationDAO.registerWish()" + child + ":" + activity + ":" + day);
             st.setInt(2, period);
             st.setInt(3, activity);
             st.setInt(4, rank);
@@ -128,11 +150,25 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         }
     }
 
+    public void registration(int child, int period, int activity, int day) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_ActivitiesRegistrations (child, period, activity, day) VALUES (?, ?, ?, ?)");) {
+            st.setInt(1, child);
+            st.setInt(2, period);
+            st.setInt(3, activity);
+            st.setInt(4, day);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
+
     public List<Activity> getActivities(int child, int period, int day) {
         List<Activity> activities = new ArrayList<>();
         try (
-                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
-                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Wishes WHERE child = ? AND period = ? AND day = ?");) {
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_ActivitiesRegistrations WHERE child = ? AND period = ? AND day = ?");) {
             st.setInt(1, child);
             st.setInt(2, period);
             st.setInt(3, day);
@@ -179,6 +215,27 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         return registrations;
     }
 
+    public int getNumberOfRegistrations(int period, int child, int activity) {
+        int n = 0;
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("Select COUNT(*) from ACVL_ActivitiesRegistrations, ACVL_Periods WHERE "
+                        + "period = ? AND idPeriod = ? AND child = ? AND activity = ? AND startDate between ? AND ?");) {
+            st.setInt(1, period);
+            st.setInt(2, period);
+            st.setInt(3, child);
+            st.setInt(4, activity);
+            st.setDate(5, Date.valueOf(ensimag.acvl.time.Time.date.toLocalDate().with(TemporalAdjusters.firstDayOfYear())));
+            st.setDate(6, Date.valueOf(ensimag.acvl.time.Time.date.toLocalDate().with(TemporalAdjusters.lastDayOfYear())));
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            n = rs.getInt(1);
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+        return n;
+    }
+
     public List<HashMap<Integer, HashMap<Integer, PriorityQueue<Wish>>>> moulinette() {
         System.out.println("==============");
         System.out.println("MOULINETTE !!!");
@@ -201,11 +258,16 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         map.put(2, new HashMap<Integer, PriorityQueue<Wish>>()); // mercredi
         map.put(3, new HashMap<Integer, PriorityQueue<Wish>>()); // jeudi
         map.put(4, new HashMap<Integer, PriorityQueue<Wish>>()); // vendredi
-        HashMap<Integer, Integer> capacities = new HashMap<>();
+        HashMap<Integer, Integer>[] capacities = new HashMap[5];
+        capacities[0] = new HashMap<>();
+        capacities[1] = new HashMap<>();
+        capacities[2] = new HashMap<>();
+        capacities[3] = new HashMap<>();
+        capacities[4] = new HashMap<>();
         try (
                 Connection conn = getConn();
-                PreparedStatement st = conn.prepareStatement("SELECT codeStrategy, activity, capacity, day, child, w.id, birthdate "
-                        + "FROM ACVL_Wishes w, ACVL_Activities a, ACVL_Children c WHERE w.activity = a.id AND w.child = c.id");) {
+                PreparedStatement st = conn.prepareStatement("SELECT codeStrategy, activity, capacity, day, rank, child, w.id, birthdate "
+                        + "FROM ACVL_Wishes w, ACVL_Activities a, ACVL_Children c WHERE w.activity = a.id AND w.child = c.id AND period=" + p.getId());) {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int codeStrategy = rs.getInt("codeStrategy");
@@ -214,32 +276,77 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                 int child = rs.getInt("child");
                 int date = rs.getInt("id");
                 int capacity = rs.getInt("capacity");
+                int rank = rs.getInt("rank");
                 Date birthdate = rs.getDate("birthdate");
-                Wish w = new Wish(date, child, activity, day, birthdate);
-                System.out.println(w);
+                Wish w = new Wish(date, child, activity, day, rank, getNumberOfRegistrations(p.getId(), child, activity), birthdate);
                 /* 1 = FIFS, 2 = random, 3 = Age */
                 if (!map.get(day).keySet().contains(activity)) {
                     map.get(day).put(activity, new PriorityQueue<Wish>());
-                    capacities.put(activity, capacity);
+                    capacities[0].put(activity, capacity);
+                    capacities[1].put(activity, capacity);
+                    capacities[2].put(activity, capacity);
+                    capacities[3].put(activity, capacity);
+                    capacities[4].put(activity, capacity);
                 }
                 if (codeStrategy == 1) {
-                    w = new WishFirst(date, child, activity, day, birthdate);
+                    w = new WishFirst(date, child, activity, day, rank, getNumberOfRegistrations(p.getId(), child, activity), birthdate);
                     map.get(day).get(activity).add(w);
                 }
                 if (codeStrategy == 2) {
-                    w = new Wish(date, child, activity, day, birthdate);
+                    w = new Wish(date, child, activity, day, rank, getNumberOfRegistrations(p.getId(), child, activity), birthdate);
                     map.get(day).get(activity).add(w);
                 }
                 if (codeStrategy == 3) {
-                    w = new WishDate(date, child, activity, day, birthdate);
+                    w = new WishDate(date, child, activity, day, rank, getNumberOfRegistrations(p.getId(), child, activity), birthdate);
                     map.get(day).get(activity).add(w);
                 }
             }
             System.out.println(map);
-            while (true) {
-                // TODO tant qu'on arrive à faire poper des trucs, et qu'on respecte les règles.
-                if (true) {
-                    break;
+            System.out.println("Capacity:");
+            System.out.println(capacities[0]);
+            System.out.println(capacities[1]);
+            System.out.println(capacities[2]);
+            System.out.println(capacities[3]);
+            System.out.println(capacities[4]);
+            for (int i = 0; i < 5; i++) {
+                HashMap<Integer, PriorityQueue<Wish>> hashMap = map.get(i);
+                int rank = 1;
+                while (true) {
+                    for (Integer activity : hashMap.keySet()) {
+                        System.out.println(capacities[i]);
+                        System.out.println(hashMap);
+                        System.out.println("Activity:" + activity);
+                        PriorityQueue<Wish> queue = hashMap.get(activity);
+                        int capacity = capacities[i].get(activity);
+                        int rank2 = 0;
+                        if (!queue.isEmpty()) {
+                            rank2 = queue.peek().rank2;
+                        }
+                        while (true) {
+                            System.out.println("Queue:" + queue);
+                            if (queue.isEmpty() || capacity <= 0) {
+                                hashMap.remove(activity);
+                                System.out.println("NEXT ACTIVITY");
+                                break;
+                            }
+                            if (queue.peek().rank == rank && rank2 == queue.peek().rank2) {
+                                Wish w = queue.poll();
+                                System.out.println("registration child:period:activity:day " + w.child + ":" + p.getId() + ":" + activity + ":" + w.day);
+                                registration(w.child, p.getId(), activity, w.day);
+                                capacity--;
+                                for (PriorityQueue<Wish> pq : hashMap.values()) {
+                                    pq.remove(w);
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                        capacities[i].put(activity, capacity);
+                    }
+                    rank++;
+                    if (hashMap.isEmpty()) {
+                        break;
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -303,7 +410,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         result.add(garderie3);
         return result;
     }
-    
+
     public List<Child>[] getSubscribers(int period, int activity) {
         List<Child>[] result = new List[5];
         result[0] = new ArrayList<>();
@@ -312,8 +419,8 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         result[3] = new ArrayList<>();
         result[4] = new ArrayList<>();
         try (
-                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
-                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Wishes WHERE period = ? AND activity = ?");) {
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_ActivitiesRegistrations WHERE period = ? AND activity = ?");) {
             st.setInt(1, period);
             st.setInt(2, activity);
             ResultSet rs = st.executeQuery();
