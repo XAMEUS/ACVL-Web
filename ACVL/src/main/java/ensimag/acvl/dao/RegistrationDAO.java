@@ -249,7 +249,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         }
         return l;
     }
-    
+
     public HashMap<Integer, HashMap<Integer, PriorityQueue<Wish>>> moulinette(Period p) {
         System.out.println("MOULINETTE ! " + p);
         HashMap<Integer, HashMap<Integer, PriorityQueue<Wish>>> map = new HashMap<>(); // map(jour, map(activité, voeux triés))
@@ -258,7 +258,12 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         map.put(2, new HashMap<Integer, PriorityQueue<Wish>>()); // mercredi
         map.put(3, new HashMap<Integer, PriorityQueue<Wish>>()); // jeudi
         map.put(4, new HashMap<Integer, PriorityQueue<Wish>>()); // vendredi
-        HashMap<Integer, Integer> capacities = new HashMap<>();
+        HashMap<Integer, Integer>[] capacities = new HashMap[5];
+        capacities[0] = new HashMap<>();
+        capacities[1] = new HashMap<>();
+        capacities[2] = new HashMap<>();
+        capacities[3] = new HashMap<>();
+        capacities[4] = new HashMap<>();
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("SELECT codeStrategy, activity, capacity, day, rank, child, w.id, birthdate "
@@ -277,7 +282,11 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                 /* 1 = FIFS, 2 = random, 3 = Age */
                 if (!map.get(day).keySet().contains(activity)) {
                     map.get(day).put(activity, new PriorityQueue<Wish>());
-                    capacities.put(activity, capacity);
+                    capacities[0].put(activity, capacity);
+                    capacities[1].put(activity, capacity);
+                    capacities[2].put(activity, capacity);
+                    capacities[3].put(activity, capacity);
+                    capacities[4].put(activity, capacity);
                 }
                 if (codeStrategy == 1) {
                     w = new WishFirst(date, child, activity, day, rank, getNumberOfRegistrations(p.getId(), child, activity), birthdate);
@@ -293,15 +302,22 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                 }
             }
             System.out.println(map);
+            System.out.println("Capacity:");
+            System.out.println(capacities[0]);
+            System.out.println(capacities[1]);
+            System.out.println(capacities[2]);
+            System.out.println(capacities[3]);
+            System.out.println(capacities[4]);
             for (int i = 0; i < 5; i++) {
                 HashMap<Integer, PriorityQueue<Wish>> hashMap = map.get(i);
                 int rank = 1;
                 while (true) {
                     for (Integer activity : hashMap.keySet()) {
+                        System.out.println(capacities[i]);
                         System.out.println(hashMap);
                         System.out.println("Activity:" + activity);
                         PriorityQueue<Wish> queue = hashMap.get(activity);
-                        int capacity = capacities.get(activity);
+                        int capacity = capacities[i].get(activity);
                         int rank2 = 0;
                         if (!queue.isEmpty()) {
                             rank2 = queue.peek().rank2;
@@ -317,7 +333,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                                 Wish w = queue.poll();
                                 System.out.println("registration child:period:activity:day " + w.child + ":" + p.getId() + ":" + activity + ":" + w.day);
                                 registration(w.child, p.getId(), activity, w.day);
-                                capacities.put(activity, capacity - 1);
+                                capacity--;
                                 for (PriorityQueue<Wish> pq : hashMap.values()) {
                                     pq.remove(w);
                                 }
@@ -325,6 +341,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                                 break;
                             }
                         }
+                        capacities[i].put(activity, capacity);
                     }
                     rank++;
                     if (hashMap.isEmpty()) {
