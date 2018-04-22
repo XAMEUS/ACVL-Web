@@ -1,5 +1,7 @@
 package ensimag.acvl.models;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,4 +91,15 @@ public class Activity {
         return id;
     }
 
+    public String getStringGrades() {
+        String[] grades = {"PS", "MS", "GS", "CP", "CE1", "CE2", "CM1", "CM2"};
+        List<String> activityGrades = new ArrayList();
+        
+        for (int i = 0; i < grades.length; i++) {
+            if ((this.codeGrades >> i) % 2 == 1) {
+                activityGrades.add(grades[i]);
+            }
+        }
+        return activityGrades.toString().replace("[", "").replace("]", "");
+    }
 }

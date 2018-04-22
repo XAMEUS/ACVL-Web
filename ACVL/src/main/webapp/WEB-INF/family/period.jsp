@@ -61,7 +61,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
     <% } %>
     <% if ((registration.getCodeCantine() >> i) % 2 == 1) {%>
     <li>
-        cantine
+        Cantine
         <% if (cancel.isCanceled(date, 2, i)) { %>
         <span class="alert-secondary">Annulé</span>
         <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>

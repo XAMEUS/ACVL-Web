@@ -27,7 +27,7 @@ public class UserDAO extends AbstractDataBaseDAO {
                 Statement st = conn.createStatement();) {
             ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Users");
             while (rs.next()) {
-                User user = new User(rs.getString("username"), rs.getBytes("passwd"));
+                User user = new User(rs.getString("username"), rs.getBytes("passwd"), rs.getString("address"));
                 result.add(user);
             }
         } catch (SQLException e) {
@@ -40,7 +40,7 @@ public class UserDAO extends AbstractDataBaseDAO {
      * @param name username
      * @param password user password
      */
-    public void createUser(String name, String password) {
+    public void createUser(String name, String password, String address) {
         try (
             Connection conn = getConn();
             PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd) VALUES (?, ?)");) {
@@ -82,7 +82,7 @@ public class UserDAO extends AbstractDataBaseDAO {
             st.setString(1, username);
             ResultSet rs = st.executeQuery();
             rs.next();
-            return new User(rs.getString("username"), rs.getBytes("passwd"));
+            return new User(rs.getString("username"), rs.getBytes("passwd"), rs.getString("address"));
         } catch (SQLException e) {
             throw new DAOException("Database error: " + e.getMessage(), e);
         }
