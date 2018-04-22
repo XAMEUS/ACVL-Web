@@ -149,7 +149,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
 
     public Registration getRegistration(int child, int period) {
         try (
-                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE child = ? AND period = ?");) {
             st.setInt(1, child);
             st.setInt(2, period);
@@ -165,7 +165,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
     public List<Registration> getRegistrations(int period) {
         List<Registration> registrations = new ArrayList<>();
         try (
-                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE period = ?");) {
             st.setInt(1, period);
             ResultSet rs = st.executeQuery();
@@ -301,6 +301,29 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         result.add(garderie1);
         result.add(garderie2);
         result.add(garderie3);
+        return result;
+    }
+    
+    public List<Child>[] getSubscribers(int period, int activity) {
+        List<Child>[] result = new List[5];
+        result[0] = new ArrayList<>();
+        result[1] = new ArrayList<>();
+        result[2] = new ArrayList<>();
+        result[3] = new ArrayList<>();
+        result[4] = new ArrayList<>();
+        try (
+                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Wishes WHERE period = ? AND activity = ?");) {
+            st.setInt(1, period);
+            st.setInt(2, activity);
+            ResultSet rs = st.executeQuery();
+            ChildDAO childDAO = new ChildDAO(dataSource);
+            while (rs.next()) {
+                result[rs.getInt("day")].add(childDAO.getChild(rs.getInt("child")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
         return result;
     }
 
