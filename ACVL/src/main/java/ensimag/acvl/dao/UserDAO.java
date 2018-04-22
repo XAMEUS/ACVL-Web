@@ -43,13 +43,14 @@ public class UserDAO extends AbstractDataBaseDAO {
     public void createUser(String name, String password, String address) {
         try (
             Connection conn = getConn();
-            PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd) VALUES (?, ?)");) {
+            PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_Users (username, passwd, address) VALUES (?, ?, ?)");) {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), name.getBytes(), 4, 256);
             SecretKey key = skf.generateSecret( spec );
             byte[] pass = key.getEncoded();
             st.setString(1, name);
-            st.setBytes(2, pass);
+            st.setBytes(2, pass);;
+            st.setString(3, address);
             st.executeUpdate();
         } catch (InvalidKeySpecException e) {
             throw new DAOException("SecretKeyFactory key error " + e.getMessage(), e);

@@ -291,6 +291,7 @@ CREATE TABLE ACVL_Cancel (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
+select * from ACVL_Users;
 select * from ACVL_CHILDREN;
 select * from ACVL_Family;
 SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = 'maxime';

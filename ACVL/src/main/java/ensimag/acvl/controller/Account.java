@@ -68,10 +68,6 @@ public class Account extends Controller {
             if (action.equals("create")) {
                 actionCreate(request, response, userDAO);
                 return;
-            } else if (action.equals("remove")) {
-                actionRemove(request, response, userDAO);
-            } else if (action.equals("edit")) {
-                actionEdit(request, response, userDAO);
             } else if (action.equals("signin")) {
                 actionSignIn(request, response, userDAO);
                 return;
@@ -81,7 +77,6 @@ public class Account extends Controller {
             }
             actionShow(request, response, userDAO);
         } catch (DAOException e) {
-            
             if (action.equals("signin")) {
                 request.setAttribute("title", "Echec de la connexion");
                 request.setAttribute("message", "Utilisateur ou mot de passe incorrect");
@@ -128,22 +123,6 @@ public class Account extends Controller {
         } else {
             throw new DAOException("Invalid parameters");
         }
-    }
-
-    private void actionRemove(HttpServletRequest request,
-            HttpServletResponse response,
-            UserDAO userDAO)
-            throws IOException, ServletException {
-        // TODO
-        System.err.println("TODO");
-    }
-
-    private void actionEdit(HttpServletRequest request,
-            HttpServletResponse response,
-            UserDAO userDAO)
-            throws IOException, ServletException {
-        // TODO
-        System.err.println("TODO");
     }
 
 }

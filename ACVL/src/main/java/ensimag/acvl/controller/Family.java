@@ -287,14 +287,6 @@ public class Family extends Controller {
         showMain(request, response, childDAO);
     }
 
-    private void actionRemove(HttpServletRequest request,
-            HttpServletResponse response,
-            ChildDAO childDAO)
-            throws IOException, ServletException {
-        // TODO
-        System.err.println("TODO");
-    }
-
     private void actionEditChild(HttpServletRequest request,
             HttpServletResponse response,
             ChildDAO childDAO)

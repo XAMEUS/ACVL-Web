@@ -402,7 +402,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         result[3] = new ArrayList<>();
         result[4] = new ArrayList<>();
         try (
-                Connection conn = getConn(); // TODO USE ACVL_ActivitiesRegistrations
+                Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_ActivitiesRegistrations WHERE period = ? AND activity = ?");) {
             st.setInt(1, period);
             st.setInt(2, activity);
