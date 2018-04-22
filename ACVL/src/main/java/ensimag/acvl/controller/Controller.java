@@ -27,7 +27,9 @@ public class Controller extends HttpServlet {
             e.printStackTrace();
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
-            e.getCause().printStackTrace(pw);
+            if (e.getCause() != null){
+                e.getCause().printStackTrace(pw);
+            }
             request.setAttribute("exception", sw.toString());
         }
         request.getRequestDispatcher("/WEB-INF/error/Error.jsp").forward(request, response);

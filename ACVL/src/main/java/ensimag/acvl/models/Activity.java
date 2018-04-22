@@ -1,6 +1,5 @@
 package ensimag.acvl.models;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,17 @@ public class Activity {
     private final String description;
     private final String animators;
 
-    public Activity(int id, int capacity, List<Period> periods, float price, int codeGrades, int codeDays, int codeStrategy, String title, String description, String animators) {
+    public Activity(int id, 
+                    int capacity, 
+                    List<Period> periods, 
+                    float price, 
+                    int codeGrades, 
+                    int codeDays, 
+                    int codeStrategy, 
+                    String title, 
+                    String description, 
+                    String animators){
+        
         this.id = id;
         this.capacity = capacity;
         this.periods = periods;
