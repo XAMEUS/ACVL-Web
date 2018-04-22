@@ -65,7 +65,7 @@ public class UserDAO extends AbstractDataBaseDAO {
         User user = getUser(name);
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), "salt".getBytes(), 4, 256);
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), name.getBytes(), 4, 256);
             SecretKey key = skf.generateSecret( spec );
             byte[] pass = key.getEncoded();
             return user.passwordMatch(pass);
