@@ -125,7 +125,7 @@
     <tbody>
         <c:forEach items="${activities}" var="activity">
             <tr>
-                <td>${activity}</td>
+                <td><a href="<%= request.getContextPath()%>/admin?view=activity&activity=${activity.id}&period=${period.id}">${activity}</a></td>
             </tr>
         </c:forEach>
     </tbody>

@@ -283,7 +283,7 @@ CREATE TABLE ACVL_Cancel (
     period number(3),
     codeType int, -- 1: garderie, 2:cantine, 3:activité
     code number(6), --gardire, cantine, activity
-    day Date, -- 1, 2, 3, 4, 5
+    day Date, -- 0, 1, 2, 3, 4
     PRIMARY KEY (child, period, codeType, code, day),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)

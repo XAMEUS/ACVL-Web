@@ -65,6 +65,7 @@
                     <c:if test="${view eq 'users'}"><%@include file="admin/users.jsp" %></c:if>
                     <c:if test="${view eq 'calendar'}"><%@include file="admin/calendar.jsp" %></c:if>
                     <c:if test="${view eq 'activities'}"><%@include file="admin/activities.jsp" %></c:if>
+                    <c:if test="${view eq 'activity'}"><%@include file="admin/activity.jsp" %></c:if>
                     <c:if test="${view eq 'settings'}"><%@include file="admin/settings.jsp" %></c:if>
                     </main>
 

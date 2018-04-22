@@ -6,6 +6,7 @@ import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
 import ensimag.acvl.dao.RegistrationDAO;
 import ensimag.acvl.dao.UserDAO;
+import ensimag.acvl.models.Activity;
 import ensimag.acvl.models.Child;
 import ensimag.acvl.models.Period;
 import java.io.*;
@@ -40,6 +41,8 @@ public class Admin extends Controller {
                 viewCalendar(request, response);
             } else if (view.equals("activities")) {
                 viewActivities(request, response);
+            } else if (view.equals("activity")) {
+                viewActivity(request, response);
             } else if (view.equals("settings")) {
                 viewSettings(request, response);
             } else if (view.equals("moulinette")) {
@@ -210,6 +213,20 @@ public class Admin extends Controller {
         request.setAttribute("periods", periods);
         request.setAttribute("activities", activityDAO.getActivities());
         request.setAttribute("view", "activities");
+        request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
+    }
+    
+    private void viewActivity(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+        ActivityDAO activityDAO = new ActivityDAO(ds);
+        int idPeriod = Integer.valueOf(request.getParameter("period"));
+        int idActivity = Integer.valueOf(request.getParameter("activity"));
+        Activity activity = activityDAO.getActivity(idPeriod);
+        request.setAttribute("activity", activity);
+        request.setAttribute("subscribers", registrationDAO.getSubscribers(idPeriod, idActivity));
+        request.setAttribute("view", "activity");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
 
