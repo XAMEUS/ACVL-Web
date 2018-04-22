@@ -175,7 +175,8 @@ END;
 
 CREATE TABLE ACVL_Users (
     username VARCHAR2(32) NOT NULL PRIMARY KEY,
-    passwd RAW(32) NOT NULL
+    passwd RAW(32) NOT NULL,
+	address VARCHAR(255)
 );
 
 CREATE SEQUENCE ACVL_Children_id_seq;
