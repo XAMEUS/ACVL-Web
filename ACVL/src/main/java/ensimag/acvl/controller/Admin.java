@@ -223,7 +223,7 @@ public class Admin extends Controller {
         ActivityDAO activityDAO = new ActivityDAO(ds);
         int idPeriod = Integer.valueOf(request.getParameter("period"));
         int idActivity = Integer.valueOf(request.getParameter("activity"));
-        Activity activity = activityDAO.getActivity(idPeriod);
+        Activity activity = activityDAO.getActivity(idActivity);
         request.setAttribute("activity", activity);
         request.setAttribute("subscribers", registrationDAO.getSubscribers(idPeriod, idActivity));
         request.setAttribute("view", "activity");
