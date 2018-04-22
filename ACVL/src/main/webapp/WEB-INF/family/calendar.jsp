@@ -26,14 +26,14 @@
             </div>
         <% } else if (Time.date.after(((Period)(pageContext.findAttribute("registeredPeriod"))).getEnd())) { %>
             <div class="alert alert-secondary" role="alert">
-                Période passée, vous pouvez maintenant accéder à votre facture...
+                Période passée, vous pouvez maintenant accéder à votre facture <a href="<%= request.getContextPath()%>/family?view=facture&period=${registeredPeriod.id}&child=${child.id}">ici</a>.
             </div>
         <% } else { %>
             <div class="alert alert-primary" role="alert">
                 Période courrante.
             </div>
         <% } %>
-        <p>Cliquez <a href="<%= request.getContextPath()%>/family?view=period&period=${registeredPeriod.id}&child=${child.id}">ici</a> pour voir les détails de l'inscription. (ça n'est pas encore fait !)</p>
+        <p>Cliquez <a href="<%= request.getContextPath()%>/family?view=period&period=${registeredPeriod.id}&child=${child.id}">ici</a> pour voir les détails de l'inscription.</p>
     </c:forEach>
     <% }%>
     <hr>

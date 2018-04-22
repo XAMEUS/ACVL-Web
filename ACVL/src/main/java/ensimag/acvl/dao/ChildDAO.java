@@ -101,6 +101,17 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
+    
+    public void removeChildDiet(int idChild) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("DELETE FROM ACVL_ChildDiet WHERE idChild=?");) {
+            st.setInt(1, idChild);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
 
     public Child getChild(int id) {
         try (
@@ -188,7 +199,7 @@ public class ChildDAO extends AbstractDataBaseDAO {
                 while (rs2.next()) {
                     Activity a = new Activity(rs2.getInt("id"), rs2.getInt("capacity"), null, rs2.getFloat("price"),
                             rs2.getInt("codeGrades"), rs2.getInt("codeDays"), rs2.getInt("codeStrategy"), rs2.getString("title"), rs2.getString("description"), rs2.getString("animators"));
-                    if ((a.getCodeGrades() / codeGrade) % 2 == 1) {
+                    if ((a.getCodeGrades() & codeGrade) != 0) {
                         for (int day = 1; day <= 5; day++) {
                             if (((a.getCodeDays() / (int) (Math.pow(2, day - 1))) % 2) == 1) {
                                 p.addActivitiy(day, a);

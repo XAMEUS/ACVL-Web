@@ -48,13 +48,13 @@
                                     <input type="checkbox" class="form-check-input" name="cantine2" value="2">
                                 </td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input" name="cantine3" value="3">
+                                    <input type="checkbox" class="form-check-input" name="cantine3" value="4">
                                 </td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input" name="cantine4" value="4">
+                                    <input type="checkbox" class="form-check-input" name="cantine4" value="8">
                                 </td>
                                 <td>
-                                    <input type="checkbox" class="form-check-input" name="cantine5" value="5">
+                                    <input type="checkbox" class="form-check-input" name="cantine5" value="16">
                                 </td>
                             </tr>
                         </tbody>

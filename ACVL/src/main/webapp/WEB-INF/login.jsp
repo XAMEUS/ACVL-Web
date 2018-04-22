@@ -32,11 +32,17 @@
                 <input type="hidden" name="action" value="signin">
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
-                    <input type="text" name="username" placeholder="Nom d'utilisateur" class="form-control" autofocus>
+                    <input class="form-control" type="text" name="username"
+                           placeholder="Nom d'utilisateur" required="" autofocus
+                           oninvalid="this.setCustomValidity('Ce champ est requis.')"
+                           oninput="setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" name="password" placeholder="Mot de passe" class="form-control">
+                    <input class="form-control" type="password" name="password"
+                           placeholder="Mot de passe" required=""
+                           oninvalid="this.setCustomValidity('Ce champ est requis.')"
+                           oninput="setCustomValidity('')">
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block" value="login">Connexion</button>
             </form>

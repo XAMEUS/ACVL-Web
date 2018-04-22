@@ -6,8 +6,7 @@
         <meta charset="UTF-8"/>
         <title>Ma famille</title>
         <%@include file="style/style.jsp" %>
-        <link href="homepage.css" rel="stylesheet">
-        <link href="navbar.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/style/navbar.css" rel="stylesheet">
     </head>
     <body>
 
@@ -41,7 +40,8 @@
             <c:if test="${view eq 'register'}"><%@include file="family/register.jsp" %></c:if>
             <c:if test="${view eq 'calendar'}"><%@include file="family/calendar.jsp" %></c:if>
             <c:if test="${view eq 'period'}"><%@include file="family/period.jsp" %></c:if>
-
+            <c:if test="${view eq 'facture'}"><%@include file="family/facture.jsp" %></c:if>
+            
             </main>
         </body>
     <%@include file="style/js.jsp" %>
