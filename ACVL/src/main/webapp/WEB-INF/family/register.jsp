@@ -18,8 +18,11 @@
     </div>
     <c:forEach items="${child.unregisteredPeriods}" var="unregisteredPeriod">
         <% c++; %>
-        ${unregisteredPeriod}
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#period<%= c%>" aria-expanded="false">Inscrire</button>
+        <div>
+            Période du ${unregisteredPeriod.getStart()} au ${unregisteredPeriod.getEnd()} :
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#period<%= c%>" aria-expanded="false">Inscrire</button>
+            <small class="form-text text-muted">Date limite des inscriptions : ${unregisteredPeriod.limit}</pre></small>
+        </div>
         <div class="collapse" id="period<%=c %>">
             <form method="post" action="family" accept-charset="UTF-8">
                 <input type="hidden" name="action" value="register">
@@ -63,7 +66,7 @@
 
                 <div class="form-group">
                     <input id="garderie0${period.id}" type="checkbox" class="form-check-input" name="garderie1" value="1">
-                    <label for="garderie0${period.id}">Garderie Matin : 7h00 - 8h30 </label>
+                    <label for="garderie0${period.id}">Garderie du matin : 7h00 - 8h30 </label>
                 </div>
                 <div class="form-group">
                     <input id="garderie1${period.id}" type="checkbox" class="form-check-input" name="garderie2" value="2">
@@ -92,13 +95,16 @@
                             <c:forEach items="${activities}" var="activity">
                                 <tr>
                                     <td>
-                                        ${activity}
+                                        <h5>${activity.getTitle()}</h5>
+                                        <p>${activity.getDescription()}</p>
+                                        <p>Cette activité est proposée à ${activity.getCapacity()} élèves de ${activity.getStringGrades()}
+                                        avec les animateurs ${activity.getAnimators()}. Son prix est de ${activity.getPrice()}.</p>
                                     </td>
                                     <td>
                                         <select class="form-control" style="width:120px" name="activity-${activity.id}-<%=day%>">
                                             <option value="0">Non</option>
                                             <% for (int i = 1; i <= n; i++) {%>
-                                            <option value="<%=i%>">Voeux <%=i%></option>
+                                            <option value="<%=i%>">Voeu <%=i%></option>
                                             <% } %>
                                         </select>
                                     </td>
