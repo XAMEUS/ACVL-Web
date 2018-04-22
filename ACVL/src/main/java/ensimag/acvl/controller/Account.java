@@ -105,10 +105,11 @@ public class Account extends Controller {
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        if (username.equals("") || password.equals("")) {
+        String address = request.getParameter("address");
+        if (username.equals("") || password.equals("") || address.equals("")) {
             throw new DAOException("Empty parameters");
         } else {
-            userDAO.createUser(username, password);
+            userDAO.createUser(username, password, address);
             session.setAttribute("username", username);
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }

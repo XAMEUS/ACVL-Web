@@ -191,6 +191,7 @@ CREATE TABLE ACVL_Children (
 CREATE TABLE ACVL_Family (
     username VARCHAR2(32),
     idChild number(6),
+	address varchar(255),
     PRIMARY KEY (username, idChild),
     FOREIGN KEY (username) references ACVL_Users(username),
     FOREIGN KEY (idChild) references ACVL_Children(id)
