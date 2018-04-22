@@ -304,5 +304,6 @@ Select * from ACVL_Activities;
 SELECT * FROM ACVL_Diet;
 Select * from ACVL_Wishes;
 Select * from ACVL_Cancel;
+Select * from ACVL_ActivitiesRegistrations;
 
 --SELECT ACVL_Children_id_seq.next FROM dual;
