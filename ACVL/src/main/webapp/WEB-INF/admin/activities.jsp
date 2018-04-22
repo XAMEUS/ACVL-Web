@@ -9,8 +9,9 @@
     <form method="post" action="admin?view=activities" accept-charset="UTF-8">
         <div class="form-group">
             <label for="activityTitle">Titre de l'activité</label>
-            <input id="activityTitle" class="form-control" type="text" name="title" placeholder="">
-            <small class="form-text text-muted">Des infos en + sur le champs</small>
+            <input id="activityTitle" class="form-control" type="text" name="title"
+                   required="" oninvalid="this.setCustomValidity('Ce champ est requis.')"
+                   oninput="setCustomValidity('')">
         </div>
         <div class="form-group">
             <label for="activityPeriod">Périodes</label>

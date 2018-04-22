@@ -7,6 +7,11 @@
         <title>Admin</title>
         <link rel="stylesheet" href="style/dashboard.css">
         <%@include file="style/style.jsp" %>
+         <style>
+            .error-message {
+                color: red;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
@@ -74,7 +79,7 @@
         <!-- Icons -->
         <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
         <script>
-            feather.replace()
+            feather.replace();
         </script>
 
     </body>
