@@ -210,9 +210,6 @@ public class Family extends Controller {
                 case "create":
                     actionCreate(request, response, childDAO);
                     break;
-                case "remove":
-                    actionRemove(request, response, childDAO);
-                    break;
                 case "editChild":
                     actionEditChild(request, response, childDAO);
                     break;
