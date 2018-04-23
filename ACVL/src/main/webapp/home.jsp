@@ -10,22 +10,28 @@
     <body>
         <main role="main" class="container">
             <%@include file="WEB-INF/debug/debug.jsp" %>
-            
-            <% if (session.getAttribute("username") != null) { %>
-            
-            <div class="text-center">
-                <h1 class="h3 mb-3 font-weight-normal">Connexion réussie</h1>
-                <p class="lead">Bonjour <strong><% out.print(session.getAttribute("username")); %></strong> !
-                    Vous pouvez maintenant consulter votre <a href="family"><strong>page famille</strong></a>.</p>
-            </div>
+                       
+            <% if (session.getAttribute("username") != null) {
+                if(session.getAttribute("username").equals("admin")) {
+                    response.sendRedirect(request.getContextPath() + "/admin?view=main");
+                }
+                else {
+                    response.sendRedirect(request.getContextPath() + "/family");
+                }
+             }
                     
-            <% } else { %>
+            else { %>
 
             <div>
                 <h1>Bienvenue !</h1>
                 <p class="lead">Chaque trimestre choisissez les activités périscolaires de vos enfants.
                     <br>Gérez facilement leur inscription à la cantine, à la garderie et annulez jusqu'à 48 heures avant.</p>
             </div>
+            <% if (request.getAttribute("message") != null) { %>
+                <div class="alert alert-danger">
+                    <strong><%out.print(request.getAttribute("title"));%> :</strong> <%out.print(request.getAttribute("message"));%>.
+                </div>
+                <%}%>
             <div>
                 <a class="btn btn-primary" data-toggle="collapse" href="#connect" role="button" aria-expanded="false" aria-controls="connect">Se connecter</a>
                 <a class="btn btn-primary" href="account?action=register">S'inscrire</a>

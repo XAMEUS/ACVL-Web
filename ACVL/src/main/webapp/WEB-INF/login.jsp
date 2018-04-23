@@ -11,24 +11,8 @@
     <body class="text-center">
         <main role="main" class="container">
             <%@include file="debug/debug.jsp" %>
-
-            <% if (session.getAttribute("username") != null) { %>
-            
-            <div>
-                <h1 class="h3 mb-3 font-weight-normal">Connexion réussie</h1>
-                <p class="lead">Bonjour <strong><% out.print(session.getAttribute("username")); %></strong> !
-                    Vous pouvez maintenant consulter votre <a href="family"><strong>page famille</strong></a>.</p>
-            </div>
-                    
-            <% } else { %>
-
             <form class="form-signin" method="post" action="account" accept-charset="UTF-8">
                 <h1 class="h3 mb-3 font-weight-normal">Se connecter</h1>
-                <% if (request.getAttribute("message") != null) { %>
-                <div class="alert alert-danger">
-                    <strong><%out.print(request.getAttribute("title"));%> :</strong> <%out.print(request.getAttribute("message"));%>.
-                </div>
-                <%}%>
                 <input type="hidden" name="action" value="signin">
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
@@ -45,10 +29,7 @@
                            oninput="setCustomValidity('')">
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block" value="login">Connexion</button>
-            </form>
-                
-            <%}%>
-            
+            </form>      
         </main>
     </body>
 

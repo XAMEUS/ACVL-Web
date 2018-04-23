@@ -15,7 +15,6 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -24,13 +23,25 @@ import java.util.logging.Logger;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "Admin", urlPatterns = {"/admin"})
 public class Admin extends Controller {
+    
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return session.getAttribute("username") != null &&
+               session.getAttribute("username").equals("admin");
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if(!isAdmin(request)) {
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            return;
+        }
         String view = request.getParameter("view");
         try {
             if (view == null) {
@@ -69,6 +80,10 @@ public class Admin extends Controller {
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+        if(!isAdmin(request)) {
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            return;
+        }
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -88,6 +103,45 @@ public class Admin extends Controller {
                 viewCalendar(request, response);
                 return;
             } else if (action.equals("create-activity")) {
+                
+                //pattern identifying special characters
+                Pattern unsafetext = Pattern.compile("[^a-zA-Z0-9, ]");
+                //pattern identifying obligatory characters
+                Pattern notemptytext = Pattern.compile("[a-zA-Z0-9]");
+                
+                Matcher titlematcher = unsafetext.matcher(request.getParameter("title"));
+                Matcher titlematcher2 = notemptytext.matcher(request.getParameter("title"));
+                Matcher descriptionmatcher = unsafetext.matcher(request.getParameter("description"));
+                Matcher animatorsmatcher = unsafetext.matcher(request.getParameter("animators"));
+                Matcher animatorsmatcher2 = notemptytext.matcher(request.getParameter("animators"));
+                
+                //check if the price is valid (refuses 10.955)
+                Float trueprice = Float.valueOf(request.getParameter("price"));
+                String strat = request.getParameter("strategy");
+                int checkprice = (int)(trueprice * 100);
+                if (100*trueprice != checkprice){
+                    throw new IllegalArgumentException("Le prix contient trop de décimales : " + trueprice.toString());
+                }
+                if (!(strat.equals("1") || strat.equals("2") || strat.equals("3"))){
+                    throw new IllegalArgumentException("La stratégie séléctionnée n'existe pas : " + strat);
+                }
+
+                if (titlematcher.find()){
+                    throw new IllegalArgumentException("Le titre contient des caratères illégaux : " + request.getParameter("title"));
+                }
+                if (!titlematcher2.find()){
+                    throw new IllegalArgumentException("Le titre est vide : " + request.getParameter("title"));
+                }
+                if (descriptionmatcher.find()){
+                    throw new IllegalArgumentException("La description contient des caratères illégaux : " + request.getParameter("description"));
+                }
+                if (animatorsmatcher.find()){
+                    throw new IllegalArgumentException("La liste des animateurs contient des caractères illégaux : " + request.getParameter("animators"));
+                }
+                if (!animatorsmatcher2.find()){
+                    throw new IllegalArgumentException("La liste des animateurs est vide : " + request.getParameter("animators"));
+                }
+                
                 ActivityDAO activityDAO = new ActivityDAO(ds);
                 int codeDays = 0;
                 int codeGrades = 0;
@@ -171,6 +225,10 @@ public class Admin extends Controller {
             request.setAttribute("message", "Quelque chose ne s'est pas bien passé au niveau des dates...\n" + ex.getMessage());
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             showError(request, response, ex);
+        } catch (IllegalArgumentException exc) {
+            request.setAttribute("title", "Illegal Argument Exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé au niveau des arguments...\n" + exc.getMessage());
+            showError(request, response, exc);
         }
     }
 

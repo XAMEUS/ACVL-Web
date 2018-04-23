@@ -15,6 +15,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -237,11 +239,50 @@ public class Family extends Controller {
             ChildDAO childDAO)
             throws IOException, ServletException {
         try {
+            
+            
+            
+            //pattern identifying special characters
+            Pattern unsafetext = Pattern.compile("[^a-zA-Z0-9, ]");
+            //pattern identifying obligatory characters
+            Pattern notemptytext = Pattern.compile("[a-zA-Z0-9]");
+
+            Matcher firstnamematcher = unsafetext.matcher(request.getParameter("firstname"));
+            Matcher firstnamematcher2 = notemptytext.matcher(request.getParameter("firstname"));
+            Matcher lastnamematcher = unsafetext.matcher(request.getParameter("lastname"));
+            Matcher lastnamematcher2 = notemptytext.matcher(request.getParameter("lastname"));
+
+            String truegrade = request.getParameter("grade");
+            String truegender = request.getParameter("gender");
+            
+            if (!(truegrade.equals("PS") || truegrade.equals("MS") || truegrade.equals("GS") || truegrade.equals("CP") 
+                ||truegrade.equals("CE1") ||truegrade.equals("CE2") ||truegrade.equals("CM1") ||truegrade.equals("CM2"))){
+                throw new IllegalArgumentException("Le grade n'est pas correct : " + truegrade);
+            }
+            if (!(truegender.equals("F") ||truegender.equals("M"))){
+                throw new IllegalArgumentException("Le genre de n'est pas correct : " + truegender);
+            }
+
+            if (firstnamematcher.find()){
+                throw new IllegalArgumentException("Le prénom contient des caratères illégaux : " + request.getParameter("firstname"));
+            }
+            if (!firstnamematcher2.find()){
+                throw new IllegalArgumentException("Le prénom est vide : " + request.getParameter("firstname"));
+            }
+            if (lastnamematcher.find()){
+                throw new IllegalArgumentException("Le nom de famille contient des caratères illégaux : " + request.getParameter("lastname"));
+            }
+            if (!lastnamematcher2.find()){
+                throw new IllegalArgumentException("Le nom de famille est vide : " + request.getParameter("lastname"));
+            }
+            
             String firstname = request.getParameter("firstname");
             String lastname = request.getParameter("lastname");
             String gender = request.getParameter("gender");
             String grade = request.getParameter("grade");
             Date birthdate = new Date(new SimpleDateFormat("yyyy-mm-dd").parse(request.getParameter("birthdate")).getTime());
+            
+            
             int idChild = childDAO.createChild(firstname, lastname, gender, grade, birthdate);
             childDAO.setParent((String) request.getSession().getAttribute("username"), idChild);
             for (int i = 1; i <= childDAO.getDiets().size(); i++) {
@@ -254,6 +295,10 @@ public class Family extends Controller {
             request.setAttribute("title", "Parse exception");
             request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
             showError(request, response, e);
+        } catch (IllegalArgumentException exc) {
+            request.setAttribute("title", "Illegal Argument Exception");
+            request.setAttribute("message", "Quelque chose ne s'est pas bien passé au niveau des arguments...\n" + exc.getMessage());
+            showError(request, response, exc);
         }
     }
 
