@@ -110,7 +110,9 @@ public class Time extends HttpServlet {
      * @return a long
      */
     public static long getEpoch() {
-        return offset;
+        long cur = System.currentTimeMillis();
+        return cur - offset;
+
     }
 
 }
