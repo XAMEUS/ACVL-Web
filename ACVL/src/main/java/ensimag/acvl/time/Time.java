@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class Time extends HttpServlet {
     @Resource(name = "jdbc/database")
     private DataSource ds;
 
-    private static Date date = new Date(Calendar.getInstance().getTime().getTime());
+    private static long offset = 0;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,7 +42,7 @@ public class Time extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("date", date);
+        request.setAttribute("date", getDate());
         request.getRequestDispatcher("/WEB-INF/debug/time.jsp").forward(request, response);
     }
 
@@ -74,7 +75,9 @@ public class Time extends HttpServlet {
         System.err.println(request  );
         if (date != null) {
             try {
-                Time.date = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(date).getTime());
+                long cur = System.currentTimeMillis();
+                long next = new SimpleDateFormat("yyyy-MM-dd").parse(date).getTime();
+                offset = cur - next;
                 System.out.println("CHANGING DATE:" + date);
             } catch (ParseException ex) {
                 Logger.getLogger(Time.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +101,16 @@ public class Time extends HttpServlet {
      * @return a Date
      */
     public static Date getDate() {
-        return Time.date;
+        long cur = System.currentTimeMillis();
+        return new Date(cur - offset);
+    }
+    
+    /**
+     * Returns the current time from epoch
+     * @return a long
+     */
+    public static long getEpoch() {
+        return offset;
     }
 
 }
