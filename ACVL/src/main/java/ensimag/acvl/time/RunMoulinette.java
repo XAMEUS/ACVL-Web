@@ -16,8 +16,7 @@ public class RunMoulinette extends Controller implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("hjohjohj");
-        //RegistrationDAO registrationDAO = new RegistrationDAO(ds);
-        //registrationDAO.moulinette();
+        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+        registrationDAO.moulinette();
     }
 }
