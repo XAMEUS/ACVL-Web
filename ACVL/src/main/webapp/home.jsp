@@ -27,6 +27,11 @@
                 <p class="lead">Chaque trimestre choisissez les activités périscolaires de vos enfants.
                     <br>Gérez facilement leur inscription à la cantine, à la garderie et annulez jusqu'à 48 heures avant.</p>
             </div>
+            <% if (request.getAttribute("message") != null) { %>
+                <div class="alert alert-danger">
+                    <strong><%out.print(request.getAttribute("title"));%> :</strong> <%out.print(request.getAttribute("message"));%>.
+                </div>
+                <%}%>
             <div>
                 <a class="btn btn-primary" data-toggle="collapse" href="#connect" role="button" aria-expanded="false" aria-controls="connect">Se connecter</a>
                 <a class="btn btn-primary" href="account?action=register">S'inscrire</a>

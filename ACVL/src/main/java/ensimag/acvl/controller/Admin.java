@@ -30,14 +30,15 @@ public class Admin extends Controller {
     
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        return session.getAttribute("username").equals("admin");
+        return session.getAttribute("username") != null &&
+               session.getAttribute("username").equals("admin");
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if(!isAdmin(request)) {
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
             return;
         }
         String view = request.getParameter("view");

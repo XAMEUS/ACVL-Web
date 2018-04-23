@@ -25,6 +25,8 @@ public class Account extends Controller {
                 actionShow(request, response, userDAO);
             } else if (action.equals("register")) {
                 actionRegister(request, response, userDAO);
+            } else if (action.equals("logout")) {
+                actionLogout(request, response);
             } else {
                 request.setAttribute("title", "Parameter Error");
                 request.setAttribute("message", "Mauvais paramètre action=" + action);
@@ -80,11 +82,11 @@ public class Account extends Controller {
             if (action.equals("signin")) {
                 request.setAttribute("title", "Echec de la connexion");
                 request.setAttribute("message", "Utilisateur ou mot de passe incorrect");
-                request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/home.jsp").forward(request, response);
             } else if (action.equals("create")) {
                 request.setAttribute("title", "Echec de la création de compte");
-                request.setAttribute("message", "Utilisateur ou mot de passe incorrect");
-                request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+                request.setAttribute("message", "Utilisateur, mot de passe ou coordonnée incorrect(e)");
+                request.getRequestDispatcher("/home.jsp").forward(request, response);
             } else {
                 request.setAttribute("title", "DAO exception");
                 request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
@@ -126,4 +128,10 @@ public class Account extends Controller {
         }
     }
 
+    private void actionLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.logout();
+        request.getSession().invalidate();
+        System.out.println("ojokjiokjiokjipji");
+        response.sendRedirect(request.getContextPath());
+    }
 }

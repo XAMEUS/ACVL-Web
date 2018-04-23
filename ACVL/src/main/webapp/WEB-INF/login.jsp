@@ -13,11 +13,6 @@
             <%@include file="debug/debug.jsp" %>
             <form class="form-signin" method="post" action="account" accept-charset="UTF-8">
                 <h1 class="h3 mb-3 font-weight-normal">Se connecter</h1>
-                <% if (request.getAttribute("message") != null) { %>
-                <div class="alert alert-danger">
-                    <strong><%out.print(request.getAttribute("title"));%> :</strong> <%out.print(request.getAttribute("message"));%>.
-                </div>
-                <%}%>
                 <input type="hidden" name="action" value="signin">
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
