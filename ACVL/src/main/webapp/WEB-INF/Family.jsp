@@ -48,6 +48,6 @@
             <c:if test="${view eq 'facture'}"><%@include file="family/facture.jsp" %></c:if>
             
             </main>
+            <%@include file="style/js.jsp" %>
         </body>
-    <%@include file="style/js.jsp" %>
 </html>

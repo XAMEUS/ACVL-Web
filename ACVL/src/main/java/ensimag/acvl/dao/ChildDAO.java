@@ -188,13 +188,21 @@ public class ChildDAO extends AbstractDataBaseDAO {
         List<Period> result = new ArrayList<Period>();
         try (Connection conn = getConn();) {
             ResultSet rs = null;
-            if (registered)
-                rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Periods where idPeriod IN (select period from ACVL_Registrations r WHERE r.child = " + idChild + ")");
-            else
-                rs = conn.createStatement().executeQuery("SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Registrations r WHERE r.child = " + idChild + ")");
+            if (registered){
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Periods where idPeriod IN (select period from ACVL_Registrations r WHERE r.child = ?)");
+                st.setInt(1, idChild);
+                rs = st.executeQuery();
+            }else{
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Registrations r WHERE r.child = ?)");
+                st.setInt(1, idChild);
+                rs = st.executeQuery();
+            }
             while (rs.next()) {
                 Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
-                ResultSet rs2 = conn.createStatement().executeQuery("SELECT * FROM ACVL_Activities a, ACVL_ActivityPeriods p WHERE p.activity = a.id AND p.period = " + p.getId());
+                ResultSet rs2 = null;
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Activities a, ACVL_ActivityPeriods p WHERE p.activity = a.id AND p.period = ?");
+                st.setInt(1, p.getId());
+                rs2 =st.executeQuery();
                 while (rs2.next()) {
                     Activity a = new Activity(rs2.getInt("id"), rs2.getInt("capacity"), null, rs2.getFloat("price"),
                             rs2.getInt("codeGrades"), rs2.getInt("codeDays"), rs2.getInt("codeStrategy"), rs2.getString("title"), rs2.getString("description"), rs2.getString("animators"));
