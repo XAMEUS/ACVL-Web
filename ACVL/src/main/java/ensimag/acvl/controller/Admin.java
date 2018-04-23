@@ -15,7 +15,6 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -28,10 +27,19 @@ import java.util.regex.Pattern;
 
 @WebServlet(name = "Admin", urlPatterns = {"/admin"})
 public class Admin extends Controller {
+    
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return session.getAttribute("username").equals("admin");
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if(!isAdmin(request)) {
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            return;
+        }
         String view = request.getParameter("view");
         try {
             if (view == null) {
@@ -70,6 +78,10 @@ public class Admin extends Controller {
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+        if(!isAdmin(request)) {
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            return;
+        }
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");

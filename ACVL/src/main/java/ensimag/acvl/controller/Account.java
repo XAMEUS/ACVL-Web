@@ -106,7 +106,7 @@ public class Account extends Controller {
         } else {
             userDAO.createUser(username, password, address);
             session.setAttribute("username", username);
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
         }
     }
 
@@ -119,7 +119,8 @@ public class Account extends Controller {
         String password = request.getParameter("password");
         if (userDAO.signAs(username, password)) {
             session.setAttribute("username", username);
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+
         } else {
             throw new DAOException("Invalid parameters");
         }
