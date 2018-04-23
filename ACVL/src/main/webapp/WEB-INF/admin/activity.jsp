@@ -2,8 +2,8 @@
 <%@page import="java.util.List"%>
 <%@page import="ensimag.acvl.models.Period"%>
 <%@page import="ensimag.acvl.models.Activity"%>
-<h2>Détails activité</h2>
-${activity}
+<h2>Détails de l'activité : ${activity.title}, du ${period.start} au ${period.end}</h2>
+
 <% Activity activity = (Activity) request.getAttribute("activity"); %>
 <% List<Child>[] subscribers = (List<Child>[]) request.getAttribute("subscribers");%>
 
@@ -72,7 +72,7 @@ ${activity}
     <tbody>
         <% for (Period p : activity.getPeriod()) {%>
         <tr>
-            <td><a href="<%= request.getContextPath()%>/admin?view=calendar&period=<%=p.getId()%>"><%=p%></a></td>
+            <td>du <%=p.getStart()%> au <%=p.getEnd()%> <a href="<%= request.getContextPath()%>/admin?view=calendar&period=<%=p.getId()%>">plus d'informations</a></td>
         </tr>
         <% }%>
     </tbody>
