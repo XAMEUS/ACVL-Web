@@ -36,7 +36,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <c:if test="${view eq 'users'}">active</c:if>" href="<%= request.getContextPath()%>/admin?view=users">
+                                    <a class="nav-link <c:if test="${view eq 'users'}">active</c:if><c:if test="${view eq 'user'}">active</c:if><c:if test="${view eq 'child'}">active</c:if>" href="<%= request.getContextPath()%>/admin?view=users">
                                         <span data-feather="users"></span>
                                         Personnes
                                     </a>
@@ -83,6 +83,8 @@
                     <c:if test="${view eq 'calendar'}"><%@include file="admin/calendar.jsp" %></c:if>
                     <c:if test="${view eq 'activities'}"><%@include file="admin/activities.jsp" %></c:if>
                     <c:if test="${view eq 'activity'}"><%@include file="admin/activity.jsp" %></c:if>
+                    <c:if test="${view eq 'child'}"><%@include file="admin/child.jsp" %></c:if>
+                    <c:if test="${view eq 'user'}"><%@include file="admin/user.jsp" %></c:if>
                     <c:if test="${view eq 'cancel'}"><%@include file="admin/cancel.jsp" %></c:if>
                     <c:if test="${view eq 'settings'}"><%@include file="admin/settings.jsp" %></c:if>
                     </main>

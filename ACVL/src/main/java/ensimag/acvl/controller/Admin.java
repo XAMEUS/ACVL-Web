@@ -28,17 +28,17 @@ import java.util.regex.Pattern;
 
 @WebServlet(name = "Admin", urlPatterns = {"/admin"})
 public class Admin extends Controller {
-    
+
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        return session.getAttribute("username") != null &&
-               session.getAttribute("username").equals("admin");
+        return session.getAttribute("username") != null
+                && session.getAttribute("username").equals("admin");
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if(!isAdmin(request)) {
+        if (!isAdmin(request)) {
             request.getRequestDispatcher("/home.jsp").forward(request, response);
             return;
         }
@@ -56,6 +56,10 @@ public class Admin extends Controller {
                 viewActivities(request, response);
             } else if (view.equals("activity")) {
                 viewActivity(request, response);
+            } else if (view.equals("child")) {
+                viewChild(request, response);
+            } else if (view.equals("user")) {
+                viewUser(request, response);
             } else if (view.equals("cancel")) {
                 viewCancel(request, response);
             } else if (view.equals("settings")) {
@@ -80,7 +84,7 @@ public class Admin extends Controller {
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        if(!isAdmin(request)) {
+        if (!isAdmin(request)) {
             request.getRequestDispatcher("/home.jsp").forward(request, response);
             return;
         }
@@ -103,45 +107,45 @@ public class Admin extends Controller {
                 viewCalendar(request, response);
                 return;
             } else if (action.equals("create-activity")) {
-                
+
                 //pattern identifying special characters
                 Pattern unsafetext = Pattern.compile("[^a-zA-Z0-9, ]");
                 //pattern identifying obligatory characters
                 Pattern notemptytext = Pattern.compile("[a-zA-Z0-9]");
-                
+
                 Matcher titlematcher = unsafetext.matcher(request.getParameter("title"));
                 Matcher titlematcher2 = notemptytext.matcher(request.getParameter("title"));
                 Matcher descriptionmatcher = unsafetext.matcher(request.getParameter("description"));
                 Matcher animatorsmatcher = unsafetext.matcher(request.getParameter("animators"));
                 Matcher animatorsmatcher2 = notemptytext.matcher(request.getParameter("animators"));
-                
+
                 //check if the price is valid (refuses 10.955)
                 Float trueprice = Float.valueOf(request.getParameter("price"));
                 String strat = request.getParameter("strategy");
-                int checkprice = (int)(trueprice * 100);
-                if (100*trueprice != checkprice){
+                int checkprice = (int) (trueprice * 100);
+                if (100 * trueprice != checkprice) {
                     throw new IllegalArgumentException("Le prix contient trop de décimales : " + trueprice.toString());
                 }
-                if (!(strat.equals("1") || strat.equals("2") || strat.equals("3"))){
+                if (!(strat.equals("1") || strat.equals("2") || strat.equals("3"))) {
                     throw new IllegalArgumentException("La stratégie séléctionnée n'existe pas : " + strat);
                 }
 
-                if (titlematcher.find()){
+                if (titlematcher.find()) {
                     throw new IllegalArgumentException("Le titre contient des caratères illégaux : " + request.getParameter("title"));
                 }
-                if (!titlematcher2.find()){
+                if (!titlematcher2.find()) {
                     throw new IllegalArgumentException("Le titre est vide : " + request.getParameter("title"));
                 }
-                if (descriptionmatcher.find()){
+                if (descriptionmatcher.find()) {
                     throw new IllegalArgumentException("La description contient des caratères illégaux : " + request.getParameter("description"));
                 }
-                if (animatorsmatcher.find()){
+                if (animatorsmatcher.find()) {
                     throw new IllegalArgumentException("La liste des animateurs contient des caractères illégaux : " + request.getParameter("animators"));
                 }
-                if (!animatorsmatcher2.find()){
+                if (!animatorsmatcher2.find()) {
                     throw new IllegalArgumentException("La liste des animateurs est vide : " + request.getParameter("animators"));
                 }
-                
+
                 ActivityDAO activityDAO = new ActivityDAO(ds);
                 int codeDays = 0;
                 int codeGrades = 0;
@@ -283,6 +287,27 @@ public class Admin extends Controller {
         request.setAttribute("periods", periods);
         request.setAttribute("activities", activityDAO.getActivities());
         request.setAttribute("view", "activities");
+        request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
+    }
+
+    private void viewChild(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        ChildDAO childDAO = new ChildDAO(ds);
+        request.setAttribute("view", "child");
+        int child = Integer.valueOf(request.getParameter("child"));
+        request.setAttribute("child", childDAO.getChild(child));
+        request.setAttribute("parent", childDAO.getParent(child));
+        request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
+    }
+
+    private void viewUser(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        ChildDAO childDAO = new ChildDAO(ds);
+        UserDAO userDAO = new UserDAO(ds);
+        request.setAttribute("view", "user");
+        String username = request.getParameter("user");
+        request.setAttribute("user", userDAO.getUser(username));
+        request.setAttribute("children", childDAO.getChildrenList(username));
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
 

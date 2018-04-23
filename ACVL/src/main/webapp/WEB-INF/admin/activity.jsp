@@ -24,35 +24,35 @@
             <td>
                 <table class="table">
                     <% for (Child c : subscribers[0]) { %>
-                    <tr><td><%=c.getFirstname()%> <%=c.getLastname()%></td></tr>
+                    <tr><td><a href="<%= request.getContextPath()%>/admin?view=child&child=<%=c.getId()%>"><%=c.getFirstname()%> <%=c.getLastname()%></a></td></tr>
                     <% }%>
                 </table>
             </td>
             <td>
                 <table class="table">
                     <% for (Child c : subscribers[1]) { %>
-                    <tr><td><%=c.getFirstname()%> <%=c.getLastname()%></td></tr>
+                    <tr><td><a href="<%= request.getContextPath()%>/admin?view=child&child=<%=c.getId()%>"><%=c.getFirstname()%> <%=c.getLastname()%></a></td></tr>
                     <% }%>
                 </table>
             </td>
             <td>
                 <table class="table">
                     <% for (Child c : subscribers[2]) { %>
-                    <tr><td><%=c.getFirstname()%> <%=c.getLastname()%></td></tr>
+                    <tr><td><a href="<%= request.getContextPath()%>/admin?view=child&child=<%=c.getId()%>"><%=c.getFirstname()%> <%=c.getLastname()%></a></td></tr>
                     <% }%>
                 </table>
             </td>
             <td>
                 <table class="table">
                     <% for (Child c : subscribers[3]) { %>
-                    <tr><td><%=c.getFirstname()%> <%=c.getLastname()%></td></tr>
+                    <tr><td><a href="<%= request.getContextPath()%>/admin?view=child&child=<%=c.getId()%>"><%=c.getFirstname()%> <%=c.getLastname()%></a></td></tr>
                     <% }%>
                 </table>
             </td>
             <td>
                 <table class="table">
                     <% for (Child c : subscribers[4]) { %>
-                    <tr><td><%=c.getFirstname()%> <%=c.getLastname()%></td></tr>
+                    <tr><td><a href="<%= request.getContextPath()%>/admin?view=child&child=<%=c.getId()%>"><%=c.getFirstname()%> <%=c.getLastname()%></a></td></tr>
                     <% }%>
                 </table>
             </td>

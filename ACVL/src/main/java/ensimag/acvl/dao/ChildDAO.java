@@ -87,12 +87,25 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
+    
+    public User getParent(int child) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("SELECT * from ACVL_Family WHERE idChild = ?");) {
+            st.setInt(1, child);
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            UserDAO userDAO = new UserDAO(dataSource);
+            return userDAO.getUser(rs.getString("username"));
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+    }
 
     public void setDiet(int idChild, String diet) {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO ACVL_ChildDiet (diet, idChild) VALUES (?, ?)");) {
-            System.out.println(idChild + " " + diet);
             st.setString(1, diet);
             st.setInt(2, idChild);
             st.executeUpdate();

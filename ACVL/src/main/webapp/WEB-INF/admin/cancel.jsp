@@ -14,7 +14,7 @@
         <c:forEach items="${cancels}" var="cancel">
             <tr>
                 <td>${cancel.date}</td>
-                <td>${cancel.child.firstname} ${cancel.child.lastname}</td>
+                <td><a href="<%= request.getContextPath()%>/admin?view=child&child=${cancel.child.id}">${cancel.child.firstname} ${cancel.child.lastname}</a></td>
                 <td>
                     <c:if test="${cancel.codeType eq 1}">
                         ${cancel.descr}

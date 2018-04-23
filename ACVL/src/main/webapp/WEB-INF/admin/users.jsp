@@ -8,6 +8,7 @@
             <tr>
                 <th></th>
                 <th>Utilisateur</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -16,7 +17,8 @@
             <% c++; %>
             <tr>
                 <td>#<% out.print(c);%></td>
-                <td>${user}</td>
+                <td>${user.name}</td>
+                <td><a href="<%= request.getContextPath()%>/admin?view=user&user=${user.name}">détails</a></td>
             </tr>
         </c:forEach>
         </tbody>
@@ -40,7 +42,7 @@
                 <td>${child.firstname}</td>
                 <td>${child.lastname}</td>
                 <td>${child.grade}</td>
-                <td><a href="">détails</a></td>
+                <td><a href="<%= request.getContextPath()%>/admin?view=child&child=${child.id}">détails</a></td>
             </tr>
         </c:forEach>
         </tbody>
