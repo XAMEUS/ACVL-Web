@@ -267,7 +267,8 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("SELECT codeStrategy, activity, capacity, day, rank, child, w.id, birthdate "
-                        + "FROM ACVL_Wishes w, ACVL_Activities a, ACVL_Children c WHERE w.activity = a.id AND w.child = c.id AND period=" + p.getId());) {
+                        + "FROM ACVL_Wishes w, ACVL_Activities a, ACVL_Children c WHERE w.activity = a.id AND w.child = c.id AND period=?");) {
+            st.setInt(1, p.getId());
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int codeStrategy = rs.getInt("codeStrategy");

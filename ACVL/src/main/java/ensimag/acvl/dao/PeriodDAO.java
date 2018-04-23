@@ -33,8 +33,9 @@ public class PeriodDAO extends AbstractDataBaseDAO {
         List<Period> result = new ArrayList<Period>();
         try (
                 Connection conn = getConn();
-                Statement st = conn.createStatement();) {
-            ResultSet rs = st.executeQuery("SELECT * FROM ACVL_Periods p, ACVL_ActivityPeriods a WHERE p.idPeriod = a.period AND a.activity = " + id);
+                PreparedStatement st = conn.prepareStatement("SELECT * FROM ACVL_Periods p, ACVL_ActivityPeriods a WHERE p.idPeriod = a.period AND a.activity = ?");) {
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Period p = new Period(rs.getInt("idPeriod"), rs.getDate("limitDate"), rs.getDate("startDate"), rs.getDate("endDate"));
                 result.add(p);

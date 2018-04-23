@@ -25,22 +25,22 @@
                 <input type="hidden" name="action" value="create">
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
-                    <input class="form-control" type="text" name="username"
+                    <input class="form-control" type="text" name="username" id="username"
                            placeholder="Nom d'utilisateur" required="" autofocus
                            oninvalid="this.setCustomValidity('Ce champ est requis.')"
                            oninput="setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input class="form-control" type="password" name="password"
+                    <input class="form-control" type="password" name="password" id="password"
                            placeholder="Mot de passe" required=""
                            oninvalid="this.setCustomValidity('Ce champ est requis.')"
                            oninput="setCustomValidity('')">
                 </div>
                 <div class="form-group">
-                    <label for="password">Coordonnées</label>
-                    <input class="form-control" type="text" name="address"
-                           placeholder="Coordonéees" required=""
+                    <label for="coordonnées">Coordonnées</label>
+                    <input class="form-control" type="text" name="address" id="coordonnées"
+                           placeholder="Coordonnéees" required=""
                            oninvalid="this.setCustomValidity('Ce champ est requis.')"
                            oninput="setCustomValidity('')">
                 </div>
@@ -48,8 +48,6 @@
             </form>
 
         </main>
+        <%@include file="style/js.jsp" %>
     </body>
-        
-    </body>
-    <%@include file="style/js.jsp" %>
 </html>

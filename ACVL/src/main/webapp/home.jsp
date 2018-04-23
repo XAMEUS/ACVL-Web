@@ -60,7 +60,6 @@
             <%}%>
             
         </main>
+        <%@include file="WEB-INF/style/js.jsp" %>
     </body>
-
-    <%@include file="WEB-INF/style/js.jsp" %>
 </html>

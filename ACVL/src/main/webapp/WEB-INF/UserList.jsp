@@ -33,6 +33,6 @@
                 </c:forEach>
             </tbody>
         </table>
+        <%@include file="style/js.jsp" %>
     </body>
-    <%@include file="style/js.jsp" %>
 </html>

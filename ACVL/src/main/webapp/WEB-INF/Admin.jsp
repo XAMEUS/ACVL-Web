@@ -89,7 +89,6 @@
         <script>
             feather.replace();
         </script>
-
+        <%@include file="style/js.jsp" %>
     </body>
-<%@include file="style/js.jsp" %>
 </html>
