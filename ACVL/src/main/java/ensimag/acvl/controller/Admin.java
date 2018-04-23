@@ -80,7 +80,7 @@ public class Admin extends Controller {
             HttpServletResponse response)
             throws IOException, ServletException {
         if(!isAdmin(request)) {
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
             return;
         }
 
