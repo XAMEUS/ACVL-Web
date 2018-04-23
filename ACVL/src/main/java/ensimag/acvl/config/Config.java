@@ -6,4 +6,6 @@ public class Config {
     public static float garderie1Price = 0.5f;
     public static float garderie2Price = 0.5f;
     public static float garderie3Price = 0.5f;
+    public static String adminPassword = "a";
+    public static boolean debug = true;
 }
