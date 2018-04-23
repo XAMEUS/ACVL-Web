@@ -62,7 +62,7 @@
     </table>
 </div>
 <% } else {%>
-<h2>Détail de la période : </h2>
+<h2>Détail de la période du ${period.start} au ${period.end}</h2>
 
 <h3>Inscriptions</h3>
 <p>Nombre d'inscrits : <%= inscrits.size()%></p>
@@ -119,13 +119,13 @@
 <table class="table table-striped table-sm">
     <thead>
         <tr>
-            <th>Activité</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <c:forEach items="${activities}" var="activity">
             <tr>
-                <td><a href="<%= request.getContextPath()%>/admin?view=activity&activity=${activity.id}&period=${period.id}">${activity}</a></td>
+                <td>${activity.title} <a href="<%= request.getContextPath()%>/admin?view=activity&activity=${activity.id}&period=${period.id}">plus d'informations</a></td>
             </tr>
         </c:forEach>
     </tbody>

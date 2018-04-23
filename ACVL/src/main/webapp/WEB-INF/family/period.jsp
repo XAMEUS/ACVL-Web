@@ -51,7 +51,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
     <li>Garderie Matin : 7h00 - 8h30
         <% if (cancel.isCanceled(date, 1, 0)) { %>
         <span class="alert-secondary">Annulé</span>
-        <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>
+        <% } else if (Time.getDate().before(Date.valueOf(date.minusDays(1)))) {%>
         <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=1&code=0" 
            class="alert-warning" role="button">Annuler</a>
         <% } else {%>
@@ -64,7 +64,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
         Cantine
         <% if (cancel.isCanceled(date, 2, i)) { %>
         <span class="alert-secondary">Annulé</span>
-        <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>
+        <% } else if (Time.getDate().before(Date.valueOf(date.minusDays(1)))) {%>
         <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=2&code=<%=i%>" 
            class="alert-warning" role="button">Annuler</a>
         <% } %>
@@ -79,7 +79,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
 
         <% if (cancel.isCanceled(date, 3, a.getId())) { %>
         <span class="alert-secondary">Annulé</span>
-        <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>
+        <% } else if (Time.getDate().before(Date.valueOf(date.minusDays(1)))) {%>
         <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=3&code=<%=activities.get(0).getId()%>" 
            class="alert-warning" role="button">Annuler</a>
         <% } %>
@@ -89,7 +89,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
     <li>Garderie du soir 1 : 15h45 - 16h30
         <% if (cancel.isCanceled(date, 1, 1)) { %>
         <span class="alert-secondary">Annulé</span>
-        <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>
+        <% } else if (Time.getDate().before(Date.valueOf(date.minusDays(1)))) {%>
         <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=1&code=1" 
            class="alert-warning" role="button">Annuler</a>
         <% } %>
@@ -99,7 +99,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
     <li>Garderie du soir 2 : 16h30 - 17h15
         <% if (cancel.isCanceled(date, 1, 2)) { %>
         <span class="alert-secondary">Annulé</span>
-        <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>
+        <% } else if (Time.getDate().before(Date.valueOf(date.minusDays(1)))) {%>
         <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=1&code=2" 
            class="alert-warning" role="button">Annuler</a>
         <% } %>
@@ -109,7 +109,7 @@ Votre enfant est inscrit pour la période ${period.id}.<br>
     <li>Garderie du soir 3 : 17h15 - 18h00
         <% if (cancel.isCanceled(date, 1, 3)) { %>
         <span class="alert-secondary">Annulé</span>
-        <% } else if (Time.date.before(Date.valueOf(date.minusDays(1)))) {%>
+        <% } else if (Time.getDate().before(Date.valueOf(date.minusDays(1)))) {%>
         <a href="<%= request.getContextPath()%>/family?view=period&period=${period.id}&child=${child.id}&cancelDate=<%=date%>&codeType=1&code=3" 
            class="alert-warning" role="button">Annuler</a>
         <% } %>
