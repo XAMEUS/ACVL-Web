@@ -8,7 +8,7 @@
         <link href="style/homepage.css" rel="stylesheet">
     </head>
     <body>
-        <main role="main" class="container">
+        <main class="container">
             <%@include file="WEB-INF/debug/debug.jsp" %>
                        
             <% if (session.getAttribute("username") != null) {
@@ -44,14 +44,14 @@
                                 <input type="hidden" name="action" value="signin">
                                 <div class="form-group">
                                     <label for="username">Nom d'utilisateur</label>
-                                    <input class="form-control" type="text" name="username"
+                                    <input class="form-control" type="text" name="username" id="username"
                                            placeholder="Nom d'utilisateur" required="" autofocus
                                            oninvalid="this.setCustomValidity('Ce champ est requis.')"
                                            oninput="setCustomValidity('')">
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Mot de passe</label>
-                                    <input class="form-control" type="password" name="password"
+                                    <input class="form-control" type="password" name="password" id="username"
                                            placeholder="Mot de passe" required=""
                                            oninvalid="this.setCustomValidity('Ce champ est requis.')"
                                            oninput="setCustomValidity('')">

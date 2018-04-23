@@ -10,7 +10,7 @@
         <link href="style/signin.css" rel="stylesheet">
     </head>
     <body class="text-center">
-        <main role="main" class="container">
+        <main class="container">
             <%@include file="debug/debug.jsp" %>
 
             <form class="form-signin" method="post" action="account" accept-charset="UTF-8">
