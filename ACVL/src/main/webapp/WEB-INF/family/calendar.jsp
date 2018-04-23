@@ -15,10 +15,9 @@
     <%} else {%>
     <div>
         <p>${child.firstname} ${child.lastname} est inscrit.e au(x) période(s) suivante(s):</p>
-    </div>
     <c:forEach items="${child.registeredPeriods}" var="registeredPeriod">
         <% c++;%>
-        ${registeredPeriod}
+        <p>${registeredPeriod.toPrettyString()} <small class="form-text text-muted">Cliquez <a href="<%= request.getContextPath()%>/family?view=period&period=${registeredPeriod.id}&child=${child.id}">ici</a> pour voir les détails de l'inscription.</small></p>
         <% if (Time.getDate().before(((Period)(pageContext.findAttribute("registeredPeriod"))).getLimit())) { %>
             <div class="alert alert-warning" role="alert">
                 Moulinette à venir... Attendez le ${registeredPeriod.limit}
@@ -29,12 +28,12 @@
             </div>
         <% } else { %>
             <div class="alert alert-primary" role="alert">
-                Période courrante.
+                Période courante.
             </div>
         <% } %>
-        <p>Cliquez <a href="<%= request.getContextPath()%>/family?view=period&period=${registeredPeriod.id}&child=${child.id}">ici</a> pour voir les détails de l'inscription.</p>
     </c:forEach>
     <% }%>
+    </div>
     <hr>
 
 </c:forEach>
