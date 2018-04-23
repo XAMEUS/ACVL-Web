@@ -66,9 +66,9 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="<%= request.getContextPath()%>/admin?view=moulinette">
+                                    <a class="nav-link" href="<%= request.getContextPath()%>/admin?view=debug">
                                         <span data-feather="play-circle"></span>
-                                        Moulinette (debug)
+                                        Déboguage
                                     </a>
                                 </li>
                             </ul>
@@ -87,6 +87,7 @@
                     <c:if test="${view eq 'user'}"><%@include file="admin/user.jsp" %></c:if>
                     <c:if test="${view eq 'cancel'}"><%@include file="admin/cancel.jsp" %></c:if>
                     <c:if test="${view eq 'settings'}"><%@include file="admin/settings.jsp" %></c:if>
+                    <c:if test="${view eq 'debug'}"><%@include file="admin/debug.jsp" %></c:if>
                     </main>
 
                 </div>
@@ -97,7 +98,6 @@
         <script>
             feather.replace();
         </script>
-
+        <%@include file="style/js.jsp" %>
     </body>
-<%@include file="style/js.jsp" %>
 </html>

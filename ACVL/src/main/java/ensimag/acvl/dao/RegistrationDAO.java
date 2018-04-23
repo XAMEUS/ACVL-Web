@@ -237,15 +237,22 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
     }
 
     public List<HashMap<Integer, HashMap<Integer, PriorityQueue<Wish>>>> moulinette() {
-        System.out.println("==============");
-        System.out.println("MOULINETTE !!!");
-        System.out.println("==============");
+        System.out.println("task: moulinette");
         ChildDAO childDAO = new ChildDAO(dataSource);
         List<Period> periods = childDAO.getPeriods(false);
         System.out.println("periods: " + periods);
         List<HashMap<Integer, HashMap<Integer, PriorityQueue<Wish>>>> l = new ArrayList<>();
         for (Period p : periods) {
             l.add(moulinette(p));
+            try (
+                    Connection conn = getConn();
+                    PreparedStatement st = conn.prepareStatement("insert into ACVL_moulinette (period) VALUES (?)");) {
+                st.setInt(1, p.getId());
+                st.executeUpdate();
+            } catch (SQLException e) {
+                throw new DAOException("Database error " + e.getMessage(), e);
+            }
+
         }
         return l;
     }
@@ -267,7 +274,8 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("SELECT codeStrategy, activity, capacity, day, rank, child, w.id, birthdate "
-                        + "FROM ACVL_Wishes w, ACVL_Activities a, ACVL_Children c WHERE w.activity = a.id AND w.child = c.id AND period=" + p.getId());) {
+                        + "FROM ACVL_Wishes w, ACVL_Activities a, ACVL_Children c WHERE w.activity = a.id AND w.child = c.id AND period=?");) {
+            st.setInt(1, p.getId());
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 int codeStrategy = rs.getInt("codeStrategy");
@@ -354,7 +362,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         }
         return map;
     }
-    
+
     public List<Child> getRegistredChilrend(int period) {
         List<Child> result = new ArrayList<>();
         try (
@@ -371,7 +379,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         }
         return result;
     }
-    
+
     public HashMap<String, Integer> recapDiets(List<Child> children) {
         HashMap<String, Integer> result = new HashMap<>();
         for (Child c : children) {
