@@ -219,6 +219,11 @@ public class Admin extends Controller {
                 childDAO.addDiet(request.getParameter("diet"));
                 viewSettings(request, response);
                 return;
+            } else if (action.equals("remove-diet")) {
+                ChildDAO childDAO = new ChildDAO(ds);
+                childDAO.removeDiet(request.getParameter("diet"));
+                viewSettings(request, response);
+                return;
             } else {
                 request.setAttribute("message", "Mauvais paramètre: action=" + action);
                 showError(request, response);

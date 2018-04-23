@@ -31,7 +31,7 @@
                 <tr>
                     <td>#<% out.print(c);%></td>
                     <td>${diet}</td>
-                    <td><span data-feather="trash"></span><span data-feather="edit"></span></td>
+                    <td><a href="<%= request.getContextPath()%>/admin?view=settings"><span data-feather="trash"></span></a></td>
                 </tr>
             </c:forEach>
         </tbody>

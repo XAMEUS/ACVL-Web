@@ -196,6 +196,28 @@ public class ChildDAO extends AbstractDataBaseDAO {
             throw new DAOException("Database error " + e.getMessage(), e);
         }
     }
+    
+    
+    public void removeDiet(String diet) {
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("DELETE FROM ACVL_ChildDiet WHERE diet=?");) {
+            st.setString(1, diet);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+        try (
+	     Connection conn = getConn();
+	     PreparedStatement st = conn.prepareStatement
+	       ("DELETE FROM ACVL_DIET WHERE diet=?");
+	     ) {
+            st.setString(1, diet);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+        }
+    }
 
     public List<Period> getPeriods(int idChild, int codeGrade, boolean registered) {
         List<Period> result = new ArrayList<Period>();
