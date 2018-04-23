@@ -65,7 +65,12 @@ public class Admin extends Controller {
             } else if (view.equals("cancel")) {
                 viewCancel(request, response);
             } else if (view.equals("settings")) {
+                if ("removeDiet".equals(request.getParameter("action"))) {
+                    ChildDAO childDAO = new ChildDAO(ds);
+                    childDAO.removeDiet(request.getParameter("diet"));
+                }
                 viewSettings(request, response);
+                return;
             } else if (view.equals("debug")) {
                 viewDebug(request, response);
             } else if (view.equals("moulinette")) {
@@ -107,7 +112,7 @@ public class Admin extends Controller {
                 Date start = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime());
                 Date end = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime());
                 Date limit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("limitDate")).getTime());
-                if(end.before(start) || limit.after(start)) {
+                if (end.before(start) || limit.after(start)) {
                     request.setAttribute("message", "La date de limite d'inscription doit être avant la date de début et la date de fin doit être après la date de début");
                     showError(request, response);
                     return;
@@ -225,11 +230,6 @@ public class Admin extends Controller {
             } else if (action.equals("diet")) {
                 ChildDAO childDAO = new ChildDAO(ds);
                 childDAO.addDiet(request.getParameter("diet"));
-                viewSettings(request, response);
-                return;
-            } else if (action.equals("remove-diet")) {
-                ChildDAO childDAO = new ChildDAO(ds);
-                childDAO.removeDiet(request.getParameter("diet"));
                 viewSettings(request, response);
                 return;
             } else {
