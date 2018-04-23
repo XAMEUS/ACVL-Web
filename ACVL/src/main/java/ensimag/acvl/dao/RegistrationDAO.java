@@ -225,8 +225,8 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             st.setInt(2, period);
             st.setInt(3, child);
             st.setInt(4, activity);
-            st.setDate(5, Date.valueOf(ensimag.acvl.time.Time.date.toLocalDate().with(TemporalAdjusters.firstDayOfYear())));
-            st.setDate(6, Date.valueOf(ensimag.acvl.time.Time.date.toLocalDate().with(TemporalAdjusters.lastDayOfYear())));
+            st.setDate(5, Date.valueOf(ensimag.acvl.time.Time.getDate().toLocalDate().with(TemporalAdjusters.firstDayOfYear())));
+            st.setDate(6, Date.valueOf(ensimag.acvl.time.Time.getDate().toLocalDate().with(TemporalAdjusters.lastDayOfYear())));
             ResultSet rs = st.executeQuery();
             rs.next();
             n = rs.getInt(1);

@@ -28,7 +28,7 @@ public class Time extends HttpServlet {
     @Resource(name = "jdbc/database")
     private DataSource ds;
 
-    public static Date date = new Date(Calendar.getInstance().getTime().getTime());
+    private static Date date = new Date(Calendar.getInstance().getTime().getTime());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -91,6 +91,14 @@ public class Time extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Time Debug Date";
+    }
+    
+    /**
+     * Returns the current date
+     * @return a Date
+     */
+    public static Date getDate() {
+        return Time.date;
     }
 
 }
