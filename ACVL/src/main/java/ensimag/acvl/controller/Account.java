@@ -48,7 +48,7 @@ public class Account extends Controller {
             UserDAO userDAO) throws ServletException, IOException {
         List<User> users = userDAO.getUsersList();
         request.setAttribute("users", users);
-        request.getRequestDispatcher("/WEB-INF/UserList.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/Family.jsp").forward(request, response);
     }
 
     public void doPost(HttpServletRequest request,
