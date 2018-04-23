@@ -16,7 +16,9 @@ public class RunMoulinette extends Controller implements Runnable {
 
     @Override
     public void run() {
-        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
-        registrationDAO.moulinette();
+        if(ensimag.acvl.config.Config.autoMoulinette == true) {
+            RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+            registrationDAO.moulinette();   
+        }
     }
 }

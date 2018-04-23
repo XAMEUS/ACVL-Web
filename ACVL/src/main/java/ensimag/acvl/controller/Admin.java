@@ -44,10 +44,12 @@ public class Admin extends Controller {
         }
         String view = request.getParameter("view");
         try {
-            if (view == null) {
+            if (view == null || view.equals("main")) {
                 viewMain(request, response);
-            } else if (view.equals("main")) {
-                viewMain(request, response);
+            } else if (view.equals("debugOn") || view.equals("debugOff")) {
+                debugSwitcher(request, response);
+            } else if (view.equals("autoMoulinetteOn") || view.equals("autoMoulinetteOff")) {
+                moulinetteSwitcher(request, response);
             } else if (view.equals("users")) {
                 viewUsers(request, response);
             } else if (view.equals("calendar")) {
@@ -60,6 +62,8 @@ public class Admin extends Controller {
                 viewCancel(request, response);
             } else if (view.equals("settings")) {
                 viewSettings(request, response);
+            } else if (view.equals("debug")) {
+                viewDebug(request, response);
             } else if (view.equals("moulinette")) {
                 RegistrationDAO registrationDAO = new RegistrationDAO(ds);
                 request.setAttribute("map", registrationDAO.moulinette());
@@ -322,6 +326,21 @@ public class Admin extends Controller {
         request.setAttribute("stats", stats);
         request.setAttribute("view", "settings");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
+    }
+
+    private void viewDebug(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("view", "debug");
+        request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
+    }
+
+    private void debugSwitcher(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ensimag.acvl.config.Config.debug = request.getParameter("view").equals("debugOn");
+        viewDebug(request, response);
+    }
+
+    private void moulinetteSwitcher(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ensimag.acvl.config.Config.autoMoulinette = request.getParameter("view").equals("autoMoulinetteOn");
+        viewDebug(request, response);
     }
 
 }
