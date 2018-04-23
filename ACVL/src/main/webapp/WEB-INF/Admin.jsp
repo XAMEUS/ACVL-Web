@@ -67,7 +67,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="<%= request.getContextPath()%>/admin?view=debug">
-                                        <span data-feather="play-circle"></span>
+                                        <span data-feather="terminal"></span>
                                         Déboguage
                                     </a>
                                 </li>

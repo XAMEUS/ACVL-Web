@@ -56,6 +56,10 @@ public class Period {
     public String toString() {
         return "Period{" + "id=" + id + ", limit=" + limit + ", start=" + start + ", end=" + end + ", activities=" + activities + '}';
     }
+    
+    public String toPrettyString() {
+        return "Période du " + start + " au " + end;
+    }
 
     @Override
     public boolean equals(Object obj) {

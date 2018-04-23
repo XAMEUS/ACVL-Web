@@ -12,8 +12,7 @@
 <%@page import="ensimag.acvl.models.Activity"%>
 <%@page import="java.util.List"%>
 <h1>Détail de la période</h1>
-<h2 class="alert alert-danger">Il faut finir cet affichage (cantine, etc.)</h2>
-${period}<br>
+${period.toPrettyString()}<br>
 ${registration}<br>
 <% Period period = (Period) (request.getAttribute("period")); %>
 <% ensimag.acvl.models.Registration registration = (ensimag.acvl.models.Registration) (request.getAttribute("registration")); %>
