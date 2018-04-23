@@ -104,10 +104,18 @@ public class Admin extends Controller {
         try {
             if (action.equals("period")) {
                 PeriodDAO periodDAO = new PeriodDAO(ds);
+                Date start = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime());
+                Date end = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime());
+                Date limit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("limitDate")).getTime());
+                if(end.before(start) || limit.after(start)) {
+                    request.setAttribute("message", "La date de limite d'inscription doit être avant la date de début et la date de fin doit être après la date de début");
+                    showError(request, response);
+                    return;
+                }
                 periodDAO.createPeriod(
-                        new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("limitDate")).getTime()),
-                        new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("startDate")).getTime()),
-                        new Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")).getTime()));
+                        limit,
+                        start,
+                        end);
                 viewCalendar(request, response);
                 return;
             } else if (action.equals("create-activity")) {
