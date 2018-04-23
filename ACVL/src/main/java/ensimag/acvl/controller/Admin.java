@@ -15,7 +15,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -28,10 +28,20 @@ import java.util.regex.Pattern;
 
 @WebServlet(name = "Admin", urlPatterns = {"/admin"})
 public class Admin extends Controller {
+    
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return session.getAttribute("username") != null &&
+               session.getAttribute("username").equals("admin");
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if(!isAdmin(request)) {
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            return;
+        }
         String view = request.getParameter("view");
         try {
             if (view == null) {
@@ -70,6 +80,10 @@ public class Admin extends Controller {
     public void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+        if(!isAdmin(request)) {
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            return;
+        }
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -251,10 +265,11 @@ public class Admin extends Controller {
             RegistrationDAO registrationDAO = new RegistrationDAO(ds);
             Period period = periodDAO.getPeriod(Integer.valueOf(p));
             List<ensimag.acvl.models.Registration> registrations = registrationDAO.getRegistrations(period.getId());
-            List<Child> inscrits = new ArrayList<Child>();
+            List<Child> inscrits = new ArrayList<>();
             request.setAttribute("stats", registrationDAO.recap(registrations, inscrits));
             request.setAttribute("inscrits", inscrits);
             request.setAttribute("period", period);
+            request.setAttribute("children", registrationDAO.getRegistredChilrend(period.getId()));
             request.setAttribute("activities", activityDAO.getActivitiesByPeriod(period.getId()));
         }
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
@@ -290,7 +305,21 @@ public class Admin extends Controller {
             HttpServletResponse response) throws ServletException, IOException {
         ChildDAO childDAO = new ChildDAO(ds);
         List<String> diets = childDAO.getDiets();
+        PeriodDAO periodDAO = new PeriodDAO(ds);
+        List<Period> periods = periodDAO.getPeriods();
+        HashMap<Period, List<Child>> children = new HashMap<>();
+        RegistrationDAO registrationDAO = new RegistrationDAO(ds);
+        for (Period p : periods) {
+            children.put(p, registrationDAO.getRegistredChilrend(p.getId()));
+        }
+        HashMap<Period, HashMap<String, Integer>> stats = new HashMap<>();
+        for (Period p : periods) {
+            stats.put(p, registrationDAO.recapDiets(children.get(p)));
+        }
+        request.setAttribute("periods", periods);
+        request.setAttribute("children", children);
         request.setAttribute("diets", diets);
+        request.setAttribute("stats", stats);
         request.setAttribute("view", "settings");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }

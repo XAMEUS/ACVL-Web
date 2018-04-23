@@ -46,4 +46,8 @@ Ces étapes ne sont à réaliser que si votre installation de Netbeans n'est pas
 	Appuyez sur la touche F6.
 	Votre navigateur devrait se lancer avec notre application.
 
+5) Création du compte administrateur
+	Il suffit de faire un compte nouveau compte dont l'identifiant est "admin"
+	En vous connectant sur ce compte, vous pouvez ensuite accéder au panneau d'administration
+
 	

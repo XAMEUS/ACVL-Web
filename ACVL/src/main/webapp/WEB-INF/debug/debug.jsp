@@ -1,7 +1,11 @@
 <%@page import="ensimag.acvl.time.Time"%>
+<%@page import="ensimag.acvl.config.Config"%>
 <%@ page import="java.util.*" %>
+<%
+    if(Config.debug) {
+%>
 Debug Tools:
-<table class="table">
+    <table class="table">
     <tr><td>
         <a href="#header" data-toggle="collapse">Header</a>
         <div id="header" class="collapse">
@@ -54,3 +58,6 @@ Debug Tools:
 </table>
 
 <hr />
+<%
+    }
+%>

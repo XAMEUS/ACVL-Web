@@ -355,6 +355,37 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
         }
         return map;
     }
+    
+    public List<Child> getRegistredChilrend(int period) {
+        List<Child> result = new ArrayList<>();
+        try (
+                Connection conn = getConn();
+                PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE period = ?");) {
+            st.setInt(1, period);
+            ResultSet rs = st.executeQuery();
+            ChildDAO childDAO = new ChildDAO(dataSource);
+            while (rs.next()) {
+                result.add(childDAO.getChild(rs.getInt("child")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Database error " + e.getMessage(), e);
+        }
+        return result;
+    }
+    
+    public HashMap<String, Integer> recapDiets(List<Child> children) {
+        HashMap<String, Integer> result = new HashMap<>();
+        for (Child c : children) {
+            for (String diet : c.getDiet()) {
+                if (!result.containsKey(c)) {
+                    result.put(diet, 1);
+                } else {
+                    result.put(diet, result.get(diet));
+                }
+            }
+        }
+        return result;
+    }
 
     public List<Integer> recap(List<Registration> registrations, List<Child> childs) {
         List<Integer> result = new ArrayList<>();
