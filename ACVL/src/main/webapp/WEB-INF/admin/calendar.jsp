@@ -22,7 +22,7 @@
                        placeholder="YYYY-MM-DD" required=""
                        oninvalid="this.setCustomValidity('Ce champ est requis.')"
                        oninput="setCustomValidity('')">
-            </div
+            </div>
             <div class="form-group">
                 <label for="startDate">Date de début de la période</label>
                 <input class="form-control" type="date" name="startDate"
@@ -47,15 +47,19 @@
     <table class="table table-striped table-sm">
         <thead>
             <tr>
-                <th></th>
-                <th></th>
+                <th>Date limite d'inscription</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             <c:forEach items="${periods}" var="period">
                 <tr>
-                    <td><a href="<%= request.getContextPath()%>/admin?view=calendar&period=${period.id}">${period}</a></td>
+                    <td>${period.limit}</td>
+                    <td>${period.start}</td>
+                    <td>${period.end}</td>
+                    <td><a href="<%= request.getContextPath()%>/admin?view=calendar&period=${period.id}">plus d'informations</a></td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -66,6 +70,30 @@
 
 <h3>Inscriptions</h3>
 <p>Nombre d'inscrits : <%= inscrits.size()%></p>
+
+<h4>Liste des enfants inscrits</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Niveau</th>
+            <th>Régime</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <c:forEach items="${children}" var="child">
+            <tr>
+                <td>${child.firstname}</td>
+                <td>${child.lastname}</td>
+                <td>${child.grade}</td>
+                <td>${child.diet}</td>
+                <td><a href="<%= request.getContextPath()%>/admin?view=child&child=${child.id}">détails</a></td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
 
 <table class="table table-striped table-sm">
     <thead>

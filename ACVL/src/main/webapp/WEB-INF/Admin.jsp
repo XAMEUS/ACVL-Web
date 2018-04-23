@@ -65,6 +65,12 @@
                                         Configuration
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<%= request.getContextPath()%>/admin?view=moulinette">
+                                        <span data-feather="play-circle"></span>
+                                        Moulinette (debug)
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </nav>

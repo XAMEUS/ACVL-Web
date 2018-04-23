@@ -1,22 +1,6 @@
 
 <h2>Personnes</h2>
 
-<form method="post" action="account" accept-charset="UTF-8">
-    <input class="form-control" type="hidden" name="action" value="create">
-    <div class="form-row align-items-center">
-        <div class="col-auto">
-            <label class="sr-only" for="inlineFormInput">Username</label>
-            <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Username">
-        </div>
-        <div class="col-auto">
-            <label class="sr-only" for="inlineFormInputGroup">Mot de passe</label>
-            <input type="password" class="form-control mb-2" id="inlineFormInputGroup" placeholder="Password">
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-2">Créer</button>
-        </div>
-    </div>
-</form>
 <div class="table-responsive">
     <h3>Liste des utilisateurs</h3>
     <table class="table table-striped table-sm">
@@ -43,17 +27,20 @@
     <table class="table table-striped table-sm">
         <thead>
             <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Niveau</th>
                 <th></th>
-                <th>Enfant</th>
             </tr>
         </thead>
         <tbody>
-            <% c = 0; %>
+            <% c = 0;%>
         <c:forEach items="${children}" var="child">
-            <% c++; %>
             <tr>
-                <td>#<% out.print(c);%></td>
-                <td>${child}</td>
+                <td>${child.firstname}</td>
+                <td>${child.lastname}</td>
+                <td>${child.grade}</td>
+                <td><a href="">détails</a></td>
             </tr>
         </c:forEach>
         </tbody>
