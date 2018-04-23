@@ -102,7 +102,7 @@ public class Activity {
 
     public String getStringGrades() {
         String[] grades = {"PS", "MS", "GS", "CP", "CE1", "CE2", "CM1", "CM2"};
-        List<String> activityGrades = new ArrayList();
+        List<String> activityGrades = new ArrayList<String>();
         
         for (int i = 0; i < grades.length; i++) {
             if ((this.codeGrades >> i) % 2 == 1) {

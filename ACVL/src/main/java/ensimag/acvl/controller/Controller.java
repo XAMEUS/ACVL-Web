@@ -9,7 +9,7 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 
 //@WebServlet(name = "C", urlPatterns = {"/admin"})
-public class Controller extends HttpServlet {
+public abstract class Controller extends HttpServlet {
 
     @Resource(name = "jdbc/database")
     protected DataSource ds;

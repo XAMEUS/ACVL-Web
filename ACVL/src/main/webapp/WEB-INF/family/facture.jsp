@@ -86,6 +86,7 @@
         <title>Facture</title>
         <style>
             table, th, td {
+                width: 100%;
                 border: 1px solid black;
                 border-collapse: collapse;
             }
@@ -95,8 +96,8 @@
         </style>
     </head>
     <body>
-        <h1>Facture de la période : ${period.start} au ${period.end}</h1>
-        <h2 style="color:red">Il faut finir le style de cet affichage.</h2>
+        <h1>École : Facture des prestations</h1>
+        <p>Période : ${period.start} au ${period.end}</p><br />
         <p>Enfant inscrit : ${child.firstname} ${child.lastname}</p>
         <% float total = 0;%>
         <table>

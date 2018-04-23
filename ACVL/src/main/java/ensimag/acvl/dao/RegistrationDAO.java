@@ -165,7 +165,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
     }
 
     public List<Activity> getActivities(int child, int period, int day) {
-        List<Activity> activities = new ArrayList<>();
+        List<Activity> activities = new ArrayList<Activity>();
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_ActivitiesRegistrations WHERE child = ? AND period = ? AND day = ?");) {
@@ -199,7 +199,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
     }
 
     public List<Registration> getRegistrations(int period) {
-        List<Registration> registrations = new ArrayList<>();
+        List<Registration> registrations = new ArrayList<Registration>();
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE period = ?");) {
@@ -225,8 +225,8 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
             st.setInt(2, period);
             st.setInt(3, child);
             st.setInt(4, activity);
-            st.setDate(5, Date.valueOf(ensimag.acvl.time.Time.date.toLocalDate().with(TemporalAdjusters.firstDayOfYear())));
-            st.setDate(6, Date.valueOf(ensimag.acvl.time.Time.date.toLocalDate().with(TemporalAdjusters.lastDayOfYear())));
+            st.setDate(5, Date.valueOf(ensimag.acvl.time.Time.getDate().toLocalDate().with(TemporalAdjusters.firstDayOfYear())));
+            st.setDate(6, Date.valueOf(ensimag.acvl.time.Time.getDate().toLocalDate().with(TemporalAdjusters.lastDayOfYear())));
             ResultSet rs = st.executeQuery();
             rs.next();
             n = rs.getInt(1);

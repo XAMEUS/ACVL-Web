@@ -1,6 +1,7 @@
 package ensimag.acvl.controller;
 
 import ensimag.acvl.dao.ActivityDAO;
+import ensimag.acvl.dao.CancelDAO;
 import ensimag.acvl.dao.ChildDAO;
 import ensimag.acvl.dao.DAOException;
 import ensimag.acvl.dao.PeriodDAO;
@@ -45,6 +46,8 @@ public class Admin extends Controller {
                 viewActivities(request, response);
             } else if (view.equals("activity")) {
                 viewActivity(request, response);
+            } else if (view.equals("cancel")) {
+                viewCancel(request, response);
             } else if (view.equals("settings")) {
                 viewSettings(request, response);
             } else if (view.equals("moulinette")) {
@@ -229,6 +232,13 @@ public class Admin extends Controller {
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
 
+    private void viewCancel(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("view", "cancel");
+        request.setAttribute("cancels", new CancelDAO(ds).getAllCancels());
+        request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
+    }
+
     private void viewCalendar(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         PeriodDAO periodDAO = new PeriodDAO(ds);
@@ -260,7 +270,7 @@ public class Admin extends Controller {
         request.setAttribute("view", "activities");
         request.getRequestDispatcher("/WEB-INF/Admin.jsp").forward(request, response);
     }
-    
+
     private void viewActivity(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         PeriodDAO periodDAO = new PeriodDAO(ds);
@@ -269,6 +279,7 @@ public class Admin extends Controller {
         int idPeriod = Integer.valueOf(request.getParameter("period"));
         int idActivity = Integer.valueOf(request.getParameter("activity"));
         Activity activity = activityDAO.getActivity(idActivity);
+        request.setAttribute("period", periodDAO.getPeriod(idPeriod));
         request.setAttribute("activity", activity);
         request.setAttribute("subscribers", registrationDAO.getSubscribers(idPeriod, idActivity));
         request.setAttribute("view", "activity");
