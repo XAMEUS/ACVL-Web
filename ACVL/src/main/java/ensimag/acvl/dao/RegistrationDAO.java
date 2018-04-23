@@ -165,7 +165,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
     }
 
     public List<Activity> getActivities(int child, int period, int day) {
-        List<Activity> activities = new ArrayList<>();
+        List<Activity> activities = new ArrayList<Activity>();
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_ActivitiesRegistrations WHERE child = ? AND period = ? AND day = ?");) {
@@ -199,7 +199,7 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
     }
 
     public List<Registration> getRegistrations(int period) {
-        List<Registration> registrations = new ArrayList<>();
+        List<Registration> registrations = new ArrayList<Registration>();
         try (
                 Connection conn = getConn();
                 PreparedStatement st = conn.prepareStatement("Select * from ACVL_Registrations WHERE period = ?");) {

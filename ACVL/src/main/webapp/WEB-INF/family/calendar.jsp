@@ -18,13 +18,12 @@
     </div>
     <c:forEach items="${child.registeredPeriods}" var="registeredPeriod">
         <% c++;%>
-        <% out.print(Time.date);%>
         ${registeredPeriod}
-        <% if (Time.date.before(((Period)(pageContext.findAttribute("registeredPeriod"))).getLimit())) { %>
+        <% if (Time.getDate().before(((Period)(pageContext.findAttribute("registeredPeriod"))).getLimit())) { %>
             <div class="alert alert-warning" role="alert">
                 Moulinette à venir... Attendez le ${registeredPeriod.limit}
             </div>
-        <% } else if (Time.date.after(((Period)(pageContext.findAttribute("registeredPeriod"))).getEnd())) { %>
+        <% } else if (Time.getDate().after(((Period)(pageContext.findAttribute("registeredPeriod"))).getEnd())) { %>
             <div class="alert alert-secondary" role="alert">
                 Période passée, vous pouvez maintenant accéder à votre facture <a href="<%= request.getContextPath()%>/family?view=facture&period=${registeredPeriod.id}&child=${child.id}">ici</a>.
             </div>

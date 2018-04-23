@@ -47,7 +47,7 @@ Debug Tools:
     <tr><td>
         <strong>Current System Date</strong>
         <%
-            out.print(Time.date);
+            out.print(Time.getDate());
         %>
         <a href="<%= request.getContextPath()%>/time"><br><i class="fas fa-cog"></i> configure</a>
     </td></tr>
