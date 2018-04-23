@@ -25,7 +25,6 @@ public class ChildDAO extends AbstractDataBaseDAO {
                 Child child = new Child(rs.getInt("id"), rs.getString("firstname"), rs.getString("lastname"), rs.getString("gender").charAt(0), rs.getString("grade"), rs.getDate("birthdate"));
                 child.setRegisteredPeriods(getPeriods(child.getId(), child.getCodeGrade(), true));
                 child.setUnregisteredPeriods(getPeriods(child.getId(), child.getCodeGrade(), false));
-                System.out.println(child);
                 result.add(child);
             }
         } catch (SQLException e) {
