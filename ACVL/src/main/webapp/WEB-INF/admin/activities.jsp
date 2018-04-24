@@ -1,4 +1,5 @@
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="ensimag.acvl.models.Period"%>
 <%@page import="ensimag.acvl.models.Period"%>
 <%@page import="java.util.List"%>
@@ -30,7 +31,7 @@
                 <% c++; %>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="period<% out.print(c); %>" name="period<%out.print(c);%>" value="${period.id}">
-                    <label for="period<% out.print(c);%>">${period}</label>
+                    <label for="period<% out.print(c);%>">du ${period.start} au ${period.start}</label>
                 </div>
             </c:forEach>
         </div>
@@ -111,13 +112,13 @@
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="Jeudi" value="Jeudi" id="Jeudi">
-                <label class="form-check-label" for="Lundi">
+                <label class="form-check-label" for="Jeudi">
                     Jeudi
                 </label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="Vendredi" value="Vendredi" id="Vendredi">
-                <label class="form-check-label" for="Lundi">
+                <label class="form-check-label" for="Vendredi">
                     Vendredi
                 </label>
             </div>
@@ -130,7 +131,7 @@
         <div class="form-group">
             <label for="activityCapacity">Capacité</label>
             <input id="activityCapacity" class="form-control" type="number" name="capacity" placeholder="">
-            <small class="form-text text-muted">Capacité par groupe (1 groupe / animateur).</pre></small>
+            <small class="form-text text-muted">Capacité totale (par jour, 1 groupe / animateur ; ex: 50).</pre></small>
         </div>
         <div class="form-group">
             <label for="activityPrice">Prix</label>
@@ -156,15 +157,25 @@
 <table class="table table-striped table-sm">
     <thead>
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
+            <td></td>
+            <td>Titre de l'activité</td>
+            <td>Prix</td>
+            <td>Capacité</td>
+            <td>Périodes</td>
         </tr>
     </thead>
     <tbody>
     <c:forEach items="${activities}" var="activity">
         <tr>
-            <td>${activity}</td>
+            <td>${activity.id}</td>
+            <td>${activity.title}</td>
+            <td>${activity.price}</td>
+            <td>${activity.capacity}</td>
+            <td>
+                <c:forEach items="${activity.period}" var="period">
+                    <a href="<%= request.getContextPath()%>/admin?view=activity&activity=${activity.id}&period=${period.id}">du ${period.start} au ${period.end}</a>, 
+                </c:forEach>
+            </td>
         </tr>
     </c:forEach>
 </tbody>

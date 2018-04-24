@@ -7,6 +7,11 @@
 <% Activity activity = (Activity) request.getAttribute("activity"); %>
 <% List<Child>[] subscribers = (List<Child>[]) request.getAttribute("subscribers");%>
 
+<p>Description : ${activity.description}</p>
+<p>Animateurs : ${activity.animators}</p>
+<p>Capacité : ${activity.capacity}</p>
+<p>Prix : ${activity.price}</p>
+
 <br>
 <h3>Enfants inscrits</h3>
 <table class="table">
@@ -61,7 +66,7 @@
 </table>
 
 <h3>Disponible sur ces périodes</h3>
-<table class="table table-striped table-sm">
+<table class="table table-striped">
     <thead>
         <tr>
             <th></th>

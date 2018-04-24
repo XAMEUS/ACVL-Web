@@ -48,7 +48,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <c:if test="${view eq 'activities'}">active</c:if>" href="<%= request.getContextPath()%>/admin?view=activities">
+                                    <a class="nav-link <c:if test="${view eq 'activities'}">active</c:if> <c:if test="${view eq 'activity'}">active</c:if>" href="<%= request.getContextPath()%>/admin?view=activities">
                                         <span data-feather="sun"></span>
                                         Activités
                                     </a>
