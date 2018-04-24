@@ -111,7 +111,6 @@
     <c:when test="${view eq 'editChild'}">
         <div>
             <h2>Éditez les informations de votre enfant</h2><br>
-            ${child}
             <hr>
         </div>
             <form method="post" action="family" accept-charset="UTF-8" onsubmit="return checkDate('birthdate')">

@@ -85,7 +85,6 @@
                     int day = 0;
                     String[] days = {"lundi", "mardi", "mercredi", "jeudi", "vendredi"};
                 %>
-${unregisteredPeriod}
                 <c:forEach items="${unregisteredPeriod.activities}" var="activities">
                     <% int n = ((List<Activity>)(pageContext.getAttribute("activities"))).size(); %>
                     <c:if test="${not empty activities}">
