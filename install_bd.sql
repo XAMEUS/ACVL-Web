@@ -262,7 +262,7 @@ CREATE TABLE ACVL_Wishes (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
-CREATE TABLE ACVL_moulinette (
+CREATE TABLE ACVL_Moulinette (
     period number(3),
     PRIMARY KEY (period),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
@@ -283,27 +283,13 @@ CREATE TABLE ACVL_Cancel (
     child number(6),
     period number(3),
     codeType int, -- 1: garderie, 2:cantine, 3:activité
-    code number(6), --gardire, cantine, activity
+    code number(6), --garderie, cantine, activité
     day Date, -- 0, 1, 2, 3, 4
     PRIMARY KEY (child, period, codeType, code, day),
     FOREIGN KEY (child) references ACVL_Children(id),
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
-select * from ACVL_Users;
-select * from ACVL_CHILDREN;
-select * from ACVL_Family;
-SELECT * FROM ACVL_Users u, ACVL_Children c, ACVL_family f where u.username = f.username and f.idChild = c.id and u.username = 'maxime';
 insert into ACVL_DIET values ('végétarien');
 insert into ACVL_DIET values ('sans gluten');
 COMMIT;
-select * from ACVL_ChildDiet;
-SELECT * FROM ACVL_Periods where idPeriod NOT IN (select period from ACVL_Registrations r WHERE r.child = 1);
-select * from ACVL_Periods;
-Select * from ACVL_Activities;
-SELECT * FROM ACVL_Diet;
-Select * from ACVL_Wishes;
-Select * from ACVL_Cancel;
-Select * from ACVL_ActivitiesRegistrations;
-
---SELECT ACVL_Children_id_seq.next FROM dual;
