@@ -4,7 +4,7 @@ Installation de notre application
 0) Prérequis
 	Une installation de JDK 7 ou plus fonctionnelle;
 	Une installation du SGBD Oracle
-	Une installation de Netbeans EE 8.2 ou plus fonctionnelle, avec l'option serveur Tomcat cochée lors de l'installation
+	Une installation de Netbeans EE 8.1 ou plus fonctionnelle, avec l'option serveur Tomcat cochée lors de l'installation (ou une installation manuelle et correctement configurée dans Netbeans)
 
 	NB: Le SGBD Oracle peut-être remplacé par un autre SBGD ayant un pilote JDBC fonctionnel. Cependant nous ne pourrions pas vous apporter une garantie de résultat et nous vous déconseillons cette option, à moins que vous soyez certain de ce que vous faîtes et en accepter les conséquences.
 	NB: Netbeans est ici utilisé par commodité. Bien qu'un administrateur expert peut utiliser directement Maven ou un autre IDE, nous utiliserons Netbeans en raison de sa facilité d'installation.
@@ -55,4 +55,8 @@ Ces étapes ne sont à réaliser que si votre installation de Netbeans n'est pas
 	Il suffit de faire un compte nouveau compte dont l'identifiant est "admin"
 	En vous connectant sur ce compte, vous pouvez ensuite accéder au panneau d'administration
 
-	
+6) Débogage
+	- La moulinette est automatiquement appelée toutes les heures, afin d'attribuer les places aux élèves.
+	Pour la désactiver et passer la moulinette en mode manuel, il faut se rendre dans le panneau d'administration, puis dans l'onglet débogage.
+	- Ce même menu permet de changer la date de l'application sans changer l'horloge du système
+	- Ce même menu permet aussi d'afficher des informations de débogages qui se révèlent utiles pour le développement
