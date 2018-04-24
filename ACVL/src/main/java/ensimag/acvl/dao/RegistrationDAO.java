@@ -309,21 +309,11 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                     map.get(day).get(activity).add(w);
                 }
             }
-            System.out.println(map);
-            System.out.println("Capacity:");
-            System.out.println(capacities[0]);
-            System.out.println(capacities[1]);
-            System.out.println(capacities[2]);
-            System.out.println(capacities[3]);
-            System.out.println(capacities[4]);
             for (int i = 0; i < 5; i++) {
                 HashMap<Integer, PriorityQueue<Wish>> hashMap = map.get(i);
                 int rank = 1;
                 while (true) {
                     for (Integer activity : hashMap.keySet()) {
-                        System.out.println(capacities[i]);
-                        System.out.println(hashMap);
-                        System.out.println("Activity:" + activity);
                         PriorityQueue<Wish> queue = hashMap.get(activity);
                         int capacity = capacities[i].get(activity);
                         int rank2 = 0;
@@ -331,15 +321,12 @@ public class RegistrationDAO extends AbstractDataBaseDAO {
                             rank2 = queue.peek().rank2;
                         }
                         while (true) {
-                            System.out.println("Queue:" + queue);
                             if (queue.isEmpty() || capacity <= 0) {
                                 hashMap.remove(activity);
-                                System.out.println("NEXT ACTIVITY");
                                 break;
                             }
                             if (queue.peek().rank == rank && rank2 == queue.peek().rank2) {
                                 Wish w = queue.poll();
-                                System.out.println("registration child:period:activity:day " + w.child + ":" + p.getId() + ":" + activity + ":" + w.day);
                                 registration(w.child, p.getId(), activity, w.day);
                                 capacity--;
                                 for (PriorityQueue<Wish> pq : hashMap.values()) {

@@ -19,7 +19,6 @@ public class Account extends Controller {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         UserDAO userDAO = new UserDAO(ds);
-        System.out.println(action);
         try {
             if (action == null) {
                 actionShow(request, response, userDAO);
@@ -131,7 +130,6 @@ public class Account extends Controller {
     private void actionLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.logout();
         request.getSession().invalidate();
-        System.out.println("ojokjiokjiokjipji");
         response.sendRedirect(request.getContextPath());
     }
 }

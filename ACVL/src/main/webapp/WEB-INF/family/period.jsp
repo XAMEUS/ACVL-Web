@@ -11,18 +11,14 @@
 <%@page import="ensimag.acvl.models.Activity"%>
 <%@page import="ensimag.acvl.models.Activity"%>
 <%@page import="java.util.List"%>
-<h1>Détail de la période</h1>
-${period.toPrettyString()}<br>
-${registration}<br>
+<h1>${period.toPrettyString()}</h1>
 <% Period period = (Period) (request.getAttribute("period")); %>
 <% ensimag.acvl.models.Registration registration = (ensimag.acvl.models.Registration) (request.getAttribute("registration")); %>
 <% LocalDate date = period.getStart().toLocalDate(); %>
 <% LocalDate limit = period.getEnd().toLocalDate(); %>
-Votre enfant est inscrit pour la période ${period.id}.<br>
+<p>${child.firstname} ${child.lastname} est inscrit pour cette période.</p>
 <% String[] days = {"lundi", "mardi", "mercredi", "jeudi", "vendredi"};%>
-<%out.print(date);%>
-<%out.print(limit);%>
-<br>
+
 <% while (date.isBefore(limit) || date.equals(limit)) { %>
 <%
     int i = 0;
