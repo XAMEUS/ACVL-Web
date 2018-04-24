@@ -31,7 +31,7 @@
                 <% c++; %>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="period<% out.print(c); %>" name="period<%out.print(c);%>" value="${period.id}">
-                    <label for="period<% out.print(c);%>">du ${period.start} au ${period.start}</label>
+                    <label for="period<% out.print(c);%>">${period.toPrettyString()}</label>
                 </div>
             </c:forEach>
         </div>
