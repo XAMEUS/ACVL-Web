@@ -27,12 +27,6 @@ import javax.servlet.http.*;
 @WebServlet(name = "Admin", urlPatterns = {"/admin"})
 public class Admin extends Controller {
 
-    private boolean isAdmin(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return session.getAttribute("username") != null
-                && session.getAttribute("username").equals("admin");
-    }
-
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

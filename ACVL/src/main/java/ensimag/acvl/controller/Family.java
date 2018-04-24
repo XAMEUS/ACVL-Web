@@ -30,6 +30,10 @@ public class Family extends Controller {
             throws IOException, ServletException {
 
         request.setCharacterEncoding("UTF-8");
+        if (isAdmin(request)) {
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            return;
+        }
 
         String username = (String) request.getSession().getAttribute("username");
         if (username == null) {
@@ -195,6 +199,10 @@ public class Family extends Controller {
             throws IOException, ServletException {
 
         request.setCharacterEncoding("UTF-8");
+        if (isAdmin(request)) {
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            return;
+        }
         String action = request.getParameter("action");
         if (action == null) {
             request.setAttribute("title", "Parameter Error");

@@ -13,6 +13,12 @@ public abstract class Controller extends HttpServlet {
 
     @Resource(name = "jdbc/database")
     protected DataSource ds;
+    
+    protected boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return session.getAttribute("username") != null
+                && session.getAttribute("username").equals("admin");
+    }
 
     protected void showError(HttpServletRequest request,
         HttpServletResponse response)
