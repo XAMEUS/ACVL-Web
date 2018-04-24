@@ -11,6 +11,9 @@ Installation de notre application
 
 1) Configuration de la base de données
 	Exécutez le script SQL/deploy.sql sur la base de données du serveur
+	En cas de problème, utilisez la base de données de Maxime Gourgoulhon:
+		nom d'utilisateur: gourgoum
+		mot de passe: gourgoum
 
 2) Configuration de l'application
 	Dans le répertoire src/main/webapp/META-INF:
@@ -19,6 +22,9 @@ Installation de notre application
 			username
 			passward
 			url
+	Dans le fichier ./ACVL/src/main/java/ensimag/acvl/config/Config.java:
+		- Remplacez les prix de la cantine et de la garderie, en remplaçant les "1f" par les prix au format "X.Xf".
+		- Garderie0 est la garderie du matin, les trois autres garderies sont celles du soir, par ordre chronologique.
 
 3) Configuration de Netbeans
 Ces étapes ne sont à réaliser que si votre installation de Netbeans n'est pas reliée à votre base de données.
@@ -38,7 +44,6 @@ Ces étapes ne sont à réaliser que si votre installation de Netbeans n'est pas
 		Dans le menu Windows, appuyez sur Services.
 		Dans l'onglet services, sélectionnez Databases et choisissez New Connection
 		Choisissez alors le driver Oracle Thin et complétez les champs en accord avec la configuration de votre serveur Oracle.
-
 
 4) Compilation de l'application
 	Dans File, sélectionnez "Open project".
