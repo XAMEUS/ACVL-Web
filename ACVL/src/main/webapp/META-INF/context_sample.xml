@@ -5,7 +5,7 @@
    type="javax.sql.DataSource"
    driverClassName="oracle.jdbc.OracleDriver"
    url="jdbc:oracle:thin:@ensioracle1.imag.fr:1521:ensioracle1"
-   maxTotal="3"
+   maxTotal="10"
    maxIdle="2"
    maxWaitMillis="20000"
    name="jdbc/database"
