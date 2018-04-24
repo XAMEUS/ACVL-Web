@@ -68,7 +68,7 @@
                                 <label>Genre</label>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="gender" id="male" value="M" checked>
-                                    <label class="form-check-label" for="male">H</label>
+                                    <label class="form-check-label" for="male">M</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="gender" id="female" value="F">
