@@ -290,6 +290,4 @@ CREATE TABLE ACVL_Cancel (
     FOREIGN KEY (period) references ACVL_Periods(idPeriod)
 );
 
-insert into ACVL_DIET values ('végétarien');
-insert into ACVL_DIET values ('sans gluten');
 COMMIT;
