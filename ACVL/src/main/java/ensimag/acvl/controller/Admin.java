@@ -78,7 +78,6 @@ public class Admin extends Controller {
             } else {
                 request.setAttribute("title", "Parameter Error");
                 request.setAttribute("message", "Mauvais paramètre view=" + view);
-                System.out.println(request);
                 showError(request, response);
             }
         } catch (DAOException e) {

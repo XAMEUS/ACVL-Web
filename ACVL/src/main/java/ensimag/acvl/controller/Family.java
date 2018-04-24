@@ -308,7 +308,6 @@ public class Family extends Controller {
             }
             showMain(request, response, childDAO);
         } catch (ParseException e) {
-            System.out.println("ensimag.acvl.controller.Family.actionEditChild()");
             request.setAttribute("title", "Parse exception");
             request.setAttribute("message", "Quelque chose ne s'est pas bien passé...\n" + e.getMessage());
             showError(request, response, e);
