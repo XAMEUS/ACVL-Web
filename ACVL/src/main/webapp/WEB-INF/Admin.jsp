@@ -79,6 +79,7 @@
                         <div class="row">
                         <%@include file="debug/debug.jsp" %>
                     </div>
+                    <c:if test="${view eq 'main'}"><%@include file="admin/home.jsp" %></c:if>
                     <c:if test="${view eq 'users'}"><%@include file="admin/users.jsp" %></c:if>
                     <c:if test="${view eq 'calendar'}"><%@include file="admin/calendar.jsp" %></c:if>
                     <c:if test="${view eq 'activities'}"><%@include file="admin/activities.jsp" %></c:if>
