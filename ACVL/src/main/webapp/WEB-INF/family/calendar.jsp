@@ -4,7 +4,7 @@
 <%@page import="ensimag.acvl.models.Activity"%>
 <%@page import="ensimag.acvl.models.Activity"%>
 <%@page import="java.util.List"%>
-<h1>Emplois du temps</h1>
+<h1>Emploi du temps</h1>
 <% int c = 0; %>
 <c:forEach items="${children}" var="child">
     <h2>${child.firstname} ${child.lastname}</h2>
